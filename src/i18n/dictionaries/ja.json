@@ -1,0 +1,78 @@
+{
+  "seo": {
+    "app-title": "ナイトライフジャパン - 大人のエンターテイメントガイド",
+    "app-description": "ナイトライフジャパンは日本最大の大人のエンターテイメントガイドです。東京、大阪、その他の地域の最高の大人のエンターテイメント施設を見つけましょう。"
+  },
+  "breadcrumbs": {
+    "home": "ホーム",
+    "search": "検索"
+  },
+  "search": {
+    "title": "店舗検索",
+    "description": "{count}件の結果が見つかりました",
+    "noResultsFound": "検索結果が見つかりません",
+    "noResultsFoundDescription": "別のフィルターをお試しください",
+    "tryDifferentFilters": "別のフィルターを試す",
+    "resetFilters": "フィルターをリセット"
+  },
+  "filters": {
+    "title": "フィルター",
+    "applyFilters": "フィルターを適用",
+    "reset": "リセット",
+    
+    "sortOptions": {
+      "newest": "新着順"
+    },
+
+    "area": "エリア",
+    "areaPlaceholder": "エリアを選択",
+    "categories": "カテゴリー",
+    "availability": "営業状況",
+    "openNow": "営業中",
+    "price": "料金",
+    "tags": "タグ",
+
+    "noResultsFound": "検索結果が見つかりません"
+  },
+
+  "shop-card": {
+    "viewDetails": "詳細を見る"
+  },
+
+  "shop-page": {
+    "call": "電話する",
+
+    "information": "情報",
+    "about-us": "店舗について",
+    "features": "特徴",
+    "basic-info": "基本情報",
+    "address": "住所",
+    "open-hours": "営業時間",
+    "phone-number": "電話番号",
+    "price-range": "料金帯",
+    "category": "カテゴリー",
+    "payment-methods": "支払い方法",
+
+    "cast": "キャスト",
+    "cast-members": "キャストメンバー",
+    
+    "system": "システム",
+    "system-menu": "システムメニュー",
+    "system-terms": "システム利用規約",
+
+    "coupon": "クーポン",
+    "coupon-code": "クーポンコード",
+    "coupon-terms-and-conditions": "利用規約",
+
+    "phone-reservation": "電話予約",
+    "access": "アクセス",
+
+    "or-contact-via": "または以下の方法でお問い合わせ",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+
+  "common": {
+    "copied": "コピーしました"
+  }
+}

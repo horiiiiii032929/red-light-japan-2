@@ -1,0 +1,79 @@
+{
+  "seo": {
+    "app-title": "Nightlife Japan - Adult Entertainment Guide",
+    "app-description": "Nightlife Japan is the leading adult entertainment guide in Japan. Find the best adult entertainment venues in Tokyo, Osaka, and beyond."
+  },
+ "breadcrumbs": {
+  "home": "Home",
+  "search": "Search"
+ },
+ "search": {
+  "title": "Search Shop",
+  "description": "{count} results found",
+  "noResultsFound": "No results found",
+  "noResultsFoundDescription": "Please try different filters",
+  "tryDifferentFilters": "Try different filters",
+  "resetFilters": "Reset Filters"
+ },
+ "filters": {
+  "title": "Filters",
+  "applyFilters": "Apply Filters",
+  "reset": "Reset",
+  
+  "sortOptions": {
+    "newest": "Newest"
+  },
+
+  "area": "Area",
+  "areaPlaceholder": "Select Area",
+  "categories": "Categories",
+  "availability": "Availability",
+  "openNow": "Open Now",
+  "price": "Price",
+  "tags": "Tags",
+
+  
+  "noResultsFound": "No results found"
+ },
+
+ "shop-card": {
+  "viewDetails": "View Details"
+ },
+
+ "shop-page": {
+  "call": "Call",
+
+  "information": "Information",
+  "about-us": "About Us",
+  "features": "Features",
+  "basic-info": "Basic Info",
+  "address": "Address",
+  "open-hours": "Open Hours",
+  "phone-number": "Phone Number",
+  "price-range": "Price Range",
+  "category": "Category",
+  "payment-methods": "Payment Methods",
+
+  "cast": "Cast",
+  "cast-members": "Cast Members",
+  
+  "system": "System",
+  "system-menu": "System Menu",
+  "system-terms": "System Terms",
+
+  "coupon": "Coupon",
+  "coupon-code": "Coupon Code",
+  "coupon-terms-and-conditions": "Terms & Conditions",
+
+  "phone-reservation": "Phone Reservation",
+  "access": "Access",
+
+  "or-contact-via": "Or Contact via",
+  "copy": "Copy",
+  "copied": "Copied"
+ },
+
+ "common": {
+  "copied": "Copied"
+ }
+}
