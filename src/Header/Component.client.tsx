@@ -1,8 +1,7 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState, useTransition } from 'react'
+import React, { useState, useTransition } from 'react'
 
 import type { Header } from '@/payload-types'
 
@@ -20,39 +19,57 @@ import {
 import { TypedLocale } from 'payload'
 import { usePathname, useRouter } from '@/i18n/routing'
 
+import { MoonIcon, SunIcon } from "lucide-react"
+import { useTheme } from "next-themes"
+
+import { Button } from "@/components/ui/button"
+
 interface HeaderClientProps {
   header: Header
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
-  /* Storing the value in a useState to avoid hydration errors */
-  const [theme, setTheme] = useState<string | null>(null)
-  const { headerTheme, setHeaderTheme } = useHeaderTheme()
-  const pathname = usePathname()
-
-  useEffect(() => {
-    setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
-
-  useEffect(() => {
-    if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headerTheme])
-
   return (
-    <header
-      className="container relative z-20 py-8 flex justify-end gap-2"
-      {...(theme ? { 'data-theme': theme } : {})}
-    >
-      <Link href="/" className="me-auto">
-        <Logo />
-      </Link>
-      <LocaleSwitcher />
-      <HeaderNav header={header} />
+    <header className="border-grid sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container-wrapper">
+        <div className="container flex h-14 items-center gap-2 md:gap-4">
+          <Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
+            <Logo className="h-6 w-6" />
+          </Link>
+
+          <div className="ml-auto flex justify-end">
+            <nav className="flex items-center gap-1">
+              <LocaleSwitcher />
+              <ModeSwitcher />
+            </nav>
+          </div>
+        </div>
+      </div>
     </header>
   )
 }
+
+function ModeSwitcher() {
+  const { setTheme, resolvedTheme } = useTheme()
+
+  const toggleTheme = React.useCallback(() => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark")
+  }, [resolvedTheme, setTheme])
+
+  return (
+    <Button
+      variant="ghost"
+      className="group/toggle h-8 w-8 px-0"
+      onClick={toggleTheme}
+    >
+      <SunIcon className="hidden [html.dark_&]:block" />
+      <MoonIcon className="hidden [html.light_&]:block" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  )
+}
+
+
 
 function LocaleSwitcher() {
   // inspired by https://github.com/amannn/next-intl/blob/main/examples/example-app-router/src/components/LocaleSwitcherSelect.tsx
@@ -75,8 +92,8 @@ function LocaleSwitcher() {
   }
 
   return (
-    <Select onValueChange={onSelectChange} value={locale}>
-      <SelectTrigger className="w-auto text-sm bg-transparent gap-2 pl-0 md:pl-3 border-none">
+    <Select onValueChange={onSelectChange} value={locale} >
+      <SelectTrigger className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none">
         <SelectValue placeholder="Theme" />
       </SelectTrigger>
       <SelectContent>

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
 /**
@@ -6,8 +5,8 @@
  * @param item
  * @returns {boolean}
  */
-export function isObject(item: unknown): item is object {
-  return typeof item === 'object' && !Array.isArray(item)
+export function isObject(item: unknown): boolean {
+  return item && typeof item === 'object' && !Array.isArray(item)
 }
 
 /**
