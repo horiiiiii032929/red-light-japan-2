@@ -1,21 +1,28 @@
 // storage-adapter-import-placeholder
-import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
 
 import sharp from 'sharp' // sharp-import
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
-
+import localization from './i18n/localization'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Tenants } from './collections/Tenants'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { en } from '@payloadcms/translations/languages/en'
+import { ja } from '@payloadcms/translations/languages/ja'
+import { Areas } from './collections/Areas'
+import { Regions } from './collections/Regions'
+import { PaymentMethods } from './collections/PaymentMethods'
+import { Shops } from './collections/Shops'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,7 +40,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
+    user: 'users',
     livePreview: {
       breakpoints: [
         {
@@ -59,12 +66,21 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.POSTGRES_URL || '',
-    },
+  db: mongooseAdapter({
+    url: process.env.MONGODB_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages,
+    Posts,
+    Categories,
+    Media,
+    Tenants,
+    Users,
+    Areas,
+    Regions,
+    PaymentMethods,
+    Shops
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
@@ -91,4 +107,9 @@ export default buildConfig({
     },
     tasks: [],
   },
+  i18n: {
+    supportedLanguages: {en, ja},
+    fallbackLanguage: 'en'
+  },
+  localization
 })

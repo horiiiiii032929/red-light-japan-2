@@ -1,0 +1,122 @@
+import type { CollectionConfig } from 'payload'
+
+import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { superAdminOrTenantAdminAccess } from '@/collections/Pages/access/superAdminOrTenantAdmin'
+import { revalidateDelete, revalidateShop } from './hooks/revalidateShop'
+import {
+  MetaDescriptionField, 
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
+import { staff } from './tabs/staff'
+import { system } from './tabs/system'
+import { coupon } from './tabs/coupon'
+import { basic } from './tabs/basic'
+import { detail } from './tabs/detail'
+import { top } from './tabs/top'
+import { populatePublishedAt } from '@/hooks/populatePublishedAt'
+import { revalidatePage } from '../Pages/hooks/revalidatePage'
+export const Shops: CollectionConfig<'shops'> = {
+    slug: 'shops',
+    admin: {
+      defaultColumns: ['name', 'updatedAt'],
+      livePreview: {
+        url: ({ data, req }) => {
+          const path = generatePreviewPath({
+            slug: typeof data?.slug === 'string' ? data.slug : '',
+            collection: 'posts',
+            req,
+          })
+  
+          return path
+        },
+      },
+      preview: (data, { req }) =>
+        generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: 'posts',
+          req,
+        }),
+      useAsTitle: 'name',
+    },
+    access: {
+      create: superAdminOrTenantAdminAccess,
+      delete: superAdminOrTenantAdminAccess,
+      read: authenticatedOrPublished,
+      update: superAdminOrTenantAdminAccess,
+    },
+    fields: [
+      {
+        type : 'tabs',
+        tabs: [
+          {
+            fields: top,
+            label: 'Top',
+          },
+          {
+            fields: basic,
+            label: 'Information',
+          },
+          {
+            fields: detail,
+            label: 'Detail',
+          },
+          {
+            fields: [system],
+            label: 'System',
+          },
+          {
+            fields: [staff],
+            label: 'Staff',
+          },
+          {
+            fields: [coupon],
+            label: 'Coupon',
+          },
+          {
+            name: 'meta',
+            label: 'SEO',
+            fields: [
+              OverviewField({
+                titlePath: 'meta.title',
+                descriptionPath: 'meta.description',
+                imagePath: 'meta.image',
+              }),
+              MetaTitleField({
+                hasGenerateFn: true,
+              }),
+              MetaImageField({
+                relationTo: 'media',
+              }),
+  
+              MetaDescriptionField({}),
+              PreviewField({
+                // if the `generateUrl` function is configured
+                hasGenerateFn: true,
+  
+                // field paths to match the target field for data
+                titlePath: 'meta.title',
+                descriptionPath: 'meta.description',
+              }),
+            ],
+          },
+        ]
+      }
+    ],
+    hooks: {
+      afterChange: [revalidateShop],
+      afterDelete: [revalidateDelete],
+    },
+    versions: {
+      drafts: {
+        autosave: {
+          interval: 100,
+        },
+        schedulePublish: true,
+      },
+      maxPerDoc: 50,
+    },
+  };

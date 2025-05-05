@@ -1,0 +1,50 @@
+{
+  "app": {
+    "description": "近くのサービスと体験を発見"
+  },
+  "filter": {
+    "filters": "フィルター",
+    "area": "エリア",
+    "serviceType": "サービスタイプ",
+    "categories": "カテゴリー",
+    "paymentMethods": "支払い方法",
+    "applyFilters": "フィルターを適用",
+    "sort": "並び替え",
+    "sortOptions": {
+      "recommended": "おすすめ順",
+      "newest": "新着順",
+      "popular": "人気順",
+      "priceLow": "価格低い順",
+      "priceHigh": "価格高い順"
+    }
+  },
+  "system": {
+    "noResultsFound": "結果が見つかりません",
+    "tryDifferentFilters": "フィルターを調整してみてください",
+    "errorOccurred": "エラーが発生しました",
+    "tryAgainLater": "後ほど再度お試しください"
+  },
+  "shops": {
+    "shopList": "店舗一覧",
+    "memberCount": "{count}名",
+    "hasCoupon": "クーポンあり",
+    "price": "料金",
+    "hours": "営業時間",
+    "viewDetails": "詳細を見る",
+    "access": "アクセス"
+  },
+  "footer": {
+    "regions": {
+      "regions": "地域",
+      "kantou": "関東",
+      "kansai": "関西"
+    },
+    "information": "情報",
+    "aboutUs": "私たちについて",
+    "contact": "お問い合わせ",
+    "legal": "法的情報",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "rightsReserved": "全著作権所有"
+  }
+}

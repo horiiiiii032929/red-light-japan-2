@@ -1,0 +1,50 @@
+{
+  "app": {
+    "description": "发现您附近的服务和体验"
+  },
+  "filter": {
+    "filters": "筛选",
+    "area": "区域",
+    "serviceType": "服务类型",
+    "categories": "类别",
+    "paymentMethods": "支付方式",
+    "applyFilters": "应用筛选",
+    "sort": "排序",
+    "sortOptions": {
+      "recommended": "推荐",
+      "newest": "最新",
+      "popular": "热门",
+      "priceLow": "价格从低到高",
+      "priceHigh": "价格从高到低"
+    }
+  },
+  "system": {
+    "noResultsFound": "未找到结果",
+    "tryDifferentFilters": "尝试调整筛选条件",
+    "errorOccurred": "发生错误",
+    "tryAgainLater": "请稍后再试"
+  },
+  "shops": {
+    "shopList": "店铺列表",
+    "memberCount": "{count} 名",
+    "hasCoupon": "优惠券可用",
+    "price": "价格",
+    "hours": "营业时间",
+    "viewDetails": "查看详情",
+    "access": "访问"
+  },
+  "footer": {
+    "regions": {
+      "regions": "区域",
+      "kantou": "关东",
+      "kansai": "关西"
+    },
+    "information": "信息",
+    "aboutUs": "关于我们",
+    "contact": "联系方式",
+    "legal": "法律信息",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "rightsReserved": "保留所有权利"
+  }
+}

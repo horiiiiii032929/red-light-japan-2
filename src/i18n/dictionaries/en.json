@@ -1,0 +1,50 @@
+{
+  "app": {
+    "description": "Discover services and experiences near you"
+  },
+  "filter": {
+    "filters": "Filters",
+    "area": "Area",
+    "serviceType": "Service Type",
+    "categories": "Categories",
+    "paymentMethods": "Payment Methods",
+    "applyFilters": "Apply Filters",
+    "sort": "Sort",
+    "sortOptions": {
+      "recommended": "Recommended",
+      "newest": "Newest",
+      "popular": "Popular",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low"
+    }
+  },
+  "system": {
+    "noResultsFound": "No results found",
+    "tryDifferentFilters": "Try adjusting your filters",
+    "errorOccurred": "An error occurred",
+    "tryAgainLater": "Please try again later"
+  },
+  "shops": {
+    "shopList": "Shop List",
+    "memberCount": "{count} Cast",
+    "hasCoupon": "Coupon Available",
+    "price": "Price",
+    "hours": "Business Hours",
+    "viewDetails": "View Details",
+    "access": "Access"
+  },
+  "footer": {
+    "regions": {
+      "regions": "Regions",
+      "kantou": "Kantou",
+      "kansai": "Kansai"
+    },
+    "information": "Information",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "rightsReserved": "All rights reserved"
+  }
+}

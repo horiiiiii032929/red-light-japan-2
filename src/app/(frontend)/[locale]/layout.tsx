@@ -5,22 +5,46 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
-import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { NextIntlClientProvider } from 'next-intl';
+import { TypedLocale } from 'payload'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { AdminBar } from '@/components/AdminBar'
+import { routing } from '@/i18n/routing'
+import { notFound } from 'next/navigation'
+import { getMessages, setRequestLocale } from 'next-intl/server'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: React.ReactNode
+  params: Promise<{
+    locale: TypedLocale
+  }>
+}
+
+export default async function RootLayout({ children, params }: Props) {
+  const { locale } = await params
+
+  if (!routing.locales.includes(locale as any)) {
+    notFound()
+  }
+  setRequestLocale(locale)
+
   const { isEnabled } = await draftMode()
+  const messages = await getMessages()
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang={locale}
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
@@ -28,15 +52,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
+          <NextIntlClientProvider messages={messages}>
+            <AdminBar 
+              adminBarProps={{
+                preview: isEnabled,
+            }}/>
 
-          <Header />
-          {children}
-          <Footer />
+            <Header locale={locale}/>
+            {children}
+            <Footer locale={locale}/>
+          </NextIntlClientProvider>
         </Providers>
       </body>
     </html>
