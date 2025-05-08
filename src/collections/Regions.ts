@@ -20,6 +20,11 @@ export const Regions: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
+    },
+    {
+      name: 'order',
+      type: 'number',
     },
     ...slugField(),
   ],

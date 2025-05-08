@@ -9,7 +9,14 @@
     "categories": "카테고리",
     "paymentMethods": "결제 방법",
     "applyFilters": "필터 적용",
-    "sort": "정렬"
+    "sort": "정렬",
+    "sortOptions": {
+      "recommended": "추천",
+      "newest": "최신",
+      "popular": "인기",
+      "priceLow": "가격 낮은 순",
+      "priceHigh": "가격 높은 순"
+    }
   },
   "system": {
     "noResultsFound": "결과를 찾을 수 없습니다",

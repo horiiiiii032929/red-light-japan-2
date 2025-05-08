@@ -56,7 +56,7 @@ export default async function RootLayout({ children, params }: Props) {
               adminBarProps={{
                 preview: isEnabled,
               }} />
-            <div className="border-grid flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col">
               <Header locale={locale} />
               <main className="flex flex-1 flex-col">
                 {children}

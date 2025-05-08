@@ -6,7 +6,7 @@ import Image from 'next/image';
 export default function Logo() {
   return (
     <div>
-      <Image className="h-20 object-contain dark:hidden" src={logo} alt="" /> // This determines which logo would show based on user settings
+      <Image className="h-20 object-contain dark:hidden" src={logo} alt="" />
       <Image className="h-20 object-contain hidden dark:block" src={logoDark} alt="" />
     </div>
   );

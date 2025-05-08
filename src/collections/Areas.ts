@@ -21,6 +21,18 @@ export const Areas: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
+    },
+    {
+      name: 'region',
+      type: 'relationship',
+      relationTo: 'regions',
+      required: true,
+      hasMany: false,
+    },
+    {
+      name: 'order',
+      type: 'number',
     },
     ...slugField(),
   ],

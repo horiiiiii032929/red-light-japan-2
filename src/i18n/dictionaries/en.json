@@ -25,13 +25,18 @@
     "tryAgainLater": "Please try again later"
   },
   "shops": {
-    "shopList": "Shop List",
-    "memberCount": "{count} Cast",
-    "hasCoupon": "Coupon Available",
-    "price": "Price",
-    "hours": "Business Hours",
-    "viewDetails": "View Details",
-    "access": "Access"
+    "shop": {
+      "contactInformation": "Contact Information",
+      "connectWithUs": "Connect with us",
+      "businessHours": "Business Hours",
+      "line": "LINE",
+      "wechat": "WeChat",
+      "whatsapp": "WhatsApp",
+      "about": "About",
+      "services": "Services",
+      "staff": "Staff",
+      "coupons": "Coupons"
+    }
   },
   "footer": {
     "regions": {

@@ -6,6 +6,7 @@ import type { Footer } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 import { TypedLocale } from 'payload'
+import { Logo } from '@/components/Logo/Logo'
 
 export async function Footer({ locale }: { locale: TypedLocale }) {
   const footer: Footer = await getCachedGlobal('footer', 1, locale)()
@@ -13,25 +14,23 @@ export async function Footer({ locale }: { locale: TypedLocale }) {
   const navItems = footer?.navItems || []
 
   return (
-    <footer className="border-t border-border bg-black dark:bg-card text-white">
-      <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
-        <Link className="flex items-center" href="/">
-          <picture>
-            <img
-              alt="Payload Logo"
-              className="max-w-[6rem] invert-0"
-              src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/payload/src/admin/assets/images/payload-logo-light.svg"
-            />
-          </picture>
-        </Link>
-
-        <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center">
-          <nav className="flex flex-col md:flex-row gap-4">
-            {navItems.map(({ link }, i) => {
-              return <CMSLink className="text-white" key={i} {...link} />
-            })}
-          </nav>
+    <footer className="border-t py-6 md:py-0">
+      <div className="container-wrapper py-2">
+        <div className="container py-4 mx-auto sm:flex sm:items-center sm:justify-between">
+          <Link href="/" className="flex items-center mb-4 sm:mb-0 space-x-3">
+            <Logo className="h-12 w-12" />
+          </Link>
+          <ul className="flex flex-wrap items-center mb-6 text-sm font-medium">
+            {navItems.map(({ link }, i) => (
+              <li key={i}>
+                <CMSLink className="hover:underline me-4 md:me-6" {...link} />
+              </li>
+            ))}
+          </ul>
         </div>
+        <span className="block text-sm text-center">
+          © {new Date().getFullYear()} <Link href="/" className="hover:underline">Red Light Japan</Link>. All Rights Reserved.
+        </span>
       </div>
     </footer>
   )

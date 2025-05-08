@@ -21,6 +21,11 @@ export const Categories: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
+    },
+    {
+      name: 'order',
+      type: 'number',
     },
     ...slugField(),
   ],

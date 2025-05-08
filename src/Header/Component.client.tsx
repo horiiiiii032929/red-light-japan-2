@@ -1,4 +1,5 @@
 'use client'
+
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useState, useTransition } from 'react'
@@ -16,10 +17,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { TypedLocale } from 'payload'
 import { usePathname, useRouter } from '@/i18n/routing'
 
-import { MoonIcon, SunIcon } from "lucide-react"
+import { GlobeIcon, MoonIcon, SunIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
@@ -30,7 +37,7 @@ interface HeaderClientProps {
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   return (
-    <header className="border-grid sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container-wrapper">
         <div className="container flex h-14 items-center gap-2 md:gap-4">
           <Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
@@ -69,10 +76,7 @@ function ModeSwitcher() {
   )
 }
 
-
-
 function LocaleSwitcher() {
-  // inspired by https://github.com/amannn/next-intl/blob/main/examples/example-app-router/src/components/LocaleSwitcherSelect.tsx
   const locale = useLocale()
   const router = useRouter()
   const [, startTransition] = useTransition()
@@ -92,19 +96,47 @@ function LocaleSwitcher() {
   }
 
   return (
-    <Select onValueChange={onSelectChange} value={locale} >
-      <SelectTrigger className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none">
-        <SelectValue placeholder="Theme" />
-      </SelectTrigger>
-      <SelectContent>
-        {localization.locales
-          .sort((a, b) => a.label.localeCompare(b.label)) // Ordenar por label
-          .map((locale) => (
-            <SelectItem value={locale.code} key={locale.code}>
-              {locale.label}
-            </SelectItem>
-          ))}
-      </SelectContent>
-    </Select>
+    <>
+      <div className="md:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <GlobeIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {localization.locales
+              .sort((a, b) => a.label.localeCompare(b.label))
+              .map((localeOption) => (
+                <DropdownMenuItem
+                  key={localeOption.code}
+                  onClick={() => onSelectChange(localeOption.code as TypedLocale)}
+                  className={locale === localeOption.code ? "bg-accent" : ""}
+                >
+                  {localeOption.label}
+                </DropdownMenuItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Desktop: Select */}
+      <div className="hidden md:block">
+        <Select onValueChange={onSelectChange} value={locale}>
+          <SelectTrigger className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none">
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent>
+            {localization.locales
+              .sort((a, b) => a.label.localeCompare(b.label)) // Ordenar por label
+              .map((locale) => (
+                <SelectItem value={locale.code} key={locale.code}>
+                  {locale.label}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </>
   )
 }

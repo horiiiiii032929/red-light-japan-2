@@ -363,6 +363,7 @@ export interface Media {
 export interface Category {
   id: string;
   title: string;
+  order?: number | null;
   slug?: string | null;
   slugLock?: boolean | null;
   parent?: (string | null) | Category;
@@ -774,6 +775,8 @@ export interface Form {
 export interface Area {
   id: string;
   title: string;
+  region: string | Region;
+  order?: number | null;
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -786,6 +789,7 @@ export interface Area {
 export interface Region {
   id: string;
   title: string;
+  order?: number | null;
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -798,6 +802,7 @@ export interface Region {
 export interface PaymentMethod {
   id: string;
   title: string;
+  order?: number | null;
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -809,19 +814,40 @@ export interface PaymentMethod {
  */
 export interface Shop {
   id: string;
-  logo?: (string | null) | Media;
-  name: string;
-  categories?: (string | Category)[] | null;
-  area?: (string | null) | Area;
+  shopName: string;
   message?: string | null;
   bannerImage?: (string | null) | Media;
-  mainImage: string | Media;
-  subImages?: (string | Media)[] | null;
-  description: string;
-  nearestStation?: string | null;
+  lowestPrice: number;
+  logo?: (string | null) | Media;
+  images?: (string | Media)[] | null;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  categories?: (string | Category)[] | null;
+  area?: (string | null) | Area;
+  paymentMethods?: (string | PaymentMethod)[] | null;
+  nearestStation: string;
+  address: string;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  location?: [number, number] | null;
+  tags: string;
   openHour: string;
   closeHour: string;
-  paymentMethods?: (string | PaymentMethod)[] | null;
   phoneNumber: {
     phoneNumber: string;
     phoneNumber2?: string | null;
@@ -838,29 +864,6 @@ export interface Shop {
     platform: string;
     qrCode?: (string | null) | Media;
   };
-  address: string;
-  detailDescription: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  location?: [number, number] | null;
-  nearestStationDescription?: string | null;
-  tags: string;
   systems?:
     | {
         name: string;
@@ -1362,6 +1365,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  order?: T;
   slug?: T;
   slugLock?: T;
   parent?: T;
@@ -1511,6 +1515,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface AreasSelect<T extends boolean = true> {
   title?: T;
+  region?: T;
+  order?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
@@ -1522,6 +1528,7 @@ export interface AreasSelect<T extends boolean = true> {
  */
 export interface RegionsSelect<T extends boolean = true> {
   title?: T;
+  order?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
@@ -1533,6 +1540,7 @@ export interface RegionsSelect<T extends boolean = true> {
  */
 export interface PaymentMethodsSelect<T extends boolean = true> {
   title?: T;
+  order?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
@@ -1543,19 +1551,22 @@ export interface PaymentMethodsSelect<T extends boolean = true> {
  * via the `definition` "shops_select".
  */
 export interface ShopsSelect<T extends boolean = true> {
-  logo?: T;
-  name?: T;
-  categories?: T;
-  area?: T;
+  shopName?: T;
   message?: T;
   bannerImage?: T;
-  mainImage?: T;
-  subImages?: T;
+  lowestPrice?: T;
+  logo?: T;
+  images?: T;
   description?: T;
+  categories?: T;
+  area?: T;
+  paymentMethods?: T;
   nearestStation?: T;
+  address?: T;
+  location?: T;
+  tags?: T;
   openHour?: T;
   closeHour?: T;
-  paymentMethods?: T;
   phoneNumber?:
     | T
     | {
@@ -1580,11 +1591,6 @@ export interface ShopsSelect<T extends boolean = true> {
         platform?: T;
         qrCode?: T;
       };
-  address?: T;
-  detailDescription?: T;
-  location?: T;
-  nearestStationDescription?: T;
-  tags?: T;
   systems?:
     | T
     | {

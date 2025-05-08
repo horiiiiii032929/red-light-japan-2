@@ -5,7 +5,7 @@ import Image from 'next/image';
 export default function Icon() {
   return (
     <div>
-      <Image className="w-40" src={logo} alt="" /> // Note that we don't have a dark mode version because the icon is red
+      <Image className="w-12" src={logo} alt="" />
     </div>
   );
 }

@@ -1,24 +1,30 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest, File } from 'payload'
+import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest } from 'payload'
 
-import { contactForm as contactFormData } from './contact-form'
-import { contact as contactPageData } from './contact-page'
-import { home } from './home'
-import { image1 } from './image-1'
-import { image2 } from './image-2'
-import { imageHero1 } from './image-hero-1'
-import { post1 } from './post-1'
-import { post2 } from './post-2'
-import { post3 } from './post-3'
+import { paymentMethods, paymentMethods_ja, paymentMethods_ko, paymentMethods_zh } from './paymentmethods'
+import { regions, regions_ja, regions_ko, regions_zh } from './regions'
+import { areas, areas_ja, areas_ko, areas_zh } from './areas'
+import { categories, categories_ja, categories_ko, categories_zh } from './categories'
 
 const collections: CollectionSlug[] = [
   'categories',
+  'payment-methods',
+  'regions',
+  'areas',
   'media',
   'pages',
   'posts',
   'forms',
   'form-submissions',
+  'shops',
+  'users',
+  'tenants',
   'search',
+  'payload-jobs',
+  'payload-locked-documents',
+  'payload-preferences',
+  'payload-migrations',
 ]
+
 const globals: GlobalSlug[] = ['header', 'footer']
 
 // Next.js revalidation errors are normal when seeding the database without a server running
@@ -34,330 +40,271 @@ export const seed = async ({
 }): Promise<void> => {
   payload.logger.info('Seeding database...')
 
-  // we need to clear the media directory before seeding
-  // as well as the collections and globals
-  // this is because while `yarn seed` drops the database
-  // the custom `/api/seed` endpoint does not
-  payload.logger.info(`— Clearing collections and globals...`)
+  // Clear the database
+  payload.logger.info(`— Clearing database...`)
 
-  // clear the database
-  await Promise.all(
-    globals.map((global) =>
-      payload.updateGlobal({
-        slug: global,
+  // Clear globals
+  payload.logger.info(`— Clearing globals...`)
+  for (const global of globals) {
+    await payload.updateGlobal({
+      slug: global,
+      data: {
+        navItems: [],
+      },
+      req,
+    })
+  }
+
+  // Clear all collections
+  payload.logger.info(`— Clearing collections...`)
+  for (const collection of collections) {
+    try {
+      // Delete all documents in the collection
+      await payload.delete({
+        collection,
+        where: {
+          id: {
+            exists: true,
+          },
+        },
+        req,
+      })
+
+      // Delete all versions if the collection has versioning enabled
+      if (payload.collections[collection]?.config?.versions) {
+        await payload.db.deleteVersions({
+          collection,
+          req,
+          where: {},
+        })
+      }
+    } catch (error) {
+      payload.logger.error(`Error clearing collection ${collection}:`, error)
+    }
+  }
+
+  // #region Categories
+  payload.logger.info(`— Seeding categories...`)
+  
+  for (const category of categories) {
+    const categoryDoc = await payload.create({
+      collection: 'categories',
+      data: JSON.parse(JSON.stringify(category)),
+      locale: 'en',
+      req,
+    })
+
+    // Add Japanese translation
+    const jaCategory = categories_ja.find(c => c.slug === category.slug)
+    if (jaCategory) {
+      await payload.update({
+        collection: 'categories',
+        id: categoryDoc.id,
+        data: JSON.parse(JSON.stringify(jaCategory)),
+        locale: 'ja',
+        req,
+      })
+    }
+
+    // Add Korean translation
+    const koCategory = categories_ko.find(c => c.slug === category.slug)
+    if (koCategory) {
+      await payload.update({
+        collection: 'categories',
+        id: categoryDoc.id,
+        data: JSON.parse(JSON.stringify(koCategory)),
+        locale: 'ko',
+        req,
+      })
+    }
+
+    // Add Chinese translation
+    const zhCategory = categories_zh.find(c => c.slug === category.slug)
+    if (zhCategory) {
+      await payload.update({
+        collection: 'categories',
+        id: categoryDoc.id,
+        data: JSON.parse(JSON.stringify(zhCategory)),
+        locale: 'zh',
+        req,
+      })
+    }
+  }
+  // #endregion
+
+  // #region Payment Methods
+  payload.logger.info(`— Seeding payment methods...`)
+  
+  for (const paymentMethod of paymentMethods) {
+    const paymentMethodDoc = await payload.create({
+      collection: 'payment-methods',
+      data: JSON.parse(JSON.stringify(paymentMethod)),
+      locale: 'en',
+      req,
+    })
+
+    // Add Japanese translation
+    const jaPaymentMethod = paymentMethods_ja.find(pm => pm.slug === paymentMethod.slug)
+    if (jaPaymentMethod) {
+      await payload.update({
+        collection: 'payment-methods',
+        id: paymentMethodDoc.id,
+        data: JSON.parse(JSON.stringify(jaPaymentMethod)),
+        locale: 'ja',
+        req,
+      })
+    }
+
+    // Add Korean translation
+    const koPaymentMethod = paymentMethods_ko.find(pm => pm.slug === paymentMethod.slug)
+    if (koPaymentMethod) {
+      await payload.update({
+        collection: 'payment-methods',
+        id: paymentMethodDoc.id,
+        data: JSON.parse(JSON.stringify(koPaymentMethod)),
+        locale: 'ko',
+        req,
+      })
+    }
+
+    // Add Chinese translation
+    const zhPaymentMethod = paymentMethods_zh.find(pm => pm.slug === paymentMethod.slug)
+    if (zhPaymentMethod) {
+      await payload.update({
+        collection: 'payment-methods',
+        id: paymentMethodDoc.id,
+        data: JSON.parse(JSON.stringify(zhPaymentMethod)),
+        locale: 'zh',
+        req,
+      })
+    }
+  }
+  // #endregion
+
+  // #region Regions
+  payload.logger.info(`— Seeding regions...`)
+  
+  const regionMap = new Map<string, string>() // Map to store slug -> id mapping
+  
+  for (const region of regions) {
+    const regionDoc = await payload.create({
+      collection: 'regions',
+      data: JSON.parse(JSON.stringify(region)),
+      locale: 'en',
+      req,
+    })
+
+    // Store the region ID mapped to its slug
+    regionMap.set(region.slug!, regionDoc.id)
+
+    // Add Japanese translation
+    const jaRegion = regions_ja.find(r => r.slug === region.slug)
+    if (jaRegion) {
+      await payload.update({
+        collection: 'regions',
+        id: regionDoc.id,
+        data: JSON.parse(JSON.stringify(jaRegion)),
+        locale: 'ja',
+        req,
+      })
+    }
+
+    // Add Korean translation
+    const koRegion = regions_ko.find(r => r.slug === region.slug)
+    if (koRegion) {
+      await payload.update({
+        collection: 'regions',
+        id: regionDoc.id,
+        data: JSON.parse(JSON.stringify(koRegion)),
+        locale: 'ko',
+        req,
+      })
+    }
+
+    // Add Chinese translation
+    const zhRegion = regions_zh.find(r => r.slug === region.slug)
+    if (zhRegion) {
+      await payload.update({
+        collection: 'regions',
+        id: regionDoc.id,
+        data: JSON.parse(JSON.stringify(zhRegion)),
+        locale: 'zh',
+        req,
+      })
+    }
+  }
+  // #endregion
+
+  // #region Areas
+  payload.logger.info(`— Seeding areas...`)
+  
+  for (const area of areas) {
+    // Get the region ID from the map
+    const regionId = regionMap.get(area.region as string)
+    if (!regionId) {
+      payload.logger.error(`Region not found for area: ${area.slug}`)
+      continue
+    }
+
+    // Create area with the correct region ID
+    const areaData = {
+      ...JSON.parse(JSON.stringify(area)),
+      region: regionId,
+    }
+
+    const areaDoc = await payload.create({
+      collection: 'areas',
+      data: areaData,
+      locale: 'en',
+      req,
+    })
+
+    // Add Japanese translation
+    const jaArea = areas_ja.find(a => a.slug === area.slug)
+    if (jaArea) {
+      await payload.update({
+        collection: 'areas',
+        id: areaDoc.id,
         data: {
-          navItems: [],
+          ...JSON.parse(JSON.stringify(jaArea)),
+          region: regionId,
         },
-        depth: 0,
-        context: {
-          disableRevalidate: true,
+        locale: 'ja',
+        req,
+      })
+    }
+
+    // Add Korean translation
+    const koArea = areas_ko.find(a => a.slug === area.slug)
+    if (koArea) {
+      await payload.update({
+        collection: 'areas',
+        id: areaDoc.id,
+        data: {
+          ...JSON.parse(JSON.stringify(koArea)),
+          region: regionId,
         },
-      }),
-    ),
-  )
+        locale: 'ko',
+        req,
+      })
+    }
 
-  await Promise.all(
-    collections.map((collection) => payload.db.deleteMany({ collection, req, where: {} })),
-  )
-
-  await Promise.all(
-    collections
-      .filter((collection) => Boolean(payload.collections[collection].config.versions))
-      .map((collection) => payload.db.deleteVersions({ collection, req, where: {} })),
-  )
-
-  payload.logger.info(`— Seeding demo author and user...`)
-
-  await payload.delete({
-    collection: 'users',
-    depth: 0,
-    where: {
-      email: {
-        equals: 'demo-author@example.com',
-      },
-    },
-  })
-
-  payload.logger.info(`— Seeding media...`)
-
-  const [image1Buffer, image2Buffer, image3Buffer, hero1Buffer] = await Promise.all([
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post1.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post2.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post3.webp',
-    ),
-    fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-hero1.webp',
-    ),
-  ])
-
-  const [demoAuthor, image1Doc, image2Doc, image3Doc, imageHomeDoc] = await Promise.all([
-    payload.create({
-      collection: 'users',
-      data: {
-        name: 'Demo Author',
-        email: 'demo-author@example.com',
-        password: 'password',
-      },
-    }),
-    payload.create({
-      collection: 'media',
-      data: image1,
-      file: image1Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: image2,
-      file: image2Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: image2,
-      file: image3Buffer,
-    }),
-    payload.create({
-      collection: 'media',
-      data: imageHero1,
-      file: hero1Buffer,
-    }),
-
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'Technology',
-        breadcrumbs: [
-          {
-            label: 'Technology',
-            url: '/technology',
-          },
-        ],
-      },
-    }),
-
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'News',
-        breadcrumbs: [
-          {
-            label: 'News',
-            url: '/news',
-          },
-        ],
-      },
-    }),
-
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'Finance',
-        breadcrumbs: [
-          {
-            label: 'Finance',
-            url: '/finance',
-          },
-        ],
-      },
-    }),
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'Design',
-        breadcrumbs: [
-          {
-            label: 'Design',
-            url: '/design',
-          },
-        ],
-      },
-    }),
-
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'Software',
-        breadcrumbs: [
-          {
-            label: 'Software',
-            url: '/software',
-          },
-        ],
-      },
-    }),
-
-    payload.create({
-      collection: 'categories',
-      data: {
-        title: 'Engineering',
-        breadcrumbs: [
-          {
-            label: 'Engineering',
-            url: '/engineering',
-          },
-        ],
-      },
-    }),
-  ])
-
-  payload.logger.info(`— Seeding posts...`)
-
-  // Do not create posts with `Promise.all` because we want the posts to be created in order
-  // This way we can sort them by `createdAt` or `publishedAt` and they will be in the expected order
-  const post1Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
-    },
-    data: post1({ heroImage: image1Doc, blockImage: image2Doc, author: demoAuthor }),
-  })
-
-  const post2Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
-    },
-    data: post2({ heroImage: image2Doc, blockImage: image3Doc, author: demoAuthor }),
-  })
-
-  const post3Doc = await payload.create({
-    collection: 'posts',
-    depth: 0,
-    context: {
-      disableRevalidate: true,
-    },
-    data: post3({ heroImage: image3Doc, blockImage: image1Doc, author: demoAuthor }),
-  })
-
-  // update each post with related posts
-  await payload.update({
-    id: post1Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post2Doc.id, post3Doc.id],
-    },
-  })
-  await payload.update({
-    id: post2Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post3Doc.id],
-    },
-  })
-  await payload.update({
-    id: post3Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post2Doc.id],
-    },
-  })
-
-  payload.logger.info(`— Seeding contact form...`)
-
-  const contactForm = await payload.create({
-    collection: 'forms',
-    depth: 0,
-    data: contactFormData,
-  })
-
-  payload.logger.info(`— Seeding pages...`)
-
-  const [_, contactPage] = await Promise.all([
-    payload.create({
-      collection: 'pages',
-      depth: 0,
-      data: home({ heroImage: imageHomeDoc, metaImage: image2Doc }),
-    }),
-    payload.create({
-      collection: 'pages',
-      depth: 0,
-      data: contactPageData({ contactForm: contactForm }),
-    }),
-  ])
-
-  payload.logger.info(`— Seeding globals...`)
-
-  await Promise.all([
-    payload.updateGlobal({
-      slug: 'header',
-      data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Posts',
-              url: '/posts',
-            },
-          },
-          {
-            link: {
-              type: 'reference',
-              label: 'Contact',
-              reference: {
-                relationTo: 'pages',
-                value: contactPage.id,
-              },
-            },
-          },
-        ],
-      },
-    }),
-    payload.updateGlobal({
-      slug: 'footer',
-      data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Admin',
-              url: '/admin',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/main/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
-            },
-          },
-        ],
-      },
-    }),
-  ])
+    // Add Chinese translation
+    const zhArea = areas_zh.find(a => a.slug === area.slug)
+    if (zhArea) {
+      await payload.update({
+        collection: 'areas',
+        id: areaDoc.id,
+        data: {
+          ...JSON.parse(JSON.stringify(zhArea)),
+          region: regionId,
+        },
+        locale: 'zh',
+        req,
+      })
+    }
+  }
+  // #endregion
 
   payload.logger.info('Seeded database successfully!')
-}
-
-async function fetchFileByURL(url: string): Promise<File> {
-  const res = await fetch(url, {
-    credentials: 'include',
-    method: 'GET',
-  })
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch file from ${url}, status: ${res.status}`)
-  }
-
-  const data = await res.arrayBuffer()
-
-  return {
-    name: url.split('/').pop() || `file-${Date.now()}`,
-    data: Buffer.from(data),
-    mimetype: `image/${url.split('.').pop()}`,
-    size: data.byteLength,
-  }
 }
