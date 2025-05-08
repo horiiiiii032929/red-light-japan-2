@@ -1,7 +1,7 @@
 import { MapPin, Clock, Phone, CreditCard, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
 import { AspectRatio } from "@radix-ui/react-aspect-ratio"
@@ -11,8 +11,6 @@ import ShopStaff from "@/components/Shop/components/shop-staff"
 import ShopCoupons from "@/components/Shop/components/shop-coupons"
 import ShopContact from "@/components/Shop/components/shop-contact"
 import ShopMap from "@/components/Shop/components/shop-map"
-import { Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
 import { ExternalLink } from "lucide-react"
 import type { Shop, Media, Category, Area, PaymentMethod } from "@/payload-types"
 import RichText from "@/components/RichText"
@@ -44,16 +42,14 @@ export async function ShopClient({ shop }: ShopClientProps) {
     <main>
       {/* Hero Section */}
       <section className="relative">
-        <div className="h-[40vh] sm:h-[45vh] md:h-[50vh] max-h-[500px] min-h-[250px] w-full overflow-hidden">
-          <ShopGallery
-            images={shop.images}
-            shopName={shop.shopName}
-          />
-        </div>
+        <ShopGallery
+          images={shop.images as Media[]}
+          shopName={shop.shopName}
+        />
       </section>
 
       {/* Shop Header */}
-      <header className="border-b sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="border-b sticky top-0 z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 sm:gap-4">
@@ -127,9 +123,10 @@ export async function ShopClient({ shop }: ShopClientProps) {
                     <h4 className="text-lg font-semibold mb-2 pb-2">{t("shop.contactInformation")}</h4>
                     {/* Phone */}
                     <div className="flex items-center gap-3">
-                      <Phone className="h-4 w-4" />
-                      <div>
-                        <p className="text-sm font-medium leading-none">{shop.phoneNumber?.phoneNumber}</p>
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-medium leading-none">{t("shop.phone")}</p>
+                        <p className="text-sm font-medium leading-none text-muted-foreground">{shop.phoneNumber?.phoneNumber}</p>
                         {shop.phoneNumber?.phoneNumber2 && (
                           <p className="text-sm font-medium leading-none">{shop.phoneNumber.phoneNumber2}</p>
                         )}
@@ -138,27 +135,29 @@ export async function ShopClient({ shop }: ShopClientProps) {
 
                     {/* Address */}
                     <div className="flex items-center gap-3">
-                      <MapPin className="h-4 w-4" />
-                      <div>
-                        <p className="text-sm font-medium leading-none">{shop.address}</p>
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-medium leading-none">{t("shop.address")}</p>
+                        <p className="text-sm font-medium leading-none text-muted-foreground">{shop.address}</p>
                       </div>
                     </div>
 
                     {/* Business Hours */}
                     <div className="flex items-center gap-3">
-                      <Clock className="h-4 w-4" />
-                      <div>
-                        <p className="text-sm font-medium leading-none">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-medium leading-none">{t("shop.businessHours")}</p>
+                        <p className="text-sm font-medium leading-none text-muted-foreground">
                           {formatTime(shop.openHour)} - {formatTime(shop.closeHour)}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <Separator className="my-3" />
+                  <Separator className="mt-4 mb-3" />
 
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold mb-2 pb-2">{t("shop.connectWithUs")}</h4>
+                    <h4 className="mb-1 pb-1">{t("shop.connectWithUs")}</h4>
                     <Tabs defaultValue="line">
                       <TabsList className="w-full mb-2">
                         <TabsTrigger value="line">{t("shop.line")}</TabsTrigger>
@@ -205,16 +204,16 @@ export async function ShopClient({ shop }: ShopClientProps) {
             <Tabs defaultValue="about" className="w-full">
               <TabsList className="mb-4 sm:mb-6 w-full justify-start overflow-x-auto">
                 <TabsTrigger value="about">{t("shop.about")}</TabsTrigger>
-                <TabsTrigger value="services">{t("shop.services")}</TabsTrigger>
+                <TabsTrigger value="services">{t("shop.system")}</TabsTrigger>
                 <TabsTrigger value="staff">{t("shop.staff")}</TabsTrigger>
-                <TabsTrigger value="coupons">{t("shop.coupons")}</TabsTrigger>
+                <TabsTrigger value="coupons">{t("shop.coupon")}</TabsTrigger>
               </TabsList>
 
               {/* About Tab */}
               <TabsContent value="about" className="mt-0">
                 <div className="space-y-8 sm:space-y-8">
                   <article>
-                    <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.about")}</h2>
+                    <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.About")}</h2>
                     <div className="prose max-w-none">
                       {typeof shop.description === 'string' ? (
                         <p className="text-base sm:text-lg">{shop.description}</p>
@@ -225,10 +224,10 @@ export async function ShopClient({ shop }: ShopClientProps) {
                   </article>
 
                   <section>
-                    <h3 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Tags</h3>
+                    <h3 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.servicesAndFacilities")}</h3>
                     <div className="grid grid-cols-2 gap-2">
                       {tagList.map((tag, idx) => (
-                        <div className="flex items-center gap-2 border rounded-xl p-2">
+                        <div className="flex items-center gap-2 border rounded-xl p-2" key={idx}>
                           <Check className="h-4 w-4 text-primary" />
                           <span className="text-lg font-semibold"> {tag}</span>
                         </div>
@@ -237,7 +236,7 @@ export async function ShopClient({ shop }: ShopClientProps) {
                   </section>
 
                   <section>
-                    <h3 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">Location</h3>
+                    <h3 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.location")}</h3>
                     <div className="overflow-hidden rounded-lg border">
                       <div className="h-[250px] sm:h-[300px]">
                         <ShopMap
@@ -249,11 +248,11 @@ export async function ShopClient({ shop }: ShopClientProps) {
                         <p className="text-sm sm:text-base font-medium">{shop.address}</p>
                         {shop.nearestStation && (
                           <p className="mt-1 text-xs sm:text-sm">
-                            {t("shop.nearestStation")}: {shop.nearestStation}
+                            {shop.nearestStation}
                           </p>
                         )}
                       </div>
-                      <div className="text-center">
+                      <div className="text-center mb-2">
                         <a
                           href={googleMapsUrl}
                           target="_blank"
@@ -272,18 +271,9 @@ export async function ShopClient({ shop }: ShopClientProps) {
               {/* Services Tab */}
               <TabsContent value="services" className="mt-0">
                 <section>
-                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.services")}</h2>
+                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.System")}</h2>
                   {shop.systems && shop.systems.length > 0 ? (
-                    <ShopSystems systems={shop.systems.map(system => ({
-                      name: system.name,
-                      description: system.description,
-                      image: system.image ?
-                        (typeof system.image === 'string' ? system.image : { url: system.image.url || "" })
-                        : null,
-                      priceMin: system.priceMin,
-                      priceMax: system.priceMax,
-                      id: system.id
-                    }))} />
+                    <ShopSystems systems={shop.systems} />
                   ) : (
                     <p className="text-sm sm:text-base">{t("system.noResultsFound")}</p>
                   )}
@@ -293,20 +283,9 @@ export async function ShopClient({ shop }: ShopClientProps) {
               {/* Staff Tab */}
               <TabsContent value="staff" className="mt-0">
                 <section>
-                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.staff")}</h2>
+                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.Staff")}</h2>
                   {shop.staff && shop.staff.length > 0 ? (
-                    <ShopStaff staff={shop.staff.map(staffMember => ({
-                      name: staffMember.name,
-                      age: staffMember.age,
-                      height: staffMember.height,
-                      cup: staffMember.cup,
-                      images: staffMember.images ?
-                        staffMember.images.map(img =>
-                          typeof img === 'string' ? img : { url: img.url || "" }
-                        )
-                        : null,
-                      id: staffMember.id
-                    }))} />
+                    <ShopStaff staff={shop.staff} />
                   ) : (
                     <p className="text-sm sm:text-base">{t("system.noResultsFound")}</p>
                   )}
@@ -316,7 +295,7 @@ export async function ShopClient({ shop }: ShopClientProps) {
               {/* Coupons Tab */}
               <TabsContent value="coupons" className="mt-0">
                 <section>
-                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.coupons")}</h2>
+                  <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.Coupon")}</h2>
                   {shop.coupons && shop.coupons.length > 0 ? (
                     <ShopCoupons coupons={shop.coupons} />
                   ) : (

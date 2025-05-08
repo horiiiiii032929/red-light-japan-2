@@ -8,8 +8,6 @@ import { fileURLToPath } from 'url'
 import localization from './i18n/localization'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import { Tenants } from './collections/Tenants'
 import { Footer } from './Footer/config'
@@ -34,7 +32,7 @@ export default buildConfig({
       // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
       beforeDashboard: ['@/components/BeforeDashboard'],
       graphics: {
-        Logo: '@/components/payload/Logo', 
+        Logo: '@/components/payload/Logo',
         Icon: '@/components/payload/Icon',
       },
     },
@@ -71,8 +69,6 @@ export default buildConfig({
     url: process.env.MONGODB_URI || '',
   }),
   collections: [
-    Pages,
-    Posts,
     Categories,
     Media,
     Tenants,
@@ -109,7 +105,7 @@ export default buildConfig({
     tasks: [],
   },
   i18n: {
-    supportedLanguages: {en, ja},
+    supportedLanguages: { en, ja },
     fallbackLanguage: 'en'
   },
   localization

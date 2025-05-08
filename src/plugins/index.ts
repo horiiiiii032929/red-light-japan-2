@@ -4,7 +4,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
-import { Config, Plugin } from 'payload'
+import { Config, Plugin, User } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -29,9 +29,10 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
 
 export const plugins: Plugin[] = [
   redirectsPlugin({
-    collections: ['pages', 'posts'],
+    // collections: ['pages', 'posts'],
     overrides: {
-      // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
+      //  - This is a valid override, mapped fields don't resolve to the same type
+      // @ts-expect-error
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           if ('name' in field && field.name === 'from') {
@@ -84,15 +85,6 @@ export const plugins: Plugin[] = [
       },
     },
   }),
-  searchPlugin({
-    collections: ['posts'],
-    beforeSync: beforeSyncWithSearch,
-    searchOverrides: {
-      fields: ({ defaultFields }) => {
-        return [...defaultFields, ...searchFields]
-      },
-    },
-  }),
   multiTenantPlugin<Config>({
     collections: {
       // pages: {},
@@ -101,7 +93,7 @@ export const plugins: Plugin[] = [
       access: {
         read: () => true,
         update: ({ req }) => {
-          if (isSuperAdmin(req.user)) {
+          if (isSuperAdmin(req.user as User | null)) {
             return true
           }
           return getUserTenantIDs(req.user).length > 0

@@ -27,15 +27,15 @@ export const externalUsersLogin: Endpoint = {
         collection: 'tenants',
         where: tenantDomain
           ? {
-              domain: {
-                equals: tenantDomain,
-              },
-            }
-          : {
-              slug: {
-                equals: tenantSlug,
-              },
+            domain: {
+              equals: tenantDomain,
             },
+          }
+          : {
+            slug: {
+              equals: tenantSlug,
+            },
+          },
       })
     ).docs[0]
 
@@ -52,7 +52,7 @@ export const externalUsersLogin: Endpoint = {
               },
               {
                 'tenants.tenant': {
-                  equals: fullTenant.id,
+                  equals: fullTenant?.id,
                 },
               },
             ],
@@ -66,7 +66,7 @@ export const externalUsersLogin: Endpoint = {
               },
               {
                 'tenants.tenant': {
-                  equals: fullTenant.id,
+                  equals: fullTenant?.id,
                 },
               },
             ],
@@ -77,19 +77,26 @@ export const externalUsersLogin: Endpoint = {
 
     if (foundUser.totalDocs > 0) {
       try {
+        const user = foundUser.docs[0]
+
+        if (!user) {
+          throw new APIError('User not found.', 400, null, true)
+        }
+
         const loginAttempt = await req.payload.login({
           collection: 'users',
           data: {
-            email: foundUser.docs[0].email,
+            email: user?.email,
             password,
           },
           req,
         })
 
         if (loginAttempt?.token) {
-          const collection: Collection = (req.payload.collections as { [key: string]: Collection })[
+          const collection = (req.payload.collections as { [key: string]: Collection })[
             'users'
-          ]
+          ] as Collection
+
           const cookie = generatePayloadCookie({
             collectionAuthConfig: collection.config.auth,
             cookiePrefix: req.payload.config.cookiePrefix,

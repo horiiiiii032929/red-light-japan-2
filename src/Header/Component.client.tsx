@@ -2,12 +2,11 @@
 
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import React, { useState, useTransition } from 'react'
+import React, { useTransition } from 'react'
 
 import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
-import { HeaderNav } from './Nav'
 import { useLocale } from 'next-intl'
 import localization from '@/i18n/localization'
 import {
@@ -86,9 +85,10 @@ function LocaleSwitcher() {
   function onSelectChange(value: TypedLocale) {
     startTransition(() => {
       router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
+        //  -- TypeScript will validate that only known `params`
         // are used in combination with a given `pathname`. Since the two will
         // always match for the current route, we can skip runtime checks.
+        // @ts-expect-error
         { pathname, params },
         { locale: value },
       )

@@ -1,54 +1,38 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Expand } from "lucide-react"
+import React, { useState, useEffect } from "react"
+import { Expand } from "lucide-react"
+import { type CarouselApi } from "@/components/ui/carousel"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Media } from "@/payload-types"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Media } from "@/components/Media"
+import type { Media as MediaType } from "@/payload-types"
+import { Progress } from "@/components/ui/progress"
 
 interface ShopGalleryProps {
-  images: Media[] | null | undefined
+  images: MediaType[] | null | undefined
   shopName: string
 }
 
 export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [fullscreenOpen, setFullscreenOpen] = useState(false)
   const [fullscreenIndex, setFullscreenIndex] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false)
-  const [touchStart, setTouchStart] = useState(0)
+  const [mainIndex, setMainIndex] = useState(0)
+  const [mainProgress, setMainProgress] = useState(0)
+  const [mainApi, setMainApi] = useState<CarouselApi>()
+  const [dialogApi, setDialogApi] = useState<CarouselApi>()
 
   // Combine main image and sub images for the gallery
   const allImages = images || []
-
-  // Get the URL from the image (which could be a string or an object)
-  const getImageUrl = (image: Media) => {
-    return image.url
-  }
-
-  // Navigate to the next image
-  const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % allImages.length)
-  }
-
-  // Navigate to the previous image
-  const prevImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
-  }
-
-  // Navigate to the next image in fullscreen mode
-  const nextFullscreenImage = () => {
-    setFullscreenIndex((prev) => (prev + 1) % allImages.length)
-  }
-
-  // Navigate to the previous image in fullscreen mode
-  const prevFullscreenImage = () => {
-    setFullscreenIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
-  }
 
   // Open fullscreen with the current image
   const openFullscreen = (index: number) => {
@@ -56,182 +40,174 @@ export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
     setFullscreenOpen(true)
   }
 
-  // Handle touch start
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.touches[0].clientX)
-  }
-
-  // Handle touch move for swipe
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart) return
-
-    const touchEnd = e.touches[0].clientX
-    const diff = touchStart - touchEnd
-
-    // Swipe threshold
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        nextImage() // Swipe left, go to next
-      } else {
-        prevImage() // Swipe right, go to previous
-      }
-      setTouchStart(0)
-    }
-  }
-
-  // Auto-play functionality
+  // Main carousel autoplay and progress
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    if (!mainApi) return
 
-    if (isAutoPlaying) {
-      interval = setInterval(() => {
-        nextImage()
-      }, 3000)
+    let startTime = Date.now()
+    const duration = 6000 // 6 seconds
+
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime
+      const newProgress = Math.min(100, (elapsed / duration) * 100)
+      setMainProgress(newProgress)
+
+      if (newProgress < 100) {
+        requestAnimationFrame(updateProgress)
+      }
     }
+
+    const autoplay = setInterval(() => {
+      mainApi.scrollNext()
+      startTime = Date.now()
+      setMainProgress(0)
+      requestAnimationFrame(updateProgress)
+    }, duration)
+
+    mainApi.on("select", () => {
+      setMainIndex(mainApi.selectedScrollSnap())
+      startTime = Date.now()
+      setMainProgress(0)
+      requestAnimationFrame(updateProgress)
+    })
+
+    // Start initial progress
+    requestAnimationFrame(updateProgress)
 
     return () => {
-      if (interval) clearInterval(interval)
+      clearInterval(autoplay)
     }
-  }, [isAutoPlaying, currentIndex])
+  }, [mainApi])
+
+  // Dialog carousel sync
+  useEffect(() => {
+    if (!dialogApi) return
+
+    dialogApi.on("select", () => {
+      setFullscreenIndex(dialogApi.selectedScrollSnap())
+    })
+  }, [dialogApi])
+
+  if (!allImages.length) return null
 
   return (
-    <div className="relative h-full w-full" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
+    <div className="relative w-full">
       {/* Main Image Carousel */}
-      <div className="relative h-full w-full overflow-hidden">
-        {allImages.map((image, index) => (
-          <div
-            key={index}
-            className={cn(
-              "absolute inset-0 h-full w-full transition-opacity duration-500",
-              index === currentIndex ? "opacity-100" : "opacity-0 pointer-events-none",
-            )}
-          >
-            <img
-              src={getImageUrl(image) || "/placeholder.svg"}
-              alt={`${shopName} view ${index + 1}`}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        ))}
-
-        {/* Navigation Controls */}
+      <Carousel
+        className="w-full"
+        opts={{
+          loop: true,
+          align: "start",
+        }}
+        setApi={setMainApi}
+      >
+        <CarouselContent>
+          {allImages.map((image, index) => (
+            <CarouselItem key={index}>
+              <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-lg">
+                <Media
+                  resource={image}
+                  fill
+                  imgClassName="object-cover object-center"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-2 bg-black/40 text-white hover:bg-black/60 transition-colors"
+                  onClick={() => openFullscreen(index)}
+                >
+                  <Expand className="h-5 w-5" />
+                </Button>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
         {allImages.length > 1 && (
           <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/30"
-              onClick={prevImage}
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/30"
-              onClick={nextImage}
-              aria-label="Next image"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </Button>
+            <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 hidden sm:flex bg-black/20" variant="ghost" />
+            <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:flex bg-black/20" variant="ghost" />
+            <div className="absolute bottom-5 -translate-y-1/2 left-1/2 -translate-x-1/2">
+              <Progress
+                value={mainProgress}
+                className="h-2 w-60"
+              />
+            </div>
           </>
         )}
-
-        {/* Fullscreen Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-2 top-2 bg-black/20 text-white hover:bg-black/30"
-          onClick={() => openFullscreen(currentIndex)}
-          aria-label="View fullscreen"
-        >
-          <Expand className="h-5 w-5" />
-        </Button>
-
-        {/* Image Counter */}
-        {allImages.length > 1 && (
-          <div className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
-            {currentIndex + 1} / {allImages.length}
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnail Indicators */}
-      {allImages.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 space-x-1">
-          {allImages.map((_, index) => (
-            <button
-              key={index}
-              className={cn(
-                "h-1.5 w-6 rounded-full transition-all",
-                index === currentIndex ? "bg-white" : "bg-white/50 hover:bg-white/80",
-              )}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Go to image ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
+      </Carousel>
 
       {/* Fullscreen Gallery Dialog */}
       <Dialog open={fullscreenOpen} onOpenChange={setFullscreenOpen}>
-        <DialogContent className="max-w-5xl">
-          <DialogHeader>
-            <DialogTitle>{shopName}</DialogTitle>
+        <DialogContent className="h-[90vh] w-5xl bg-black/95">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle className="text-white text-xl md:text-2xl">{shopName}</DialogTitle>
           </DialogHeader>
-          <div className="relative h-[70vh] w-full">
-            <img
-              src={getImageUrl(allImages[fullscreenIndex]) || "/placeholder.svg"}
-              alt={`${shopName} gallery view ${fullscreenIndex + 1}`}
-              className="h-full w-full object-contain"
-            />
-
-            {allImages.length > 1 && (
-              <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/30"
-                  onClick={prevFullscreenImage}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 text-white hover:bg-black/30"
-                  onClick={nextFullscreenImage}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-              </>
-            )}
-
-            {/* Fullscreen Image Counter */}
-            <div className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
-              {fullscreenIndex + 1} / {allImages.length}
-            </div>
+          <div className="relative w-full">
+            <Carousel
+              className="w-full"
+              setApi={setDialogApi}
+              opts={{
+                loop: true,
+                startIndex: fullscreenIndex,
+                dragFree: true, // Optional: Allows free dragging for better UX
+              }}
+            >
+              <CarouselContent >
+                {allImages.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <Media
+                      resource={image}
+                      alt={`Shop image ${index + 1}`}
+                      pictureClassName="flex flex-col items-center justify-center"
+                      imgClassName="object-cover object-center"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {allImages.length > 1 && (
+                <>
+                  <CarouselPrevious
+                    className="absolute left-2 top-1/2 -translate-y-1/2 hidden sm:flex bg-black/40 hover:bg-black/60 transition-colors shadow-md"
+                    variant="ghost"
+                    aria-label="Previous image"
+                  />
+                  <CarouselNext
+                    className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:flex bg-black/40 hover:bg-black/60 transition-colors shadow-md"
+                    variant="ghost"
+                    aria-label="Next image"
+                  />
+                </>
+              )}
+            </Carousel>
           </div>
 
           {/* Fullscreen Thumbnails */}
-          <div className="flex justify-center space-x-2 overflow-x-auto pb-2">
-            {allImages.map((image, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "h-16 w-16 cursor-pointer overflow-hidden rounded-md border-2",
-                  index === fullscreenIndex ? "border-rose-500" : "border-transparent hover:border-rose-200",
-                )}
-                onClick={() => setFullscreenIndex(index)}
-              >
-                <img
-                  src={getImageUrl(image) || "/placeholder.svg"}
-                  alt={`${shopName} thumbnail ${index + 1}`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
+          <div className="border-t border-white/10 bg-black/50">
+            <div className="flex gap-3 p-4 overflow-x-auto scrollbar-thin">
+              {allImages.map((image, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "relative h-34 flex-shrink-0 cursor-pointer overflow-hidden rounded-md hover:scale-105 transition-all",
+                    index === fullscreenIndex && "border-white"
+                  )}
+                  onClick={() => {
+                    setFullscreenIndex(index);
+                    dialogApi?.scrollTo(index);
+                  }}
+                  aria-label={`Select image ${index + 1}`}
+                >
+                  <Media
+                    resource={image}
+                    imgClassName="h-full w-full object-cover"
+                    alt={`Thumbnail image ${index + 1}`}
+                  />
+                  {index === fullscreenIndex && (
+                    <div className="absolute inset-0 bg-white/20" />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>

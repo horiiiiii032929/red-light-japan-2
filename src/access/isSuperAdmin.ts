@@ -1,8 +1,8 @@
 import type { Access } from 'payload'
-import { User } from '../payload-types'
+import type { User } from 'payload'
 
 export const isSuperAdminAccess: Access = ({ req }): boolean => {
-  return isSuperAdmin(req.user)
+  return isSuperAdmin(req.user as User | null)
 }
 
 export const isSuperAdmin = (user: User | null): boolean => {

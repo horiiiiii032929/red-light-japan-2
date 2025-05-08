@@ -11,10 +11,6 @@ const collections: CollectionSlug[] = [
   'regions',
   'areas',
   'media',
-  'pages',
-  'posts',
-  'forms',
-  'form-submissions',
   'shops',
   'users',
   'tenants',
@@ -85,7 +81,7 @@ export const seed = async ({
 
   // #region Categories
   payload.logger.info(`— Seeding categories...`)
-  
+
   for (const category of categories) {
     const categoryDoc = await payload.create({
       collection: 'categories',
@@ -134,7 +130,7 @@ export const seed = async ({
 
   // #region Payment Methods
   payload.logger.info(`— Seeding payment methods...`)
-  
+
   for (const paymentMethod of paymentMethods) {
     const paymentMethodDoc = await payload.create({
       collection: 'payment-methods',
@@ -183,9 +179,9 @@ export const seed = async ({
 
   // #region Regions
   payload.logger.info(`— Seeding regions...`)
-  
+
   const regionMap = new Map<string, string>() // Map to store slug -> id mapping
-  
+
   for (const region of regions) {
     const regionDoc = await payload.create({
       collection: 'regions',
@@ -237,7 +233,7 @@ export const seed = async ({
 
   // #region Areas
   payload.logger.info(`— Seeding areas...`)
-  
+
   for (const area of areas) {
     // Get the region ID from the map
     const regionId = regionMap.get(area.region as string)

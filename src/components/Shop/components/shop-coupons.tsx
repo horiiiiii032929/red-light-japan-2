@@ -3,20 +3,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Copy, Check } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { Shop } from "@/payload-types"
 
-interface Coupon {
-  code: string
-  name: string
-  description?: string | null
-  validUntil: string
-  id?: string | null
-}
 
 interface ShopCouponsProps {
-  coupons: Coupon[]
+  coupons: Shop['coupons']
 }
-
 export default function ShopCoupons({ coupons }: ShopCouponsProps) {
+  const t = useTranslations('shops.shop')
 
   const copyToClipboard = (code: string) => {
     navigator.clipboard.writeText(code)
@@ -29,16 +24,16 @@ export default function ShopCoupons({ coupons }: ShopCouponsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {coupons.map((coupon) => (
+      {coupons?.map((coupon) => (
         <Card key={coupon.id || coupon.code}>
           <CardHeader>
             <CardTitle>{coupon.name}</CardTitle>
-            <CardDescription >Valid until: {formatDate(coupon.validUntil)}</CardDescription>
+            <CardDescription>{t("validUntil")}: {formatDate(coupon.validUntil)}</CardDescription>
           </CardHeader>
           <CardContent>
             {coupon.description && <p className="mb-4">{coupon.description}</p>}
             <div className="flex items-center justify-between rounded-md border p-2">
-              <code className="font-mono text-sm font-semibold text-primary">{coupon.code}</code>
+              <code className="font-mono text-lg font-semibold text-primary">{coupon.code}</code>
               <Button
                 variant="ghost"
                 size="sm"

@@ -1,4 +1,4 @@
-import { CollectionSlug, TypedLocale } from 'payload'
+import { CollectionSlug, } from 'payload'
 
 const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
   posts: '/posts',

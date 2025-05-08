@@ -25,17 +25,30 @@
     "tryAgainLater": "Please try again later"
   },
   "shops": {
+    "lowestPrice": "Lowest Price",
+    "hours": "Business Hours",
     "shop": {
       "contactInformation": "Contact Information",
-      "connectWithUs": "Connect with us",
+      "phone": "Phone",
+      "address": "Address",
       "businessHours": "Business Hours",
+      "connectWithUs": "Connect with us",
       "line": "LINE",
       "wechat": "WeChat",
       "whatsapp": "WhatsApp",
-      "about": "About",
-      "services": "Services",
-      "staff": "Staff",
-      "coupons": "Coupons"
+      "about": "about",
+      "About": "About",
+      "system": "system",
+      "System": "System",
+      "servicesAndFacilities": "Services and Facilities",
+      "location": "Location",
+      "staff": "staff",
+      "Staff": "Staff",
+      "age": "age",
+      "height": "height",
+      "coupon": "coupon",
+      "Coupon": "Coupon",
+      "validUntil": "Valid until"
     }
   },
   "footer": {

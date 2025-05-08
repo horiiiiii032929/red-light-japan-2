@@ -54,7 +54,7 @@ export function Form({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const { areas: selectedAreas, categories: selectedCategories } = data;
 
-    let path = `/${region}/`;
+    let path = `/region/${region}/`;
 
     if (selectedAreas.length > 0) {
       path += `area/${selectedAreas.join('+')}`;

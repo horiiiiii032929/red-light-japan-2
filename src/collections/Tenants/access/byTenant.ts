@@ -1,4 +1,4 @@
-import type { Access } from 'payload'
+import type { Access, User } from 'payload'
 
 import { isSuperAdmin } from '../../../access/isSuperAdmin'
 
@@ -20,7 +20,7 @@ export const canMutateTenant: Access = ({ req }) => {
     return false
   }
 
-  if (isSuperAdmin(req.user)) {
+  if (isSuperAdmin(req.user as User | null)) {
     return true
   }
 

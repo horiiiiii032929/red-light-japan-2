@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, User } from 'payload'
 
 import { createAccess } from './access/create'
 import { readAccess } from './access/read'
@@ -52,7 +52,7 @@ export const Users: CollectionConfig = {
       options: ['super-admin', 'user'],
       access: {
         update: ({ req }) => {
-          return isSuperAdmin(req.user)
+          return isSuperAdmin(req.user as User | null)
         },
       },
     },

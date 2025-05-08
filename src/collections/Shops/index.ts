@@ -1,8 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { generatePreviewPath } from '../../utilities/generatePreviewPath'
-import { superAdminOrTenantAdminAccess } from '@/collections/Pages/access/superAdminOrTenantAdmin'
+import { superAdminOrTenantAdminAccess } from './access/superAdminOrTenantAdmin'
 import { revalidateDelete, revalidateShop } from './hooks/revalidateShop'
 import {
   MetaDescriptionField,
@@ -21,23 +20,23 @@ export const Shops: CollectionConfig<'shops'> = {
   slug: 'shops',
   admin: {
     defaultColumns: ['name', 'updatedAt'],
-    livePreview: {
-      url: ({ data, req }) => {
-        const path = generatePreviewPath({
-          slug: typeof data?.slug === 'string' ? data.slug : '',
-          collection: 'posts',
-          req,
-        })
+    // livePreview: {
+    //   url: ({ data, req }) => {
+    //     const path = generatePreviewPath({
+    //       slug: typeof data?.slug === 'string' ? data.slug : '',
+    //       collection: 'posts',
+    //       req,
+    //     })
 
-        return path
-      },
-    },
-    preview: (data, { req }) =>
-      generatePreviewPath({
-        slug: typeof data?.slug === 'string' ? data.slug : '',
-        collection: 'posts',
-        req,
-      }),
+    //     return path
+    //   },
+    // },
+    // preview: (data, { req }) =>
+    //   generatePreviewPath({
+    //     slug: typeof data?.slug === 'string' ? data.slug : '',
+    //     collection: 'posts',
+    //     req,
+    //   }),
     useAsTitle: 'shopName',
   },
   access: {
@@ -111,9 +110,6 @@ export const Shops: CollectionConfig<'shops'> = {
   },
   versions: {
     drafts: {
-      autosave: {
-        interval: 100,
-      },
       schedulePublish: true,
     },
     maxPerDoc: 50,

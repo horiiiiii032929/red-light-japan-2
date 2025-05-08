@@ -20,7 +20,7 @@ export default function ShopSystems({ systems }: ShopSystemsProps) {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {systems?.map((system) => (
-        <Card key={system.id || system.name} className="pt-0">
+        <Card key={system.id || system.name} className="pt-0 gap-2 pb-1">
           {(system.image as Media)?.url && (
             <div className="h-48 w-full overflow-hidden">
               <img
@@ -31,7 +31,7 @@ export default function ShopSystems({ systems }: ShopSystemsProps) {
             </div>
           )}
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between flex-wrap gap-3">
               <CardTitle>{system.name}</CardTitle>
               <Badge>{formatPrice(system.priceMin, system.priceMax)}</Badge>
             </div>

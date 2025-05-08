@@ -20,6 +20,8 @@ export default async function Layout({
 }: Props) {
   const { region, filters = [], locale } = await paramsPromise
 
+  console.log(region, filters, locale)
+
   const { areas, categories } = await queryMasterData({ region, locale })
 
   const areaSlugs = extractSlugFromFilters(filters, 'area')

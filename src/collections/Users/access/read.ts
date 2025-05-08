@@ -1,4 +1,4 @@
-import type { User } from '@/payload-types'
+import type { User } from 'payload'
 import type { Access, Where } from 'payload'
 import { getTenantFromCookie } from '@payloadcms/plugin-multi-tenant/utilities'
 
@@ -16,7 +16,7 @@ export const readAccess: Access<User> = ({ req, id }) => {
     return true
   }
 
-  const superAdmin = isSuperAdmin(req.user)
+  const superAdmin = isSuperAdmin(req.user as User | null)
   const selectedTenant = getTenantFromCookie(
     req.headers,
     getCollectionIDType({ payload: req.payload, collectionSlug: 'tenants' }),

@@ -1,40 +1,111 @@
 import type { Metadata } from 'next/types'
 
-import { CollectionArchive } from '@/components/CollectionArchive'
 import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, TypedLocale, Where } from 'payload'
 import React from 'react'
+import { ShopCard } from '@/components/Shop/Card'
 
-export default async function Page() {
+interface FilterParams {
+  locale: TypedLocale
+  region: string
+  filters: string[]
+}
+
+interface Props {
+  params: Promise<FilterParams>
+}
+
+interface FilterConditions {
+  areas: string[]
+  categories: string[]
+}
+
+export default async function Page({ params: paramsPromise }: Props) {
+  const {
+    region,
+    filters = [],
+    locale
+  } = await paramsPromise
+
+  const filterConditions = parseFilters(filters)
+  const whereConditions = buildWhereConditions(region, filterConditions)
+
   const payload = await getPayload({ config: configPromise })
 
-  const posts = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: 12,
+  const shops = await payload.find({
+    collection: 'shops',
     overrideAccess: false,
+    locale,
+    where: whereConditions,
     select: {
-      title: true,
-      slug: true,
+      id: true,
+      logo: true,
+      shopName: true,
+      message: true,
+      lowestPrice: true,
+      openHour: true,
+      closeHour: true,
+      bannerImage: true,
+      staff: true,
+      description: true,
+      paymentMethods: true,
+      area: true,
       categories: true,
-      meta: true,
-    },
+    }
   })
 
   return (
     <div className="flex flex-col gap-4 py-4">
-
-
-      <CollectionArchive posts={posts.docs} />
+      {shops.docs.map((shop) => (
+        <ShopCard key={shop.id} shop={shop} />
+      ))}
 
       <div className="container">
-        {posts.totalPages > 1 && posts.page && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
+        {shops.totalPages > 1 && shops.page && (
+          <Pagination page={shops.page} totalPages={shops.totalPages} />
         )}
       </div>
     </div>
   )
 }
 
+function parseFilters(filters: string[]): FilterConditions {
+  const areas: string[] = []
+  const categories: string[] = []
 
+  filters.forEach((filter, index) => {
+    const nextSegment = filters[index + 1]
+    if (!nextSegment) return
+
+    if (filter === 'area') {
+      areas.push(...nextSegment.split('+'))
+    } else if (filter === 'category') {
+      categories.push(...nextSegment.split('+'))
+    }
+  })
+
+  return { areas, categories }
+}
+
+function buildWhereConditions(region: string, { areas, categories }: FilterConditions): Where {
+  const conditions: Where = {
+    'area.region.slug': {
+      equals: region,
+    },
+  }
+
+  if (areas.length > 0) {
+    conditions['area.slug'] = {
+      in: areas,
+    }
+  }
+
+  if (categories.length > 0) {
+    conditions['categories.slug'] = {
+      in: categories,
+    }
+  }
+
+  return conditions
+}
