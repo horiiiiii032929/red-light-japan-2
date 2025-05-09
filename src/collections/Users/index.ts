@@ -37,6 +37,9 @@ export const Users: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'email',
+    hidden: (args) => {
+      return !isSuperAdmin(args.user)
+    },
   },
   auth: true,
   endpoints: [externalUsersLogin],

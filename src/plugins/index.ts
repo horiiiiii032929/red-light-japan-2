@@ -28,6 +28,11 @@ export const plugins: Plugin[] = [
   redirectsPlugin({
     // collections: ['pages', 'posts'],
     overrides: {
+      admin: {
+        hidden: (args) => {
+          return !isSuperAdmin(args.user as User)
+        },
+      },
       //  - This is a valid override, mapped fields don't resolve to the same type
       // @ts-expect-error
       fields: ({ defaultFields }) => {
@@ -40,6 +45,7 @@ export const plugins: Plugin[] = [
               },
             }
           }
+
           return field
         })
       },
@@ -60,7 +66,19 @@ export const plugins: Plugin[] = [
     fields: {
       payment: false,
     },
+    formSubmissionOverrides: {
+      admin: {
+        hidden: (args) => {
+          return !isSuperAdmin(args.user)
+        },
+      },
+    },
     formOverrides: {
+      admin: {
+        hidden: (args) => {
+          return !isSuperAdmin(args.user)
+        },
+      },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           if ('name' in field && field.name === 'confirmationMessage') {
@@ -84,7 +102,8 @@ export const plugins: Plugin[] = [
   }),
   multiTenantPlugin<Config>({
     collections: {
-      // pages: {},
+      shops: {},
+      media: {},
     },
     tenantField: {
       access: {

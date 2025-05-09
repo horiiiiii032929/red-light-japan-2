@@ -8,7 +8,6 @@ import {
   MetaImageField,
   MetaTitleField,
   OverviewField,
-  PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { staff } from './tabs/staff'
 import { system } from './tabs/system'
@@ -18,25 +17,18 @@ import { top } from './tabs/top'
 
 export const Shops: CollectionConfig<'shops'> = {
   slug: 'shops',
+  labels: {
+    singular: {
+      ja: '店舗',
+      en: 'Shop',
+    },
+    plural: {
+      ja: '店舗',
+      en: 'Shops',
+    },
+  },
   admin: {
     defaultColumns: ['shopName', 'updatedAt'],
-    // livePreview: {
-    //   url: ({ data, req }) => {
-    //     const path = generatePreviewPath({
-    //       slug: typeof data?.slug === 'string' ? data.slug : '',
-    //       collection: 'posts',
-    //       req,
-    //     })
-
-    //     return path
-    //   },
-    // },
-    // preview: (data, { req }) =>
-    //   generatePreviewPath({
-    //     slug: typeof data?.slug === 'string' ? data.slug : '',
-    //     collection: 'posts',
-    //     req,
-    //   }),
     useAsTitle: 'shopName',
   },
   access: {
@@ -50,29 +42,49 @@ export const Shops: CollectionConfig<'shops'> = {
       name: 'shopName',
       type: 'text',
       required: true,
+      localized: true,
+      label: {
+        ja: '店舗名',
+        en: 'Shop Name',
+      },
     },
     {
       type: 'tabs',
       tabs: [
         {
           fields: top,
-          label: 'Top',
+          label: {
+            ja: '店舗一覧カード',
+            en: 'Top',
+          },
         },
         {
           fields: basic,
-          label: 'Information',
+          label: {
+            ja: '店舗情報',
+            en: 'Information',
+          },
         },
         {
           fields: [system],
-          label: 'System',
+          label: {
+            ja: 'システム',
+            en: 'System',
+          },
         },
         {
           fields: [staff],
-          label: 'Staff',
+          label: {
+            ja: 'スタッフ',
+            en: 'Staff',
+          },
         },
         {
           fields: [coupon],
-          label: 'Coupon',
+          label: {
+            ja: 'クーポン',
+            en: 'Coupon',
+          },
         },
         {
           name: 'meta',

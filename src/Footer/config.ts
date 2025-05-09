@@ -1,5 +1,5 @@
-import type { GlobalConfig } from 'payload'
-
+import type { GlobalConfig, User } from 'payload'
+import { isSuperAdmin } from '@/access/isSuperAdmin'
 import { link } from '@/fields/link'
 import { revalidateFooter } from './hooks/revalidateFooter'
 
@@ -7,6 +7,11 @@ export const Footer: GlobalConfig = {
   slug: 'footer',
   access: {
     read: () => true,
+  },
+  admin: {
+    hidden: (args) => {
+      return !isSuperAdmin(args.user as User)
+    },
   },
   fields: [
     {

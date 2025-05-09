@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { anyone } from '../access/anyone'
 import { slugField } from '@/fields/slug'
-import { isSuperAdminAccess } from '@/access/isSuperAdmin'
+import { isSuperAdmin, isSuperAdminAccess } from '@/access/isSuperAdmin'
 
 export const PaymentMethods: CollectionConfig = {
   slug: 'payment-methods',
@@ -14,6 +14,9 @@ export const PaymentMethods: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    hidden: (args) => {
+      return !isSuperAdmin(args.user)
+    },
   },
   fields: [
     {

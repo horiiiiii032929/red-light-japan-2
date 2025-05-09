@@ -1,11 +1,10 @@
 import React from 'react';
-import logo from '@/assets/logo.png';
-import Image from 'next/image';
+import { Home } from 'lucide-react';
 
 export default function Icon() {
   return (
     <div>
-      <Image className="w-12" src={logo} alt="" />
+      <Home className="w-6" />
     </div>
   );
 }

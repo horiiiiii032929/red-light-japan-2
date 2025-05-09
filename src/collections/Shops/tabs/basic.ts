@@ -10,12 +10,20 @@ export const basic: Field[] = [
         type: 'upload',
         relationTo: 'media',
         hasMany: false,
+        label: {
+          ja: 'ロゴ',
+          en: 'Logo',
+        },
       },
       {
         name: 'images',
         type: 'upload',
         relationTo: 'media',
         hasMany: true,
+        label: {
+          ja: 'トップ画像',
+          en: 'Images',
+        },
       },
     ]
   },
@@ -24,13 +32,20 @@ export const basic: Field[] = [
     type: 'richText',
     required: true,
     localized: true,
+    label: {
+      ja: '店舗説明',
+      en: 'Description',
+    },
     editor: lexicalEditor({
       features: ({ rootFeatures }) => {
         return [
+          ...rootFeatures,
+          FixedToolbarFeature(),
+          InlineToolbarFeature(),
           UploadFeature(),
         ]
       },
-    })
+    }),
   },
   {
     type: 'row',
@@ -39,6 +54,10 @@ export const basic: Field[] = [
         name: 'categories',
         type: 'relationship',
         relationTo: 'categories',
+        label: {
+          ja: 'カテゴリ',
+          en: 'Categories',
+        },
         hasMany: true,
         localized: true,
       },
@@ -46,6 +65,10 @@ export const basic: Field[] = [
         name: 'area',
         type: 'relationship',
         relationTo: 'areas',
+        label: {
+          ja: 'エリア',
+          en: 'Area',
+        },
         hasMany: false,
         localized: true,
       },
@@ -53,6 +76,10 @@ export const basic: Field[] = [
         name: 'paymentMethods',
         type: 'relationship',
         relationTo: 'payment-methods',
+        label: {
+          ja: '支払い方法',
+          en: 'Payment Methods',
+        },
         hasMany: true,
         localized: true,
       },
@@ -63,22 +90,41 @@ export const basic: Field[] = [
     type: 'text',
     required: true,
     localized: true,
+    label: {
+      ja: '最寄駅',
+      en: 'Nearest Station',
+    },
   },
   {
     name: 'address',
     type: 'text',
     required: true,
     localized: true,
+    label: {
+      ja: '住所',
+      en: 'Address',
+    },
   },
   {
     name: 'location',
     type: 'point',
+    label: {
+      ja: '位置',
+      en: 'Location',
+    },
   },
   {
     name: 'tags',
     type: 'text',
     required: true,
     localized: true,
+    label: {
+      ja: 'タグ',
+      en: 'Tags',
+    },
+    admin: {
+      placeholder: 'タグを入力してください (カンマ区切り) 例: 英語対応可能、日本人スタッフなど',
+    }
   },
   {
     type: 'row',
@@ -93,6 +139,10 @@ export const basic: Field[] = [
           },
         },
         required: true,
+        label: {
+          ja: '開店時間',
+          en: 'Open Hour',
+        },
       },
       {
         name: 'closeHour',
@@ -104,11 +154,18 @@ export const basic: Field[] = [
           },
         },
         required: true,
+        label: {
+          ja: '閉店時間',
+          en: 'Close Hour',
+        },
       },
     ]
   },
   {
-    label: 'Contact',
+    label: {
+      ja: '連絡先',
+      en: 'Contact',
+    },
     type: 'collapsible',
     admin: {
       initCollapsed: true,
@@ -126,7 +183,11 @@ export const basic: Field[] = [
             ],
             admin: {
               width: '50%',
-            }
+            },
+            label: {
+              ja: '電話番号',
+              en: 'Phone Number',
+            },
           },
           {
             name: 'line',
@@ -137,7 +198,11 @@ export const basic: Field[] = [
             ],
             admin: {
               width: '50%',
-            }
+            },
+            label: {
+              ja: 'LINE',
+              en: 'LINE',
+            },
           },
           {
             name: 'weChat',
@@ -148,7 +213,11 @@ export const basic: Field[] = [
             ],
             admin: {
               width: '50%',
-            }
+            },
+            label: {
+              ja: 'WeChat',
+              en: 'WeChat',
+            },
           },
           {
             name: 'whatsapp',
@@ -159,7 +228,11 @@ export const basic: Field[] = [
             ],
             admin: {
               width: '50%',
-            }
+            },
+            label: {
+              ja: 'WhatsApp',
+              en: 'WhatsApp',
+            },
           },
         ]
       }

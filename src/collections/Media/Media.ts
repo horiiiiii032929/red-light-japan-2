@@ -8,19 +8,29 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { anyone } from '@/access/anyone'
+import { superAdminOrTenantAdminAccess } from './access/superAdminOrTenantAdmin'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  labels: {
+    singular: {
+      en: 'Media',
+      ja: 'メディア',
+    },
+    plural: {
+      en: 'Media',
+      ja: 'メディア',
+    },
+  },
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: superAdminOrTenantAdminAccess,
+    delete: superAdminOrTenantAdminAccess,
     read: anyone,
-    update: authenticated,
+    update: superAdminOrTenantAdminAccess,
   },
   fields: [
     {

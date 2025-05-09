@@ -7,7 +7,7 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 import localization from './i18n/localization'
 import { Categories } from './collections/Categories'
-import { Media } from './collections/Media'
+import { Media } from './collections/Media/Media'
 import { Users } from './collections/Users'
 import { Tenants } from './collections/Tenants'
 import { Footer } from './Footer/config'
@@ -28,10 +28,23 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    avatar: {
+      Component: '@/components/payload/Avatar',
+    },
+    meta: {
+      titleSuffix: '- NIGHT LIFE JAPAN',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          url: '/favicon.ico',
+        },
+      ],
+    },
     components: {
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      // beforeDashboard: ['@/components/BeforeDashboard'],
       graphics: {
         Logo: '@/components/payload/Logo',
         Icon: '@/components/payload/Icon',
