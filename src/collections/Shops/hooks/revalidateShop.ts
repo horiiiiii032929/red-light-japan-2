@@ -3,6 +3,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'paylo
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 import type { Shop } from '../../../payload-types'
+import localization from '@/i18n/localization'
 
 export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
   doc,
@@ -11,7 +12,7 @@ export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
 }) => {
   if (!context.disableRevalidate) {
     if (doc._status === 'published') {
-      const path = `/shops/${doc.id}`
+      const path = `/${localization.defaultLocale}/shops/${doc.id}`
 
       payload.logger.info(`Revalidating post at path: ${path}`)
 
@@ -20,7 +21,7 @@ export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
     }
 
     if (previousDoc._status === 'published' && doc._status !== 'published') {
-      const oldPath = `/shops/${previousDoc.id}`
+      const oldPath = `/${localization.defaultLocale}/shops/${previousDoc.id}`
 
       payload.logger.info(`Revalidating old post at path: ${oldPath}`)
 
@@ -33,7 +34,7 @@ export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
 
 export const revalidateDelete: CollectionAfterDeleteHook<Shop> = ({ doc, req: { context } }) => {
   if (!context.disableRevalidate) {
-    const path = `/shops/${doc?.id}`
+    const path = `/${localization.defaultLocale}/shops/${doc?.id}`
 
     revalidatePath(path)
     // revalidateTag('shops-sitemap')
