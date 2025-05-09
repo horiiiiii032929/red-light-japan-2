@@ -23,6 +23,7 @@ export const basic: Field[] = [
     name: 'description',
     type: 'richText',
     required: true,
+    localized: true,
     editor: lexicalEditor({
       features: ({ rootFeatures }) => {
         return [
@@ -39,18 +40,21 @@ export const basic: Field[] = [
         type: 'relationship',
         relationTo: 'categories',
         hasMany: true,
+        localized: true,
       },
       {
         name: 'area',
         type: 'relationship',
         relationTo: 'areas',
-        hasMany: false
+        hasMany: false,
+        localized: true,
       },
       {
         name: 'paymentMethods',
         type: 'relationship',
         relationTo: 'payment-methods',
         hasMany: true,
+        localized: true,
       },
     ]
   },
@@ -58,11 +62,13 @@ export const basic: Field[] = [
     name: 'nearestStation',
     type: 'text',
     required: true,
+    localized: true,
   },
   {
     name: 'address',
     type: 'text',
-    required: true
+    required: true,
+    localized: true,
   },
   {
     name: 'location',
@@ -71,7 +77,8 @@ export const basic: Field[] = [
   {
     name: 'tags',
     type: 'text',
-    required: true
+    required: true,
+    localized: true,
   },
   {
     type: 'row',
