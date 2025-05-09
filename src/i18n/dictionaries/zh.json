@@ -2,9 +2,12 @@
   "app": {
     "description": "发现您附近的服务和体验"
   },
+  "region": {
+    "description": "探索{region}最佳夜生活场所。提供全面的价格、营业时间、交通和员工信息。您值得信赖的{region}安全可靠娱乐指南。"
+  },
   "filter": {
     "filters": "筛选",
-    "area": "区域",
+    "area": "地区",
     "serviceType": "服务类型",
     "categories": "类别",
     "paymentMethods": "支付方式",

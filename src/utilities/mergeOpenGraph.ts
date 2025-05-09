@@ -10,8 +10,8 @@ const defaultOpenGraph: Metadata['openGraph'] = {
     //     : '/website-template-OG.webp',
     // },
   ],
-  siteName: 'RED LIGHT JAPAN',
-  title: 'RED LIGHT JAPAN',
+  siteName: 'NIGHT LIFE JAPAN',
+  title: 'NIGHT LIFE JAPAN',
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {

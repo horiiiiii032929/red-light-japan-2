@@ -1,6 +1,9 @@
 {
   "app": {
-    "description": "근처의 서비스와 경험을 발견하세요"
+    "description": "주변 서비스와 경험을 발견하세요"
+  },
+  "region": {
+    "description": "{region}의 최고의 나이트라이프 스팟을 발견하세요. 가격, 영업시간, 접근성, 스태프 정보 등 {region}의 나이트라이프에 대한 종합적인 정보를 제공합니다. 안전하고 신뢰할 수 있는 엔터테인먼트 가이드."
   },
   "filter": {
     "filters": "필터",
@@ -11,11 +14,11 @@
     "applyFilters": "필터 적용",
     "sort": "정렬",
     "sortOptions": {
-      "recommended": "추천",
-      "newest": "최신",
-      "popular": "인기",
-      "priceLow": "가격 낮은 순",
-      "priceHigh": "가격 높은 순"
+      "recommended": "추천순",
+      "newest": "최신순",
+      "popular": "인기순",
+      "priceLow": "가격 낮은순",
+      "priceHigh": "가격 높은순"
     }
   },
   "system": {

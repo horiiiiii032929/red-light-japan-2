@@ -71,7 +71,7 @@ export function MobileForm({ region, areaSlugs, categorySlugs, areas, categories
             </Button>
           </DrawerTrigger>
           <DrawerContent>
-            <div className="mx-auto w-full max-w-sm">
+            <div className="mx-auto w-full max-w-sm px-4">
               <FormComponent
                 region={region}
                 areaSlugs={areaSlugs}

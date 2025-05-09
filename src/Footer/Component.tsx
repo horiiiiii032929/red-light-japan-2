@@ -29,7 +29,7 @@ export async function Footer({ locale }: { locale: TypedLocale }) {
           </ul>
         </div>
         <span className="block text-sm text-center">
-          © {new Date().getFullYear()} <Link href="/" className="hover:underline">Red Light Japan</Link>. All Rights Reserved.
+          © {new Date().getFullYear()} <Link href="/" className="hover:underline">NIGHT LIFE JAPAN</Link>. All Rights Reserved.
         </span>
       </div>
     </footer>

@@ -1,52 +1,46 @@
 import type { Metadata } from 'next'
 
-import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
-import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, TypedLocale } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
-import RichText from '@/components/RichText'
 
-import type { Post } from '@/payload-types'
-
-import { PostHero } from '@/heros/PostHero'
-import { generateMeta } from '@/utilities/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { ShopClient } from '@/components/Shop/Page'
 import { notFound } from 'next/navigation'
-// export async function generateStaticParams() {
-// 	const payload = await getPayload({ config: configPromise })
-// 	const posts = await payload.find({
-// 		collection: 'posts',
-// 		draft: false,
-// 		limit: 1000,
-// 		overrideAccess: false,
-// 		pagination: false,
-// 		select: {
-// 			slug: true,
-// 		},
-// 	})
+import { generateMeta } from '@/utilities/generateMeta'
+import { Shop } from '@/payload-types'
 
-// 	const params = posts.docs.map(({ slug }) => {
-// 		return { slug }
-// 	})
 
-// 	return params
-// }
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const posts = await payload.find({
+    collection: 'shops',
+    draft: false,
+    limit: 100,
+    overrideAccess: false,
+    pagination: false,
+  })
+
+  const params = posts.docs.map(({ id }) => {
+    return { id }
+  })
+
+  return params
+}
 
 type Args = {
   params: Promise<{
     id?: string
-    locale: string
+    locale: TypedLocale
   }>
 }
 
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
-  const { id = '' } = await paramsPromise
+  const { id = '', locale } = await paramsPromise
 
-  const shop = await queryShopBySlug({ id: '6819bee84225b871faf204a1' })
+  const shop = await queryShopBySlug({ id, locale })
 
   if (!shop) {
     return notFound()
@@ -62,14 +56,16 @@ export default async function Post({ params: paramsPromise }: Args) {
   )
 }
 
-// export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
-// 	const { slug = '' } = await paramsPromise
-// 	const post = await queryPostBySlug({ slug })
+export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
+  const { id = '', locale } = await paramsPromise
+  const shop = await queryShopBySlug({ id, locale })
 
-// 	return generateMeta({ doc: post })
-// }
+  return generateMeta({ doc: shop as Shop })
+}
 
-const queryShopBySlug = cache(async ({ id }: { id: string }) => {
+
+
+const queryShopBySlug = cache(async ({ id, locale }: { id: string, locale: TypedLocale }) => {
   const { isEnabled: draft } = await draftMode()
 
   const payload = await getPayload({ config: configPromise })
@@ -78,6 +74,7 @@ const queryShopBySlug = cache(async ({ id }: { id: string }) => {
     collection: 'shops',
     draft,
     limit: 1,
+    locale,
     overrideAccess: draft,
     pagination: false,
     where: {

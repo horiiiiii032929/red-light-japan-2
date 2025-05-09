@@ -2,6 +2,9 @@
   "app": {
     "description": "Discover services and experiences near you"
   },
+  "region": {
+    "description": "Discover {region}'s best nightlife spots. Find comprehensive information about prices, business hours, access, and staff details. Your trusted guide to safe and reliable entertainment in {region}."
+  },
   "filter": {
     "filters": "Filters",
     "area": "Area",
@@ -25,8 +28,14 @@
     "tryAgainLater": "Please try again later"
   },
   "shops": {
-    "lowestPrice": "Lowest Price",
+    "shopList": "Shop List",
+    "memberCount": "{count} members",
+    "hasCoupon": "Has coupon",
+    "price": "Price",
     "hours": "Business Hours",
+    "viewDetails": "View Details",
+    "access": "Access",
+    "lowestPrice": "Lowest Price",
     "shop": {
       "contactInformation": "Contact Information",
       "phone": "Phone",

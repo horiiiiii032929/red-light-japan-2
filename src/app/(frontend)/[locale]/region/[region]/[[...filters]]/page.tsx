@@ -1,9 +1,10 @@
 import type { Metadata } from 'next/types'
-
+import { getTranslations } from 'next-intl/server'
 import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload, TypedLocale, Where } from 'payload'
 import React from 'react'
+import { queryMasterData } from './layout'
 import { ShopCard } from '@/components/Shop/Card'
 
 interface FilterParams {
@@ -19,6 +20,47 @@ interface Props {
 interface FilterConditions {
   areas: string[]
   categories: string[]
+}
+
+export async function generateMetadata({
+  params: paramsPromise,
+}: Props): Promise<Metadata> {
+  const { region, filters = [], locale } = await paramsPromise
+  const t = await getTranslations()
+
+  const { regions } = await queryMasterData({ region, locale })
+
+  const regionName = regions.find(r => r.slug === region)?.title || region
+
+  const title = `${regionName} ${t('app.description')} | NIGHT LIFE JAPAN`
+  const description = t('region.description', { region: regionName })
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      locale: locale,
+      siteName: t('shops.shopList')
+    },
+    alternates: {
+      canonical: `https://nightlifejapan.com/${locale}/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+      languages: {
+        'en': `https://nightlifejapan.com/en/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'ja': `https://nightlifejapan.com/ja/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'ko': `https://nightlifejapan.com/ko/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'zh': `https://nightlifejapan.com/zh/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+      }
+    },
+    robots: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    }
+  }
 }
 
 export default async function Page({ params: paramsPromise }: Props) {

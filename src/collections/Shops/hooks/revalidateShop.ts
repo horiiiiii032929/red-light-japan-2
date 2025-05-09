@@ -16,7 +16,7 @@ export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
       payload.logger.info(`Revalidating post at path: ${path}`)
 
       revalidatePath(path)
-      revalidateTag('shops-sitemap')
+      // revalidateTag('shops-sitemap')
     }
 
     if (previousDoc._status === 'published' && doc._status !== 'published') {
@@ -25,7 +25,7 @@ export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
       payload.logger.info(`Revalidating old post at path: ${oldPath}`)
 
       revalidatePath(oldPath)
-      revalidateTag('shops-sitemap')
+      // revalidateTag('shops-sitemap')
     }
   }
   return doc

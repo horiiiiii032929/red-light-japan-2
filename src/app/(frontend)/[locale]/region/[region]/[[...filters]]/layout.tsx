@@ -56,10 +56,10 @@ export default async function Layout({
   )
 }
 
-const queryMasterData = cache(async ({ region, locale }: { region: string, locale: TypedLocale }) => {
+export const queryMasterData = cache(async ({ region, locale }: { region: string, locale: TypedLocale }) => {
   const payload = await getPayload({ config: configPromise })
 
-  const [areas, categories] = await Promise.all([
+  const [areas, categories, regions] = await Promise.all([
     payload.find({
       collection: 'areas',
       sort: 'order',
@@ -79,11 +79,19 @@ const queryMasterData = cache(async ({ region, locale }: { region: string, local
       locale,
       limit: 30,
     }),
+    payload.find({
+      collection: 'regions',
+      sort: 'order',
+      overrideAccess: false,
+      locale,
+      limit: 30,
+    }),
   ])
 
   return {
     areas: areas.docs,
     categories: categories.docs,
+    regions: regions.docs,
   }
 })
 
