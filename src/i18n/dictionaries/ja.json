@@ -31,7 +31,31 @@
     "price": "料金",
     "hours": "営業時間",
     "viewDetails": "詳細を見る",
-    "access": "アクセス"
+    "access": "アクセス",
+    "lowestPrice": "最低価格",
+    "shop": {
+      "contactInformation": "連絡先情報",
+      "phone": "電話番号",
+      "address": "住所",
+      "businessHours": "営業時間",
+      "connectWithUs": "お問い合わせ",
+      "line": "LINE",
+      "wechat": "WeChat",
+      "whatsapp": "WhatsApp",
+      "about": "概要",
+      "About": "概要",
+      "system": "システム",
+      "System": "システム",
+      "servicesAndFacilities": "サービスと設備",
+      "location": "場所",
+      "staff": "スタッフ",
+      "Staff": "スタッフ",
+      "age": "年齢",
+      "height": "身長",
+      "coupon": "クーポン",
+      "Coupon": "クーポン",
+      "validUntil": "有効期限"
+    }
   },
   "footer": {
     "regions": {

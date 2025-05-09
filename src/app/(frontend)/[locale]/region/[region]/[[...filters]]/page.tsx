@@ -61,6 +61,12 @@ export default async function Page({ params: paramsPromise }: Props) {
         <ShopCard key={shop.id} shop={shop} />
       ))}
 
+      {shops.totalDocs === 0 && (
+        <div className="container">
+          <p className="text-center text-2xl font-bold">No shops found</p>
+        </div>
+      )}
+
       <div className="container">
         {shops.totalPages > 1 && shops.page && (
           <Pagination page={shops.page} totalPages={shops.totalPages} />

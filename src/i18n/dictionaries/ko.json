@@ -31,7 +31,31 @@
     "price": "가격",
     "hours": "영업 시간",
     "viewDetails": "자세히 보기",
-    "access": "접근"
+    "access": "접근",
+    "lowestPrice": "최저 가격",
+    "shop": {
+      "contactInformation": "연락처 정보",
+      "phone": "전화번호",
+      "address": "주소",
+      "businessHours": "영업 시간",
+      "connectWithUs": "연락하기",
+      "line": "라인",
+      "wechat": "위챗",
+      "whatsapp": "왓츠앱",
+      "about": "소개",
+      "About": "소개",
+      "system": "시스템",
+      "System": "시스템",
+      "servicesAndFacilities": "서비스 및 시설",
+      "location": "위치",
+      "staff": "스태프",
+      "Staff": "스태프",
+      "age": "나이",
+      "height": "키",
+      "coupon": "쿠폰",
+      "Coupon": "쿠폰",
+      "validUntil": "유효 기간"
+    }
   },
   "footer": {
     "regions": {

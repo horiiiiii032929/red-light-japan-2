@@ -70,6 +70,7 @@
     "cmdk": "^1.1.1",
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
+    "db-postgres": "link:@/payloadcms/db-postgres",
     "embla-carousel-react": "^8.6.0",
     "geist": "^1.4.1",
     "graphql": "^16.11.0",

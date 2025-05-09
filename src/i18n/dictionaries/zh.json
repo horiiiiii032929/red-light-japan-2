@@ -31,7 +31,31 @@
     "price": "价格",
     "hours": "营业时间",
     "viewDetails": "查看详情",
-    "access": "访问"
+    "access": "访问",
+    "lowestPrice": "最低价格",
+    "shop": {
+      "contactInformation": "联系信息",
+      "phone": "电话",
+      "address": "地址",
+      "businessHours": "营业时间",
+      "connectWithUs": "联系我们",
+      "line": "LINE",
+      "wechat": "微信",
+      "whatsapp": "WhatsApp",
+      "about": "关于",
+      "About": "关于",
+      "system": "系统",
+      "System": "系统",
+      "servicesAndFacilities": "服务和设施",
+      "location": "位置",
+      "staff": "员工",
+      "Staff": "员工",
+      "age": "年龄",
+      "height": "身高",
+      "coupon": "优惠券",
+      "Coupon": "优惠券",
+      "validUntil": "有效期至"
+    }
   },
   "footer": {
     "regions": {
