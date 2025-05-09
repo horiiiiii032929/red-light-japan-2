@@ -1,5 +1,5 @@
 import type { Field } from "payload";
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { EXPERIMENTAL_TableFeature, FixedToolbarFeature, InlineToolbarFeature, lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 
 export const basic: Field[] = [
   {
@@ -23,7 +23,13 @@ export const basic: Field[] = [
     name: 'description',
     type: 'richText',
     required: true,
-    editor: lexicalEditor({})
+    editor: lexicalEditor({
+      features: ({ rootFeatures }) => {
+        return [
+          UploadFeature(),
+        ]
+      },
+    })
   },
   {
     type: 'row',

@@ -15,7 +15,7 @@ import { ExternalLink } from "lucide-react"
 import type { Shop, Media, Category, Area, PaymentMethod } from "@/payload-types"
 import RichText from "@/components/RichText"
 import { getTranslations } from "next-intl/server"
-
+import { formatTime } from "@/lib/format"
 interface ShopClientProps {
   shop: Shop
 }
@@ -24,13 +24,6 @@ interface ShopClientProps {
 const getImageUrl = (image: Media | string | null | undefined): string | null => {
   if (!image) return null
   return typeof image === "string" ? image : (image.url || null)
-}
-
-const formatTime = (date: string) => {
-  const dateObj = new Date(date)
-  const hours = dateObj.getHours()
-  const minutes = dateObj.getMinutes()
-  return `${hours}:${minutes.toString().padStart(2, '0')}`
 }
 
 export async function ShopClient({ shop }: ShopClientProps) {

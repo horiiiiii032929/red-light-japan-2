@@ -4,8 +4,8 @@ import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload, TypedLocale, Where } from 'payload'
 import React from 'react'
-import { queryMasterData } from './layout'
 import { ShopCard } from '@/components/Shop/Card'
+import { queryMasterData } from '@/lib/queries/masterData'
 
 interface FilterParams {
   locale: TypedLocale

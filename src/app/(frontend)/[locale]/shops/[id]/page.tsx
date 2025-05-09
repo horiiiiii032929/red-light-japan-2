@@ -10,24 +10,8 @@ import { ShopClient } from '@/components/Shop/Page'
 import { notFound } from 'next/navigation'
 import { generateMeta } from '@/utilities/generateMeta'
 import { Shop } from '@/payload-types'
+import localization from '@/i18n/localization'
 
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const posts = await payload.find({
-    collection: 'shops',
-    draft: false,
-    limit: 100,
-    overrideAccess: false,
-    pagination: false,
-  })
-
-  const params = posts.docs.map(({ id }) => {
-    return { id }
-  })
-
-  return params
-}
 
 type Args = {
   params: Promise<{
@@ -35,6 +19,34 @@ type Args = {
     locale: TypedLocale
   }>
 }
+
+export async function generateStaticParams() {
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const posts = await payload.find({
+      collection: 'shops',
+      limit: 100,
+      overrideAccess: false,
+      pagination: false,
+    })
+
+    if (!posts?.docs) {
+      console.warn('No shops found or docs property is undefined')
+      return []
+    }
+
+    return posts.docs.flatMap(({ id }) => {
+      return localization.locales.map(locale => ({
+        id,
+        locale: locale.code,
+      }))
+    })
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
 
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()

@@ -19,7 +19,7 @@ import { top } from './tabs/top'
 export const Shops: CollectionConfig<'shops'> = {
   slug: 'shops',
   admin: {
-    defaultColumns: ['name', 'updatedAt'],
+    defaultColumns: ['shopName', 'updatedAt'],
     // livePreview: {
     //   url: ({ data, req }) => {
     //     const path = generatePreviewPath({
@@ -91,14 +91,6 @@ export const Shops: CollectionConfig<'shops'> = {
             }),
 
             MetaDescriptionField({}),
-            PreviewField({
-              // if the `generateUrl` function is configured
-              hasGenerateFn: true,
-
-              // field paths to match the target field for data
-              titlePath: 'meta.title',
-              descriptionPath: 'meta.description',
-            }),
           ],
         },
       ]

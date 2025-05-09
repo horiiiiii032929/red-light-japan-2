@@ -1,8 +1,6 @@
 import { Form } from "@/components/Form"
 import { TypedLocale } from "payload"
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { cache } from 'react'
+import { queryMasterData } from "@/lib/queries/masterData"
 import { MobileForm } from "@/components/MobileForm"
 
 interface Props {
@@ -19,9 +17,6 @@ export default async function Layout({
   children,
 }: Props) {
   const { region, filters = [], locale } = await paramsPromise
-
-  console.log(region, filters, locale)
-
   const { areas, categories } = await queryMasterData({ region, locale })
 
   const areaSlugs = extractSlugFromFilters(filters, 'area')
@@ -56,44 +51,7 @@ export default async function Layout({
   )
 }
 
-export const queryMasterData = cache(async ({ region, locale }: { region: string, locale: TypedLocale }) => {
-  const payload = await getPayload({ config: configPromise })
 
-  const [areas, categories, regions] = await Promise.all([
-    payload.find({
-      collection: 'areas',
-      sort: 'order',
-      overrideAccess: false,
-      locale,
-      limit: 30,
-      where: {
-        ['region.slug']: {
-          equals: region,
-        },
-      },
-    }),
-    payload.find({
-      collection: 'categories',
-      sort: 'order',
-      overrideAccess: false,
-      locale,
-      limit: 30,
-    }),
-    payload.find({
-      collection: 'regions',
-      sort: 'order',
-      overrideAccess: false,
-      locale,
-      limit: 30,
-    }),
-  ])
-
-  return {
-    areas: areas.docs,
-    categories: categories.docs,
-    regions: regions.docs,
-  }
-})
 
 const extractSlugFromFilters = (filters: string[], key: string): string => {
   const keyIndex = filters.indexOf(key)

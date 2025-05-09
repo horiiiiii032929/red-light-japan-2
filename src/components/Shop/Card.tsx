@@ -9,20 +9,13 @@ import { getTranslations } from "next-intl/server";
 import { Media } from "@/components/Media";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-
+import { formatTime } from "@/lib/format";
 interface Props {
   shop: Shop
 }
 
 export async function ShopCard({ shop }: Props) {
   const t = await getTranslations('shops')
-
-  const formatTime = (date: string) => {
-    const dateObj = new Date(date)
-    const hours = dateObj.getHours()
-    const minutes = dateObj.getMinutes()
-    return `${hours}:${minutes.toString().padStart(2, '0')}`
-  };
 
   return (
     <Link href={`/shops/${shop.id}`}>
