@@ -3,8 +3,6 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import Image from "next/image"
-import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import ShopGallery from "@/components/Shop/components/shop-gallery"
 import ShopSystems from "@/components/Shop/components/shop-systems"
 import ShopStaff from "@/components/Shop/components/shop-staff"
@@ -12,18 +10,14 @@ import ShopCoupons from "@/components/Shop/components/shop-coupons"
 import ShopContact from "@/components/Shop/components/shop-contact"
 import ShopMap from "@/components/Shop/components/shop-map"
 import { ExternalLink } from "lucide-react"
-import type { Shop, Media, Category, Area, PaymentMethod } from "@/payload-types"
+import type { Shop, Category, Area, PaymentMethod, Media } from "@/payload-types"
 import RichText from "@/components/RichText"
 import { getTranslations } from "next-intl/server"
 import { formatTime } from "@/lib/format"
+import { Media as MediaComponent } from "@/components/Media"
+
 interface ShopClientProps {
   shop: Shop
-}
-
-// Helper function to get image URL
-const getImageUrl = (image: Media | string | null | undefined): string | null => {
-  if (!image) return null
-  return typeof image === "string" ? image : (image.url || null)
 }
 
 export async function ShopClient({ shop }: ShopClientProps) {
@@ -33,7 +27,6 @@ export async function ShopClient({ shop }: ShopClientProps) {
 
   return (
     <main>
-      {/* Hero Section */}
       <section className="relative">
         <ShopGallery
           images={shop.images as Media[]}
@@ -41,23 +34,17 @@ export async function ShopClient({ shop }: ShopClientProps) {
         />
       </section>
 
-      {/* Shop Header */}
       <header className="border-b sticky top-0 z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 sm:gap-4">
-              {shop.logo && (
-                <div className="h-20 w-20 sm:h-24 sm:w-24">
-                  <AspectRatio ratio={1 / 1} className="bg-muted">
-                    <Image
-                      src={getImageUrl(shop.logo) || "/placeholder.svg"}
-                      alt={`${shop.shopName} logo`}
-                      fill
-                      className="rounded-md object-cover"
-                    />
-                  </AspectRatio>
-                </div>
-              )}
+              <div className="relative h-22 w-22 md:h-24 md:w-24">
+                {shop.logo && <MediaComponent
+                  // @ts-expect-error
+                  resource={shop.logo?.sizes?.logo}
+                  className="-z-10 object-cover"
+                />}
+              </div>
               <div>
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">{shop.shopName}</h1>
                 <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -78,43 +65,17 @@ export async function ShopClient({ shop }: ShopClientProps) {
               </div>
             </div>
           </div>
-
-          {/* Quick Info Bar */}
-          <nav className="mt-4 sm:mt-6 flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-2 text-xs sm:text-sm">
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>
-                {formatTime(shop.openHour)} - {formatTime(shop.closeHour)}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
-              <span>{shop.nearestStation}</span>
-            </div>
-            {shop.paymentMethods && (shop.paymentMethods as string[]).length > 0 && (
-              <div className="flex items-center gap-1">
-                <CreditCard className="h-4 w-4" />
-                <span className="hidden sm:inline">
-                  {(shop.paymentMethods.map(i => (i as PaymentMethod).title)).join(", ")}
-                </span>
-              </div>
-            )}
-          </nav>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="py-4 sm:py-8">
         <div className="container flex-1 items-start grid grid-cols-1 gap-4 md:grid md:grid-cols-[260px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-10">
-          {/* Sidebar */}
           <aside className="md:sticky top-14 z-30 w-full shrink-0">
             <div className="no-scrollbar h-full overflow-auto">
-              {/* Contact Card */}
               <Card className="gap-2">
                 <CardContent className="py-0 mt-0">
                   <div className="space-y-4">
                     <h4 className="text-lg font-semibold mb-2 pb-2">{t("shop.contactInformation")}</h4>
-                    {/* Phone */}
                     <div className="flex items-center gap-3">
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <div className="flex flex-col gap-1">
@@ -126,7 +87,6 @@ export async function ShopClient({ shop }: ShopClientProps) {
                       </div>
                     </div>
 
-                    {/* Address */}
                     <div className="flex items-center gap-3">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
                       <div className="flex flex-col gap-1">
@@ -135,7 +95,6 @@ export async function ShopClient({ shop }: ShopClientProps) {
                       </div>
                     </div>
 
-                    {/* Business Hours */}
                     <div className="flex items-center gap-3">
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <div className="flex flex-col gap-1">
@@ -160,28 +119,19 @@ export async function ShopClient({ shop }: ShopClientProps) {
                       <TabsContent value="line">
                         <ShopContact
                           platform={shop.line?.platform}
-                          qrCode={shop.line?.qrCode ?
-                            { url: getImageUrl(shop.line.qrCode) || "" } :
-                            null
-                          }
+                          qrCode={shop.line?.qrCode as Media}
                         />
                       </TabsContent>
                       <TabsContent value="wechat">
                         <ShopContact
                           platform={shop.weChat?.platform}
-                          qrCode={shop.weChat?.qrCode ?
-                            { url: getImageUrl(shop.weChat.qrCode) || "" } :
-                            null
-                          }
+                          qrCode={shop.weChat?.qrCode as Media}
                         />
                       </TabsContent>
                       <TabsContent value="whatsapp">
                         <ShopContact
                           platform={shop.whatsapp?.platform}
-                          qrCode={shop.whatsapp?.qrCode ?
-                            { url: getImageUrl(shop.whatsapp.qrCode) || "" } :
-                            null
-                          }
+                          qrCode={shop.whatsapp?.qrCode as Media}
                         />
                       </TabsContent>
                     </Tabs>

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Media, Shop } from "@/payload-types"
 import RichText from "@/components/RichText"
+import { Media as MediaComponent } from "@/components/Media"
 
 
 interface ShopSystemsProps {
@@ -21,21 +22,22 @@ export default function ShopSystems({ systems }: ShopSystemsProps) {
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {systems?.map((system) => (
         <Card key={system.id || system.name} className="pt-0 gap-2 pb-1">
-          {(system.image as Media)?.url && (
-            <div className="h-48 w-full overflow-hidden">
-              <img
-                src={(system.image as Media).url || "/placeholder.svg"}
-                alt={system.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
-          <CardHeader>
-            <div className="flex justify-between flex-wrap gap-3">
-              <CardTitle>{system.name}</CardTitle>
-              <Badge>{formatPrice(system.priceMin, system.priceMax)}</Badge>
-            </div>
-          </CardHeader>
+          <div className="relative w-full">
+            {(system.image as Media)?.url && (
+              <div className="h-48 w-full overflow-hidden">
+                <MediaComponent
+                  resource={system.image as Media}
+                  className="object-cover"
+                />
+              </div>
+            )}
+            <CardHeader className="absolute bottom-0 w-full">
+              <div className="flex flex-row justify-between w-full">
+                <CardTitle className="text-lg font-semibold">{system.name}</CardTitle>
+                <Badge>{formatPrice(system.priceMin, system.priceMax)}</Badge>
+              </div>
+            </CardHeader>
+          </div>
           <CardContent>
             {system.description && <RichText data={system.description} />}
           </CardContent>

@@ -59,25 +59,34 @@ export const Media: CollectionConfig = {
         width: 300,
       },
       {
-        name: 'square',
-        width: 500,
-        height: 500,
+        name: 'logo',
+        width: 200,
+        height: 200,
+        crop: 'center',
       },
       {
-        name: 'small',
+        name: 'banner',
+        width: 800,
+        height: 250,
+        crop: 'center',
+      },
+      {
+        name: 'portrait',
         width: 600,
+        height: 800,
+        crop: 'center',
       },
       {
-        name: 'medium',
-        width: 900,
-      },
-      {
-        name: 'large',
-        width: 1400,
-      },
-      {
-        name: 'xlarge',
+        name: 'hero',
         width: 1920,
+        height: 1080,
+        crop: 'center',
+      },
+      {
+        name: 'system',
+        width: 400,
+        height: 300,
+        crop: 'center',
       },
       {
         name: 'og',

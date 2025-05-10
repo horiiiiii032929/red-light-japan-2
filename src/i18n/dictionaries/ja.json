@@ -37,6 +37,7 @@
     "access": "アクセス",
     "lowestPrice": "最低価格",
     "shop": {
+      "noXXAvailable": "{platform}が利用できません",
       "contactInformation": "連絡先情報",
       "phone": "電話番号",
       "address": "住所",

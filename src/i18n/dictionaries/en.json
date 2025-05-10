@@ -37,6 +37,7 @@
     "access": "Access",
     "lowestPrice": "Lowest Price",
     "shop": {
+      "noXXAvailable": "No {platform} available",
       "contactInformation": "Contact Information",
       "phone": "Phone",
       "address": "Address",

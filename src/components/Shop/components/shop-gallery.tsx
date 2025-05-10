@@ -26,7 +26,7 @@ interface ShopGalleryProps {
 export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
   const [fullscreenOpen, setFullscreenOpen] = useState(false)
   const [fullscreenIndex, setFullscreenIndex] = useState(0)
-  const [mainIndex, setMainIndex] = useState(0)
+  const [_, setMainIndex] = useState(0)
   const [mainProgress, setMainProgress] = useState(0)
   const [mainApi, setMainApi] = useState<CarouselApi>()
   const [dialogApi, setDialogApi] = useState<CarouselApi>()
@@ -104,11 +104,11 @@ export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
         <CarouselContent>
           {allImages.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-lg">
+              <div className="relative w-full">
                 <Media
-                  resource={image}
-                  fill
-                  imgClassName="object-cover object-center"
+                  // @ts-expect-error
+                  resource={image.sizes.hero}
+                  imgClassName="object-cover"
                 />
                 <Button
                   variant="ghost"
@@ -156,10 +156,10 @@ export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
                 {allImages.map((image, index) => (
                   <CarouselItem key={index}>
                     <Media
-                      resource={image}
+                      // @ts-expect-error
+                      resource={image.sizes.hero}
                       alt={`Shop image ${index + 1}`}
-                      pictureClassName="flex flex-col items-center justify-center"
-                      imgClassName="object-cover object-center"
+                      imgClassName="object-cover"
                     />
                   </CarouselItem>
                 ))}
@@ -188,7 +188,7 @@ export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
                 <div
                   key={index}
                   className={cn(
-                    "relative h-34 flex-shrink-0 cursor-pointer overflow-hidden rounded-md hover:scale-105 transition-all",
+                    "relative h-34 flex-shrink-0 cursor-pointer overflow-hidden hover:scale-105 transition-all aspect-square",
                     index === fullscreenIndex && "border-white"
                   )}
                   onClick={() => {
@@ -198,13 +198,11 @@ export default function ShopGallery({ images, shopName }: ShopGalleryProps) {
                   aria-label={`Select image ${index + 1}`}
                 >
                   <Media
-                    resource={image}
-                    imgClassName="h-full w-full object-cover"
+                    // @ts-expect-error
+                    resource={image.sizes?.thumbnail}
+                    imgClassName=" object-cover"
                     alt={`Thumbnail image ${index + 1}`}
                   />
-                  {index === fullscreenIndex && (
-                    <div className="absolute inset-0 bg-white/20" />
-                  )}
                 </div>
               ))}
             </div>

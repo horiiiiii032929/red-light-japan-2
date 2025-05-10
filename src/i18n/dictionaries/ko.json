@@ -37,6 +37,7 @@
     "access": "접근",
     "lowestPrice": "최저 가격",
     "shop": {
+      "noXXAvailable": "{platform}을 사용할 수 없습니다",
       "contactInformation": "연락처 정보",
       "phone": "전화번호",
       "address": "주소",

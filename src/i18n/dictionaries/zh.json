@@ -37,6 +37,7 @@
     "access": "访问",
     "lowestPrice": "最低价格",
     "shop": {
+      "noXXAvailable": "没有{platform}可用",
       "contactInformation": "联系信息",
       "phone": "电话",
       "address": "地址",

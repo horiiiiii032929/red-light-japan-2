@@ -10,8 +10,6 @@ import { Categories } from './collections/Categories'
 import { Media } from './collections/Media/Media'
 import { Users } from './collections/Users'
 import { Tenants } from './collections/Tenants'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -93,7 +91,6 @@ export default buildConfig({
     Shops
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
   plugins: [
     ...plugins,
     vercelBlobStorage({
@@ -130,7 +127,7 @@ export default buildConfig({
   },
   i18n: {
     supportedLanguages: { en, ja },
-    fallbackLanguage: 'en'
+    fallbackLanguage: 'en',
   },
   localization
 })

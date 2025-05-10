@@ -27,13 +27,13 @@ export default function ShopCoupons({ coupons }: ShopCouponsProps) {
       {coupons?.map((coupon) => (
         <Card key={coupon.id || coupon.code}>
           <CardHeader>
-            <CardTitle>{coupon.name}</CardTitle>
+            <CardTitle className="text-lg font-semibold">{coupon.name}</CardTitle>
             <CardDescription>{t("validUntil")}: {formatDate(coupon.validUntil)}</CardDescription>
           </CardHeader>
           <CardContent>
             {coupon.description && <p className="mb-4">{coupon.description}</p>}
             <div className="flex items-center justify-between rounded-md border p-2">
-              <code className="font-mono text-lg font-semibold text-primary">{coupon.code}</code>
+              <code className="font-mono text-sm font-medium leading-none text-primary">{coupon.code}</code>
               <Button
                 variant="ghost"
                 size="sm"
