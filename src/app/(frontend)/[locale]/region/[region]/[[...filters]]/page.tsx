@@ -27,13 +27,26 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { region, filters = [], locale } = await paramsPromise
   const t = await getTranslations()
-
   const { regions } = await queryMasterData({ region, locale })
-
   const regionName = regions.find(r => r.slug === region)?.title || region
 
-  const title = `${regionName} ${t('app.description')} | NIGHT LIFE JAPAN`
-  const description = t('region.description', { region: regionName })
+  // Parse filters to determine if they're canonical
+  const { areas, categories } = parseFilters(filters)
+
+  // Determine if this is a canonical view
+  const isCanonicalView = determineCanonicalView(areas, categories)
+
+  // Base URL without filters
+  const baseUrl = `https://nightlifejapan.com/${locale}/region/${region}`
+
+  // Canonical URL - either base URL or filtered URL depending on context
+  const canonicalUrl = isCanonicalView
+    ? `${baseUrl}${filters.length ? `/${filters.join('/')}` : ''}`
+    : baseUrl
+
+  // Generate title and description based on filters
+  const title = generateTitle(regionName, areas, categories, t)
+  const description = generateDescription(regionName, areas, categories, t)
 
   return {
     title,
@@ -43,24 +56,83 @@ export async function generateMetadata({
       description,
       type: 'website',
       locale: locale,
-      siteName: t('shops.shopList')
+      siteName: t('shops.shopList'),
+      url: canonicalUrl,
     },
     alternates: {
-      canonical: `https://nightlifejapan.com/${locale}/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+      canonical: canonicalUrl,
       languages: {
-        'en': `https://nightlifejapan.com/en/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
-        'ja': `https://nightlifejapan.com/ja/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
-        'ko': `https://nightlifejapan.com/ko/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
-        'zh': `https://nightlifejapan.com/zh/region/${region}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'en': `${baseUrl}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'ja': `${baseUrl}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'ko': `${baseUrl}${filters.length ? `/${filters.join('/')}` : ''}`,
+        'zh': `${baseUrl}${filters.length ? `/${filters.join('/')}` : ''}`,
       }
     },
     robots: {
-      index: true,
+      index: isCanonicalView,
       follow: true,
       'max-image-preview': 'large',
       'max-snippet': -1,
     }
   }
+}
+
+// Helper function to determine if a filtered view should be canonical
+function determineCanonicalView(areas: string[], categories: string[]): boolean {
+  // Example rules for canonical views:
+  // 1. No filters (base view)
+  if (areas.length === 0 && categories.length === 0) return true
+
+  // 2. Single area filter (common use case)
+  if (areas.length === 1 && categories.length === 0) return true
+
+  // 3. Single category filter (common use case)
+  if (areas.length === 0 && categories.length === 1) return true
+
+  // 4. Common area + category combinations
+  if (areas.length === 1 && categories.length === 1) return true
+
+  // All other combinations are non-canonical
+  return false
+}
+
+// Helper function to generate dynamic titles
+function generateTitle(
+  regionName: string,
+  areas: string[],
+  categories: string[],
+  t: any
+): string {
+  let title = `${regionName} ${t('app.description')}`
+
+  if (areas.length > 0) {
+    title += ` - ${t('area')}: ${areas.join(', ')}`
+  }
+
+  if (categories.length > 0) {
+    title += ` - ${t('category')}: ${categories.join(', ')}`
+  }
+
+  return `${title} | NIGHT LIFE JAPAN`
+}
+
+// Helper function to generate dynamic descriptions
+function generateDescription(
+  regionName: string,
+  areas: string[],
+  categories: string[],
+  t: any
+): string {
+  let description = t('region.description', { region: regionName })
+
+  if (areas.length > 0 || categories.length > 0) {
+    description += ` ${t('filtered.description', {
+      areas: areas.length > 0 ? areas.join(', ') : t('all'),
+      categories: categories.length > 0 ? categories.join(', ') : t('all')
+    })}`
+  }
+
+  return description
 }
 
 export default async function Page({ params: paramsPromise }: Props) {
