@@ -1,9 +1,17 @@
 {
   "app": {
-    "description": "Discover services and experiences near you"
+    "title": "Nightlife Japan - Adult Entertainment Guide",
+    "description": "Discover the best adult entertainment venues in Japan's red light districts. Find comprehensive information about prices, business hours, access, and staff details."
   },
   "region": {
-    "description": "Discover {region}'s best nightlife spots. Find comprehensive information about prices, business hours, access, and staff details. Your trusted guide to safe and reliable entertainment in {region}."
+    "title": "{region} Shop List",
+    "description": "Discover {region}'s best nightlife spots. Find comprehensive information about prices, business hours, access, and staff details. Your trusted guide to safe and reliable entertainment in {region}.",
+    "filterOptions": "Filter options",
+    "loading": {
+      "form": "Loading filters...",
+      "mobileForm": "Loading mobile filters...",
+      "content": "Loading content..."
+    }
   },
   "filter": {
     "filters": "Filters",
@@ -19,7 +27,17 @@
       "popular": "Popular",
       "priceLow": "Price: Low to High",
       "priceHigh": "Price: High to Low"
-    }
+    },
+    "mobile": {
+      "filters": "Filters",
+      "sort": "Sort by"
+    },
+    "applying": "Applying...",
+    "filterOptions": "Filter Options",
+    "filterDescription": "Select areas and categories to filter the results",
+    "selectArea": "Select {area}",
+    "selectCategory": "Select {category}",
+    "close": "Close"
   },
   "system": {
     "noResultsFound": "No results found",

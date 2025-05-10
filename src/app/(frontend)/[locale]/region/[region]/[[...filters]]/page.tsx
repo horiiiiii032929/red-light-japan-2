@@ -11,19 +11,33 @@ interface FilterParams {
   locale: TypedLocale
   region: string
   filters: string[]
+  searchParams: { sort?: string }
 }
 
 interface Props {
   params: Promise<FilterParams>
+  searchParams: Promise<{ sort?: string }>
 }
 
 interface FilterConditions {
   areas: string[]
   categories: string[]
+  sort?: string
 }
+
+const SORT_OPTIONS = {
+  recommended: '-createdAt',
+  newest: '-createdAt',
+  popular: '-staff.length',
+  priceLow: 'lowestPrice',
+  priceHigh: '-lowestPrice'
+} as const
+
+type SortOption = keyof typeof SORT_OPTIONS
 
 export async function generateMetadata({
   params: paramsPromise,
+  searchParams,
 }: Props): Promise<Metadata> {
   const { region, filters = [], locale } = await paramsPromise
   const t = await getTranslations()
@@ -135,23 +149,29 @@ function generateDescription(
   return description
 }
 
-export default async function Page({ params: paramsPromise }: Props) {
+export default async function Page({ params: paramsPromise, searchParams }: Props) {
   const {
     region,
     filters = [],
     locale
   } = await paramsPromise
 
+  const { sort } = await searchParams
+
   const filterConditions = parseFilters(filters)
-  const whereConditions = buildWhereConditions(region, filterConditions)
+  const whereConditions = buildWhereConditions(region, { ...filterConditions, sort: sort })
 
   const payload = await getPayload({ config: configPromise })
+
+  // Validate and get sort option
+  const sortField = SORT_OPTIONS[sort as SortOption] || SORT_OPTIONS.recommended
 
   const shops = await payload.find({
     collection: 'shops',
     overrideAccess: false,
     locale,
     where: whereConditions,
+    sort: sortField,
     select: {
       id: true,
       logo: true,
@@ -169,6 +189,8 @@ export default async function Page({ params: paramsPromise }: Props) {
     }
   })
 
+  const t = await getTranslations('system')
+
   return (
     <div className="flex flex-col gap-4 py-4">
       {shops.docs.map((shop) => (
@@ -177,7 +199,8 @@ export default async function Page({ params: paramsPromise }: Props) {
 
       {shops.totalDocs === 0 && (
         <div className="container">
-          <p className="text-center text-2xl font-bold">No shops found</p>
+          <p className="text-center text-2xl font-bold">{t('noResultsFound')}</p>
+          <p className="text-center text-muted-foreground mt-2">{t('tryDifferentFilters')}</p>
         </div>
       )}
 
@@ -208,22 +231,22 @@ function parseFilters(filters: string[]): FilterConditions {
   return { areas, categories }
 }
 
-function buildWhereConditions(region: string, { areas, categories }: FilterConditions): Where {
+function buildWhereConditions(region: string, { areas, categories, sort }: FilterConditions): Where {
   const conditions: Where = {
     'area.region.slug': {
-      equals: region,
-    },
+      equals: region
+    }
   }
 
   if (areas.length > 0) {
     conditions['area.slug'] = {
-      in: areas,
+      in: areas
     }
   }
 
   if (categories.length > 0) {
     conditions['categories.slug'] = {
-      in: categories,
+      in: categories
     }
   }
 

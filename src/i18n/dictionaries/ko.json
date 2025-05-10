@@ -1,9 +1,17 @@
 {
   "app": {
-    "description": "주변 서비스와 경험을 발견하세요"
+    "title": "Nightlife Japan - 성인 엔터테인먼트 가이드",
+    "description": "일본의 유흥가에서 최고의 성인 엔터테인먼트 장소를 발견하세요. 가격, 영업 시간, 접근성, 스태프 정보 등 종합적인 정보를 제공합니다."
   },
   "region": {
-    "description": "{region}의 최고의 나이트라이프 스팟을 발견하세요. 가격, 영업시간, 접근성, 스태프 정보 등 {region}의 나이트라이프에 대한 종합적인 정보를 제공합니다. 안전하고 신뢰할 수 있는 엔터테인먼트 가이드."
+    "title": "{region} 매장 목록",
+    "description": "{region}의 최고의 나이트라이프 스팟을 발견하세요. 가격, 영업시간, 접근성, 스태프 정보 등 {region}의 나이트라이프에 대한 종합적인 정보를 제공합니다. 안전하고 신뢰할 수 있는 엔터테인먼트 가이드.",
+    "filterOptions": "필터 옵션",
+    "loading": {
+      "form": "필터 로딩 중...",
+      "mobileForm": "모바일 필터 로딩 중...",
+      "content": "콘텐츠 로딩 중..."
+    }
   },
   "filter": {
     "filters": "필터",
@@ -19,7 +27,17 @@
       "popular": "인기순",
       "priceLow": "가격 낮은순",
       "priceHigh": "가격 높은순"
-    }
+    },
+    "mobile": {
+      "filters": "필터",
+      "sort": "정렬 기준"
+    },
+    "applying": "적용 중...",
+    "filterOptions": "필터 옵션",
+    "filterDescription": "지역과 카테고리를 선택하여 결과를 필터링하세요",
+    "selectArea": "{area} 선택",
+    "selectCategory": "{category} 선택",
+    "close": "닫기"
   },
   "system": {
     "noResultsFound": "결과를 찾을 수 없습니다",

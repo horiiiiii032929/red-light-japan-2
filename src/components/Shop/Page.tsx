@@ -15,6 +15,7 @@ import RichText from "@/components/RichText"
 import { getTranslations } from "next-intl/server"
 import { formatTime } from "@/lib/format"
 import { Media as MediaComponent } from "@/components/Media"
+import { Suspense } from "react"
 
 interface ShopClientProps {
   shop: Shop
@@ -27,14 +28,16 @@ export async function ShopClient({ shop }: ShopClientProps) {
 
   return (
     <main>
-      <section className="relative">
-        <ShopGallery
-          images={shop.images as Media[]}
-          shopName={shop.shopName}
-        />
+      <section className="relative" aria-label="Shop gallery">
+        <Suspense fallback={<div className="animate-pulse bg-gray-200 h-[300px] w-full" />}>
+          <ShopGallery
+            images={shop.images as Media[]}
+            shopName={shop.shopName}
+          />
+        </Suspense>
       </section>
 
-      <header className="border-b sticky top-0 z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <header className="border-b sticky top-0 z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60" role="banner">
         <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 sm:gap-4">
@@ -43,6 +46,9 @@ export async function ShopClient({ shop }: ShopClientProps) {
                   // @ts-expect-error
                   resource={shop.logo?.sizes?.logo}
                   className="-z-10 object-cover"
+                  loading="eager"
+                  priority
+                  alt={`${shop.shopName} logo`}
                 />}
               </div>
               <div>
@@ -70,7 +76,7 @@ export async function ShopClient({ shop }: ShopClientProps) {
 
       <div className="py-4 sm:py-8">
         <div className="container flex-1 items-start grid grid-cols-1 gap-4 md:grid md:grid-cols-[260px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-10">
-          <aside className="md:sticky top-14 z-30 w-full shrink-0">
+          <aside className="md:sticky top-14 z-30 w-full shrink-0" role="complementary">
             <div className="no-scrollbar h-full overflow-auto">
               <Card className="gap-2">
                 <CardContent className="py-0 mt-0">
@@ -142,7 +148,7 @@ export async function ShopClient({ shop }: ShopClientProps) {
           </aside>
 
           {/* Main Content Area */}
-          <section>
+          <section role="main">
             {/* Main Tabs */}
             <Tabs defaultValue="about" className="w-full">
               <TabsList className="mb-4 sm:mb-6 w-full justify-start overflow-x-auto">
@@ -216,7 +222,9 @@ export async function ShopClient({ shop }: ShopClientProps) {
                 <section>
                   <h2 className="mb-4 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">{t("shop.System")}</h2>
                   {shop.systems && shop.systems.length > 0 ? (
-                    <ShopSystems systems={shop.systems} />
+                    <Suspense fallback={<div className="animate-pulse bg-gray-200 h-[200px] w-full rounded-lg" />}>
+                      <ShopSystems systems={shop.systems} />
+                    </Suspense>
                   ) : (
                     <p className="text-sm sm:text-base">{t("system.noResultsFound")}</p>
                   )}

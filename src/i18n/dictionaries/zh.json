@@ -1,9 +1,17 @@
 {
   "app": {
-    "description": "发现您附近的服务和体验"
+    "title": "Nightlife Japan - 成人娱乐指南",
+    "description": "探索日本红灯区最佳成人娱乐场所。提供价格、营业时间、交通和员工详情等全面信息。"
   },
   "region": {
-    "description": "探索{region}最佳夜生活场所。提供全面的价格、营业时间、交通和员工信息。您值得信赖的{region}安全可靠娱乐指南。"
+    "title": "{region}店铺列表",
+    "description": "探索{region}最佳夜生活场所。提供全面的价格、营业时间、交通和员工信息。您值得信赖的{region}安全可靠娱乐指南。",
+    "filterOptions": "筛选选项",
+    "loading": {
+      "form": "正在加载筛选器...",
+      "mobileForm": "正在加载移动端筛选器...",
+      "content": "正在加载内容..."
+    }
   },
   "filter": {
     "filters": "筛选",
@@ -19,7 +27,17 @@
       "popular": "热门",
       "priceLow": "价格从低到高",
       "priceHigh": "价格从高到低"
-    }
+    },
+    "mobile": {
+      "filters": "筛选",
+      "sort": "排序方式"
+    },
+    "applying": "正在应用...",
+    "filterOptions": "筛选选项",
+    "filterDescription": "选择地区和类别以筛选结果",
+    "selectArea": "选择{area}",
+    "selectCategory": "选择{category}",
+    "close": "关闭"
   },
   "system": {
     "noResultsFound": "未找到结果",

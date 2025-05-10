@@ -5,16 +5,20 @@ import { Button } from "@/components/ui/button"
 import { Copy, Check } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Shop } from "@/payload-types"
-
+import { useState } from "react"
 
 interface ShopCouponsProps {
   coupons: Shop['coupons']
 }
+
 export default function ShopCoupons({ coupons }: ShopCouponsProps) {
   const t = useTranslations('shops.shop')
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
   const copyToClipboard = (code: string) => {
     navigator.clipboard.writeText(code)
+    setCopiedCode(code)
+    setTimeout(() => setCopiedCode(null), 2000)
   }
 
   // Format date
@@ -23,9 +27,9 @@ export default function ShopCoupons({ coupons }: ShopCouponsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2" role="list" aria-label="Available coupons">
       {coupons?.map((coupon) => (
-        <Card key={coupon.id || coupon.code}>
+        <Card key={coupon.id || coupon.code} role="listitem">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">{coupon.name}</CardTitle>
             <CardDescription>{t("validUntil")}: {formatDate(coupon.validUntil)}</CardDescription>
@@ -38,8 +42,13 @@ export default function ShopCoupons({ coupons }: ShopCouponsProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => copyToClipboard(coupon.code)}
+                aria-label={`Copy coupon code ${coupon.code}`}
               >
-                <Copy className="h-4 w-4" />
+                {copiedCode === coupon.code ? (
+                  <Check className="h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </CardContent>

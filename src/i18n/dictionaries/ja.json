@@ -1,9 +1,17 @@
 {
   "app": {
-    "description": "近くのサービスと体験を発見"
+    "title": "Nightlife Japan - 大人のエンターテイメントガイド",
+    "description": "日本の歓楽街で最高の大人のエンターテイメント施設を発見。料金、営業時間、アクセス、スタッフ情報など、包括的な情報をご提供。"
   },
   "region": {
-    "description": "{region}の夜遊びスポット情報。最新の料金、営業時間、アクセス方法、スタッフ情報など、{region}の夜遊びに必要な情報を網羅。安全で安心な夜遊びスポットをご紹介。"
+    "title": "{region}店舗一覧",
+    "description": "{region}の夜遊びスポット情報。最新の料金、営業時間、アクセス方法、スタッフ情報など、{region}の夜遊びに必要な情報を網羅。安全で安心な夜遊びスポットをご紹介。",
+    "filterOptions": "フィルターオプション",
+    "loading": {
+      "form": "フィルターを読み込み中...",
+      "mobileForm": "モバイルフィルターを読み込み中...",
+      "content": "コンテンツを読み込み中..."
+    }
   },
   "filter": {
     "filters": "フィルター",
@@ -19,7 +27,17 @@
       "popular": "人気順",
       "priceLow": "価格低い順",
       "priceHigh": "価格高い順"
-    }
+    },
+    "mobile": {
+      "filters": "フィルター",
+      "sort": "並び替え"
+    },
+    "applying": "適用中...",
+    "filterOptions": "フィルターオプション",
+    "filterDescription": "エリアとカテゴリーを選択して結果を絞り込み",
+    "selectArea": "{area}を選択",
+    "selectCategory": "{category}を選択",
+    "close": "閉じる"
   },
   "system": {
     "noResultsFound": "結果が見つかりません",

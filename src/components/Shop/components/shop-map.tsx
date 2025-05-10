@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import dynamic from "next/dynamic"
 import { ExternalLink } from "lucide-react"
 
@@ -49,27 +49,55 @@ interface ShopMapProps {
 }
 
 const ShopMap = ({ location, name }: ShopMapProps) => {
+  const [error, setError] = useState<string | null>(null)
   const loc = location || [35.681236, 139.767125]
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc[0]},${loc[1]}`
 
   const customIcon = useMemo(() => createCustomIcon(), [])
 
+  if (error) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-gray-100 rounded-lg">
+        <p className="text-sm text-gray-500">{error}</p>
+      </div>
+    )
+  }
+
   return (
-    <MapContainer
-      center={loc}
-      zoom={13}
-      scrollWheelZoom={false}
-      attributionControl={false}
-      style={{
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={loc} icon={customIcon} />
-    </MapContainer >
+    <div className="relative h-full w-full" role="region" aria-label={`Map showing location of ${name}`}>
+      <MapContainer
+        center={loc}
+        zoom={13}
+        scrollWheelZoom={false}
+        attributionControl={false}
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
+        whenReady={() => setError(null)}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Marker position={loc} icon={customIcon}>
+          <Popup>
+            <div className="text-sm">
+              <p className="font-medium">{name}</p>
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1"
+              >
+                Open in Google Maps
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </div>
   )
 }
 

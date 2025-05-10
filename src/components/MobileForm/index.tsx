@@ -1,17 +1,21 @@
 'use client'
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { useTranslations } from "next-intl"
-import { ArrowDownNarrowWide, Funnel } from "lucide-react"
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Form as FormComponent } from '@/components/Form'
-import { Area, Category } from "@/payload-types"
-import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
+import { Filter, ArrowDownNarrowWide } from "lucide-react"
+import { Form } from "../Form"
+import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   Select,
   SelectContent,
@@ -24,75 +28,127 @@ interface Props {
   region: string
   areaSlugs: string
   categorySlugs: string
-  areas: Area[]
-  categories: Category[]
+  areas: any[]
+  categories: any[]
 }
 
-type SortOption = "newest" | "recommended" | "popular" | "priceLow" | "priceHigh"
+const SORT_OPTIONS = {
+  recommended: 'recommended',
+  newest: 'newest',
+  popular: 'popular',
+  priceLow: 'priceLow',
+  priceHigh: 'priceHigh'
+} as const
 
-export function MobileForm({ region, areaSlugs, categorySlugs, areas, categories }: Props) {
+type SortOption = keyof typeof SORT_OPTIONS
+
+export function MobileForm({
+  region,
+  areas,
+  categories,
+  areaSlugs,
+  categorySlugs,
+}: Props) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const t = useTranslations('filter')
   const router = useRouter()
-  const [sortBy, setSortBy] = useState<SortOption>("newest")
+  const searchParams = useSearchParams()
 
-  const handleSortChange = (value: SortOption) => {
-    setSortBy(value)
+  const handleSubmit = async (data: any) => {
+    try {
+      setIsSubmitting(true)
+      const { areas: selectedAreas, categories: selectedCategories } = data;
 
-    let path = `/region/${region}/`;
+      let path = `/region/${region}/`;
 
-    if (areaSlugs) {
-      path += `area/${areaSlugs}`;
-    }
-
-    if (categorySlugs) {
-      if (areaSlugs) {
-        path += '/';
+      if (selectedAreas.length > 0) {
+        path += `area/${selectedAreas.join('+')}`;
       }
-      path += `category/${categorySlugs}`;
+
+      if (selectedCategories.length > 0) {
+        if (selectedAreas.length > 0) {
+          path += '/';
+        }
+        path += `category/${selectedCategories.join('+')}`;
+      }
+
+      await router.push(path);
+      setIsOpen(false)
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false)
     }
+  }
 
-    path += `?sort=${value}`;
-
-    router.push(path);
+  const handleSort = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('sort', value)
+    router.push(`?${params.toString()}`)
   }
 
   return (
-    <div className="flex items-center justify-end">
-      <div className="flex items-center gap-4">
-        <Drawer>
-          <DrawerTrigger asChild >
-            <Button className="block md:hidden" variant="outline">
-              <div className="flex items-center gap-2">
-                <Funnel />
-                <span>
-                  {t('filters')}
-                </span>
-              </div>
+    <div className="flex gap-4 justify-end">
+      <div className="flex items-center gap-2">
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
+          <DrawerTrigger asChild>
+            <Button
+              variant="outline"
+              className="flex-1 md:hidden"
+              aria-label={t('filterOptions')}
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              {t('filterOptions')}
             </Button>
           </DrawerTrigger>
           <DrawerContent>
-            <div className="mx-auto w-full max-w-sm px-4">
-              <FormComponent
+            <DrawerHeader>
+              <DrawerTitle>{t('filterOptions')}</DrawerTitle>
+              <DrawerDescription>
+                {t('filterDescription')}
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="px-4">
+              <Form
                 region={region}
-                areaSlugs={areaSlugs}
-                categorySlugs={categorySlugs}
                 areas={areas}
                 categories={categories}
+                areaSlugs={areaSlugs}
+                categorySlugs={categorySlugs}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
               />
             </div>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button
+                  variant="outline"
+                  aria-label={t('close')}
+                >
+                  {t('close')}
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
 
         <Select
-          onValueChange={handleSortChange}
-          value={sortBy}
+          defaultValue={searchParams.get('sort') || 'recommended'}
+          onValueChange={handleSort}
         >
-          <SelectTrigger>
-            <ArrowDownNarrowWide />
-            <SelectValue placeholder={t('sort')} />
+          <SelectTrigger className="w-[180px]">
+            <div className="flex items-center gap-2">
+              <ArrowDownNarrowWide className="w-4 h-4" />
+              <SelectValue placeholder={t('sort')} />
+            </div>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="newest">{t('sortOptions.newest')}</SelectItem>
+            {Object.entries(SORT_OPTIONS).map(([key, value]) => (
+              <SelectItem key={key} value={value}>
+                {t(`sortOptions.${key}`)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

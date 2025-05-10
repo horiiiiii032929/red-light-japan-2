@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
 import configPromise from '@payload-config'
 import { getPayload, TypedLocale } from 'payload'
@@ -11,11 +12,12 @@ import { notFound } from 'next/navigation'
 import { generateMeta } from '@/utilities/generateMeta'
 import { Shop } from '@/payload-types'
 import localization from '@/i18n/localization'
+import { getTranslations } from 'next-intl/server'
 
 
 type Args = {
   params: Promise<{
-    id?: string
+    id: string
     locale: TypedLocale
   }>
 }
@@ -63,6 +65,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
+
       <ShopClient shop={shop} />
     </div>
   )
@@ -71,30 +74,78 @@ export default async function Post({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { id = '', locale } = await paramsPromise
   const shop = await queryShopBySlug({ id, locale })
+  const t = await getTranslations('shops')
 
-  return generateMeta({ doc: shop as Shop })
+  const baseMeta = generateMeta({ doc: shop as Shop })
+  const shopData = shop as Shop
+
+  // Generate structured data for the shop
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: shopData.shopName,
+    description: shopData.meta?.description || t('shop.description'),
+    image: shopData.meta?.image && typeof shopData.meta.image !== 'string'
+      ? `${process.env.NEXT_PUBLIC_SERVER_URL}${shopData.meta.image.url}`
+      : undefined,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: shopData.address,
+      addressLocality: shopData.area && typeof shopData.area === 'object' ? shopData.area.title : undefined,
+      addressCountry: 'JP'
+    },
+    geo: shopData.location ? {
+      '@type': 'GeoCoordinates',
+      latitude: shopData.location[0],
+      longitude: shopData.location[1]
+    } : undefined,
+    url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/shops/${id}`,
+    servesCuisine: shopData.categories?.map(cat =>
+      typeof cat === 'object' ? cat.title : cat
+    )
+  }
+
+  return {
+    ...baseMeta,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/shops/${id}`,
+      languages: {
+        'en': `/en/shops/${id}`,
+        'ja': `/ja/shops/${id}`,
+        'ko': `/ko/shops/${id}`,
+        'zh': `/zh/shops/${id}`,
+      }
+    },
+    other: {
+      'structured-data': JSON.stringify(structuredData)
+    }
+  }
 }
 
 
 
 const queryShopBySlug = cache(async ({ id, locale }: { id: string, locale: TypedLocale }) => {
-  const { isEnabled: draft } = await draftMode()
+  try {
+    const { isEnabled: draft } = await draftMode()
+    const payload = await getPayload({ config: configPromise })
 
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'shops',
-    draft,
-    limit: 1,
-    locale,
-    overrideAccess: draft,
-    pagination: false,
-    where: {
-      id: {
-        equals: id,
+    const result = await payload.find({
+      collection: 'shops',
+      draft,
+      limit: 1,
+      locale,
+      overrideAccess: draft,
+      pagination: false,
+      where: {
+        id: {
+          equals: id,
+        },
       },
-    },
-  })
+    })
 
-  return result.docs?.[0] || null
+    return result.docs?.[0] || null
+  } catch (error) {
+    console.error(`Error fetching shop with id ${id}:`, error)
+    return null
+  }
 })
