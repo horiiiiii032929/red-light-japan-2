@@ -22,32 +22,32 @@ type Args = {
   }>
 }
 
-export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const posts = await payload.find({
-      collection: 'shops',
-      limit: 100,
-      overrideAccess: false,
-      pagination: false,
-    })
+// export async function generateStaticParams() {
+//   try {
+//     const payload = await getPayload({ config: configPromise })
+//     const posts = await payload.find({
+//       collection: 'shops',
+//       limit: 100,
+//       overrideAccess: false,
+//       pagination: false,
+//     })
 
-    if (!posts?.docs) {
-      console.warn('No shops found or docs property is undefined')
-      return []
-    }
+//     if (!posts?.docs) {
+//       console.warn('No shops found or docs property is undefined')
+//       return []
+//     }
 
-    return posts.docs.flatMap(({ id }) => {
-      return localization.locales.map(locale => ({
-        id,
-        locale: locale.code,
-      }))
-    })
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
-}
+//     return posts.docs.flatMap(({ id }) => {
+//       return localization.locales.map(locale => ({
+//         id,
+//         locale: locale.code,
+//       }))
+//     })
+//   } catch (error) {
+//     console.error('Error generating static params:', error)
+//     return []
+//   }
+// }
 
 
 export default async function Post({ params: paramsPromise }: Args) {
