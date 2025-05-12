@@ -338,7 +338,7 @@ export function Form({
   const selectedTags = localParams.tags?.split(',') || [];
   const priceRange = [
     Number(localParams.price_min) || 0,
-    Number(localParams.price_max) || 20000
+    Number(localParams.price_max) || 100000
   ] as [number, number];
 
   const handleCitySelect = (city: string) => {
@@ -383,7 +383,7 @@ export function Form({
               category: '',
               open_now: '',
               price_min: '0',
-              price_max: '20000',
+              price_max: '100000',
               tags: '',
               sort: 'recommended'
             });

@@ -60,6 +60,7 @@
     "access": "Access",
     "lowestPrice": "Lowest Price",
     "shop": {
+      "description": "Discover comprehensive information about this venue including prices, business hours, access, and staff details.",
       "noXXAvailable": "No {platform} available",
       "contactInformation": "Contact Information",
       "phone": "Phone",
@@ -82,6 +83,9 @@
       "coupon": "coupon",
       "Coupon": "Coupon",
       "validUntil": "Valid until"
+    },
+    "system": {
+      "noResultsFound": "No shops found matching your criteria"
     }
   },
   "footer": {

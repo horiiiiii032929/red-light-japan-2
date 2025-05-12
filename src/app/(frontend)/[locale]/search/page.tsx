@@ -91,7 +91,9 @@ export default async function Page({ params, searchParams }: Props) {
   )
 }
 
-function buildWhereConditions(searchParams: Awaited<Props['searchParams']>): Where {
+function buildWhereConditions(
+  searchParams: Awaited<Props['searchParams']>,
+): Where {
   const conditions: Where = {}
 
   // Prefecture filter
@@ -127,20 +129,16 @@ function buildWhereConditions(searchParams: Awaited<Props['searchParams']>): Whe
   if (searchParams?.open_now === 'true') {
     const now = new Date()
     const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTime = currentHour + (currentMinute / 60)
+
     conditions['openHour'] = {
-      less_than_equal: currentHour
+      less_than_equal: currentTime.toString()
     }
     conditions['closeHour'] = {
-      greater_than_equal: currentHour
+      greater_than_equal: currentTime.toString()
     }
   }
-
-  // // Tags filter
-  // if (searchParams.tags) {
-  //   conditions['tags'] = {
-  //     in: searchParams.tags.split(',')
-  //   }
-  // }
 
   return conditions
 }

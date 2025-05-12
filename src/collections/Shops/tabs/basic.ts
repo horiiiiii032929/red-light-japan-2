@@ -59,7 +59,6 @@ export const basic: Field[] = [
           en: 'Categories',
         },
         hasMany: true,
-        localized: true,
       },
       {
         name: 'area',
@@ -70,7 +69,6 @@ export const basic: Field[] = [
           en: 'Area',
         },
         hasMany: false,
-        localized: true,
       },
       {
         name: 'paymentMethods',
@@ -81,7 +79,6 @@ export const basic: Field[] = [
           en: 'Payment Methods',
         },
         hasMany: true,
-        localized: true,
       },
     ]
   },

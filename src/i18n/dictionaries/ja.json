@@ -46,9 +46,9 @@
   },
   "system": {
     "noResultsFound": "結果が見つかりません",
-    "tryDifferentFilters": "フィルターを調整してみてください",
+    "tryDifferentFilters": "フィルターを調整してください",
     "errorOccurred": "エラーが発生しました",
-    "tryAgainLater": "後ほど再度お試しください"
+    "tryAgainLater": "後でもう一度お試しください"
   },
   "shops": {
     "shopList": "店舗一覧",
@@ -60,7 +60,8 @@
     "access": "アクセス",
     "lowestPrice": "最低価格",
     "shop": {
-      "noXXAvailable": "{platform}が利用できません",
+      "description": "料金、営業時間、アクセス、スタッフ情報など、この店舗の詳細情報をご覧いただけます。",
+      "noXXAvailable": "{platform}は利用できません",
       "contactInformation": "連絡先情報",
       "phone": "電話番号",
       "address": "住所",
@@ -82,6 +83,9 @@
       "coupon": "クーポン",
       "Coupon": "クーポン",
       "validUntil": "有効期限"
+    },
+    "system": {
+      "noResultsFound": "条件に一致する店舗が見つかりません"
     }
   },
   "footer": {
