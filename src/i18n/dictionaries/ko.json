@@ -4,7 +4,7 @@
     "description": "일본의 유흥가에서 최고의 성인 엔터테인먼트 장소를 발견하세요. 가격, 영업 시간, 접근성, 스태프 정보 등 종합적인 정보를 제공합니다."
   },
   "region": {
-    "title": "{region} 매장 목록",
+    "title": "나이트라이프 서비스 검색",
     "description": "{region}의 최고의 나이트라이프 스팟을 발견하세요. 가격, 영업시간, 접근성, 스태프 정보 등 {region}의 나이트라이프에 대한 종합적인 정보를 제공합니다. 안전하고 신뢰할 수 있는 엔터테인먼트 가이드.",
     "filterOptions": "필터 옵션",
     "loading": {
@@ -21,8 +21,9 @@
     "paymentMethods": "결제 방법",
     "applyFilters": "필터 적용",
     "sort": "정렬",
+    "reset": "필터 초기화",
     "sortOptions": {
-      "recommended": "추천순",
+      "recommended": "추천 🔥",
       "newest": "최신순",
       "popular": "인기순",
       "priceLow": "가격 낮은순",
@@ -37,7 +38,11 @@
     "filterDescription": "지역과 카테고리를 선택하여 결과를 필터링하세요",
     "selectArea": "{area} 선택",
     "selectCategory": "{category} 선택",
-    "close": "닫기"
+    "close": "닫기",
+    "availability": "영업 상태",
+    "openNow": "영업 중 / 심야 영업",
+    "noResultsFound": "결과를 찾을 수 없습니다",
+    "noResultsFoundDescription": "필터를 조정해 보세요"
   },
   "system": {
     "noResultsFound": "결과를 찾을 수 없습니다",

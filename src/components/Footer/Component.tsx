@@ -1,9 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
 
-import type { Footer } from '@/payload-types'
-
-import { CMSLink } from '@/components/Link'
 import { TypedLocale } from 'payload'
 import { Logo } from '@/components/Logo/Logo'
 

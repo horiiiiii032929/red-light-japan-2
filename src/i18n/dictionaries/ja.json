@@ -4,7 +4,7 @@
     "description": "日本の歓楽街で最高の大人のエンターテイメント施設を発見。料金、営業時間、アクセス、スタッフ情報など、包括的な情報をご提供。"
   },
   "region": {
-    "title": "{region}店舗一覧",
+    "title": "夜遊びサービス検索",
     "description": "{region}の夜遊びスポット情報。最新の料金、営業時間、アクセス方法、スタッフ情報など、{region}の夜遊びに必要な情報を網羅。安全で安心な夜遊びスポットをご紹介。",
     "filterOptions": "フィルターオプション",
     "loading": {
@@ -21,8 +21,9 @@
     "paymentMethods": "支払い方法",
     "applyFilters": "フィルターを適用",
     "sort": "並び替え",
+    "reset": "フィルターをリセット",
     "sortOptions": {
-      "recommended": "おすすめ順",
+      "recommended": "おすすめ 🔥",
       "newest": "新着順",
       "popular": "人気順",
       "priceLow": "価格低い順",
@@ -37,7 +38,11 @@
     "filterDescription": "エリアとカテゴリーを選択して結果を絞り込み",
     "selectArea": "{area}を選択",
     "selectCategory": "{category}を選択",
-    "close": "閉じる"
+    "close": "閉じる",
+    "availability": "営業状況",
+    "openNow": "営業中 / 深夜営業",
+    "noResultsFound": "結果が見つかりません",
+    "noResultsFoundDescription": "フィルターを調整してみてください"
   },
   "system": {
     "noResultsFound": "結果が見つかりません",

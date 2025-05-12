@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { routing } from './i18n/routing'
+import createMiddleware from 'next-intl/middleware'
+
+// Create the next-intl middleware
+const intlMiddleware = createMiddleware(routing)
 
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next()
+  // First handle the internationalization routing
+  const response = intlMiddleware(request)
 
   // Add security headers
   response.headers.set('X-DNS-Prefetch-Control', 'on')
@@ -29,6 +35,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next|_vercel|admin|next|.*\\..*).*)',
   ],
 }

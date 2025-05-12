@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useTransition } from 'react'
 
-import type { Header } from '@/payload-types'
+// import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
 import { useLocale } from 'next-intl'
@@ -96,47 +96,27 @@ function LocaleSwitcher() {
   }
 
   return (
-    <>
-      <div className="md:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <GlobeIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {localization.locales
-              .sort((a, b) => a.label.localeCompare(b.label))
-              .map((localeOption) => (
-                <DropdownMenuItem
-                  key={localeOption.code}
-                  onClick={() => onSelectChange(localeOption.code as TypedLocale)}
-                  className={locale === localeOption.code ? "bg-accent" : ""}
-                >
-                  {localeOption.label}
-                </DropdownMenuItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Desktop: Select */}
-      <div className="hidden md:block">
-        <Select onValueChange={onSelectChange} value={locale}>
-          <SelectTrigger className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            {localization.locales
-              .sort((a, b) => a.label.localeCompare(b.label)) // Ordenar por label
-              .map((locale) => (
-                <SelectItem value={locale.code} key={locale.code}>
-                  {locale.label}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </>
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <GlobeIcon className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {localization.locales
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map((localeOption) => (
+              <DropdownMenuItem
+                key={localeOption.code}
+                onClick={() => onSelectChange(localeOption.code as TypedLocale)}
+                className={locale === localeOption.code ? "bg-accent" : ""}
+              >
+                {localeOption.label}
+              </DropdownMenuItem>
+            ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }

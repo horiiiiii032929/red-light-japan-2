@@ -12,11 +12,11 @@ export default async function ShopContact({ platform, qrCode }: ShopContactProps
 
   return (
     <div className="flex flex-col items-center" role="region" aria-label={`${platform} contact information`}>
-      {qrCode?.sizes?.square ? (
+      {qrCode?.sizes?.logo ? (
         <div className="h-32 w-32 overflow-hidden">
           <MediaComponent
             // @ts-expect-error
-            resource={qrCode.sizes?.square}
+            resource={qrCode.sizes?.logo}
             className="object-contain"
             alt={`${platform} QR code`}
             priority

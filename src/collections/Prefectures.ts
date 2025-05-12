@@ -4,8 +4,8 @@ import { anyone } from '../access/anyone'
 import { slugField } from '@/fields/slug'
 import { isSuperAdmin, isSuperAdminAccess } from '@/access/isSuperAdmin'
 
-export const Areas: CollectionConfig = {
-  slug: 'areas',
+export const Prefectures: CollectionConfig = {
+  slug: 'prefectures',
   access: {
     create: isSuperAdminAccess,
     delete: isSuperAdminAccess,
@@ -21,14 +21,14 @@ export const Areas: CollectionConfig = {
   fields: [
     {
       name: 'title',
-      type: 'textarea',
+      type: 'text',
       required: true,
       localized: true,
     },
     {
-      name: 'prefecture',
+      name: 'region',
       type: 'relationship',
-      relationTo: 'prefectures',
+      relationTo: 'regions',
       required: true,
       hasMany: false,
     },

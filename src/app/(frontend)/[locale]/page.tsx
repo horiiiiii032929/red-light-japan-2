@@ -1,5 +1,12 @@
 import { redirect } from "next/navigation";
 
-export default function Page() {
-  redirect('/region/kanto/')
+interface Props {
+  params: Promise<{
+    locale: string
+  }>
+}
+
+export default async function Page({ params }: Props) {
+  const { locale } = await params
+  redirect(`/${locale}/search`)
 }

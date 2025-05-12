@@ -1,27 +1,30 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest } from 'payload'
+import type { CollectionSlug, Payload, PayloadRequest } from 'payload'
+import type { Area } from '@/payload-types'
 
 import { paymentMethods, paymentMethods_ja, paymentMethods_ko, paymentMethods_zh } from './paymentmethods'
-import { regions, regions_ja, regions_ko, regions_zh } from './regions'
-import { areas, areas_ja, areas_ko, areas_zh } from './areas'
+import { prefectures, prefectures_ja, prefectures_ko, prefectures_zh } from './prefecture'
+import { areas, areas_ja, areas_ko, areas_zh } from './area'
 import { categories, categories_ja, categories_ko, categories_zh } from './categories'
+import { regions, regions_ja, regions_ko, regions_zh } from './regions'
 
 const collections: CollectionSlug[] = [
   'categories',
   'payment-methods',
   'regions',
+  'prefectures',
   'areas',
   'media',
   'shops',
   'users',
   'tenants',
-  'search',
   'payload-jobs',
   'payload-locked-documents',
   'payload-preferences',
   'payload-migrations',
 ]
 
-const globals: GlobalSlug[] = ['header', 'footer']
+type GlobalType = 'header' | 'footer'
+const globals: GlobalType[] = ['header', 'footer']
 
 // Next.js revalidation errors are normal when seeding the database without a server running
 // i.e. running `yarn seed` locally instead of using the admin UI within an active app
@@ -39,17 +42,15 @@ export const seed = async ({
   // Clear the database
   payload.logger.info(`— Clearing database...`)
 
-  // Clear globals
-  payload.logger.info(`— Clearing globals...`)
-  for (const global of globals) {
-    await payload.updateGlobal({
-      slug: global,
-      data: {
-        navItems: [],
-      },
-      req,
-    })
-  }
+  // // Clear globals
+  // payload.logger.info(`— Clearing globals...`)
+  // for (const global of globals) {
+  //   await payload.updateGlobal({
+  //     slug: global,
+  //     data: {},
+  //     req,
+  //   })
+  // }
 
   // Clear all collections
   payload.logger.info(`— Clearing collections...`)
@@ -183,50 +184,134 @@ export const seed = async ({
   const regionMap = new Map<string, string>() // Map to store slug -> id mapping
 
   for (const region of regions) {
-    const regionDoc = await payload.create({
-      collection: 'regions',
-      data: JSON.parse(JSON.stringify(region)),
-      locale: 'en',
-      req,
-    })
-
-    // Store the region ID mapped to its slug
-    regionMap.set(region.slug!, regionDoc.id)
-
-    // Add Japanese translation
-    const jaRegion = regions_ja.find(r => r.slug === region.slug)
-    if (jaRegion) {
-      await payload.update({
+    try {
+      const regionDoc = await payload.create({
         collection: 'regions',
-        id: regionDoc.id,
-        data: JSON.parse(JSON.stringify(jaRegion)),
-        locale: 'ja',
+        data: JSON.parse(JSON.stringify(region)),
+        locale: 'en',
         req,
       })
+
+      // Store the region ID mapped to its slug
+      regionMap.set(region.slug!, regionDoc.id)
+
+      // Add Japanese translation
+      const jaRegion = regions_ja.find(r => r.slug === region.slug)
+      if (jaRegion) {
+        await payload.update({
+          collection: 'regions',
+          id: regionDoc.id,
+          data: JSON.parse(JSON.stringify(jaRegion)),
+          locale: 'ja',
+          req,
+        })
+      }
+
+      // Add Korean translation
+      const koRegion = regions_ko.find(r => r.slug === region.slug)
+      if (koRegion) {
+        await payload.update({
+          collection: 'regions',
+          id: regionDoc.id,
+          data: JSON.parse(JSON.stringify(koRegion)),
+          locale: 'ko',
+          req,
+        })
+      }
+
+      // Add Chinese translation
+      const zhRegion = regions_zh.find(r => r.slug === region.slug)
+      if (zhRegion) {
+        await payload.update({
+          collection: 'regions',
+          id: regionDoc.id,
+          data: JSON.parse(JSON.stringify(zhRegion)),
+          locale: 'zh',
+          req,
+        })
+      }
+    } catch (error) {
+      payload.logger.error(`Error creating region ${region.slug}:`, error)
     }
+  }
+  // #endregion
 
-    // Add Korean translation
-    const koRegion = regions_ko.find(r => r.slug === region.slug)
-    if (koRegion) {
-      await payload.update({
-        collection: 'regions',
-        id: regionDoc.id,
-        data: JSON.parse(JSON.stringify(koRegion)),
-        locale: 'ko',
+  // #region Prefectures
+  payload.logger.info(`— Seeding prefectures...`)
+
+  const prefectureMap = new Map<string, string>() // Map to store slug -> id mapping
+
+  for (const prefecture of prefectures) {
+    try {
+      // Get the region ID from the map
+      const regionId = regionMap.get(prefecture.region as string)
+      if (!regionId) {
+        payload.logger.error(`Region not found for prefecture: ${prefecture.slug}`)
+        continue
+      }
+
+      // Create prefecture with the correct region ID
+      const prefectureData = {
+        ...JSON.parse(JSON.stringify(prefecture)),
+        region: regionId,
+      }
+
+      const prefectureDoc = await payload.create({
+        collection: 'prefectures',
+        data: prefectureData,
+        locale: 'en',
         req,
       })
-    }
 
-    // Add Chinese translation
-    const zhRegion = regions_zh.find(r => r.slug === region.slug)
-    if (zhRegion) {
-      await payload.update({
-        collection: 'regions',
-        id: regionDoc.id,
-        data: JSON.parse(JSON.stringify(zhRegion)),
-        locale: 'zh',
-        req,
-      })
+      // Store the prefecture ID mapped to its slug
+      prefectureMap.set(prefecture.slug!, prefectureDoc.id)
+
+      // Add Japanese translation
+      const jaPrefecture = prefectures_ja.find(p => p.slug === prefecture.slug)
+      if (jaPrefecture) {
+        await payload.update({
+          collection: 'prefectures',
+          id: prefectureDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(jaPrefecture)),
+            region: regionId,
+          },
+          locale: 'ja',
+          req,
+        })
+      }
+
+      // Add Korean translation
+      const koPrefecture = prefectures_ko.find(p => p.slug === prefecture.slug)
+      if (koPrefecture) {
+        await payload.update({
+          collection: 'prefectures',
+          id: prefectureDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(koPrefecture)),
+            region: regionId,
+          },
+          locale: 'ko',
+          req,
+        })
+      }
+
+      // Add Chinese translation
+      const zhPrefecture = prefectures_zh.find(p => p.slug === prefecture.slug)
+      if (zhPrefecture) {
+        await payload.update({
+          collection: 'prefectures',
+          id: prefectureDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(zhPrefecture)),
+            region: regionId,
+          },
+          locale: 'zh',
+          req,
+        })
+      }
+    } catch (error) {
+      payload.logger.error(`Error creating prefecture ${prefecture.slug}:`, error)
     }
   }
   // #endregion
@@ -235,69 +320,73 @@ export const seed = async ({
   payload.logger.info(`— Seeding areas...`)
 
   for (const area of areas) {
-    // Get the region ID from the map
-    const regionId = regionMap.get(area.region as string)
-    if (!regionId) {
-      payload.logger.error(`Region not found for area: ${area.slug}`)
-      continue
-    }
+    try {
+      // Get the prefecture ID from the map
+      const prefectureId = prefectureMap.get(area.prefecture as string)
+      if (!prefectureId) {
+        payload.logger.error(`Prefecture not found for area: ${area.slug}`)
+        continue
+      }
 
-    // Create area with the correct region ID
-    const areaData = {
-      ...JSON.parse(JSON.stringify(area)),
-      region: regionId,
-    }
+      // Create area with the correct prefecture ID
+      const areaData = {
+        ...JSON.parse(JSON.stringify(area)),
+        prefecture: prefectureId,
+      }
 
-    const areaDoc = await payload.create({
-      collection: 'areas',
-      data: areaData,
-      locale: 'en',
-      req,
-    })
-
-    // Add Japanese translation
-    const jaArea = areas_ja.find(a => a.slug === area.slug)
-    if (jaArea) {
-      await payload.update({
+      const areaDoc = await payload.create({
         collection: 'areas',
-        id: areaDoc.id,
-        data: {
-          ...JSON.parse(JSON.stringify(jaArea)),
-          region: regionId,
-        },
-        locale: 'ja',
+        data: areaData,
+        locale: 'en',
         req,
       })
-    }
 
-    // Add Korean translation
-    const koArea = areas_ko.find(a => a.slug === area.slug)
-    if (koArea) {
-      await payload.update({
-        collection: 'areas',
-        id: areaDoc.id,
-        data: {
-          ...JSON.parse(JSON.stringify(koArea)),
-          region: regionId,
-        },
-        locale: 'ko',
-        req,
-      })
-    }
+      // Add Japanese translation
+      const jaArea = areas_ja.find((a: Partial<Area>) => a.slug === area.slug)
+      if (jaArea) {
+        await payload.update({
+          collection: 'areas',
+          id: areaDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(jaArea)),
+            prefecture: prefectureId,
+          },
+          locale: 'ja',
+          req,
+        })
+      }
 
-    // Add Chinese translation
-    const zhArea = areas_zh.find(a => a.slug === area.slug)
-    if (zhArea) {
-      await payload.update({
-        collection: 'areas',
-        id: areaDoc.id,
-        data: {
-          ...JSON.parse(JSON.stringify(zhArea)),
-          region: regionId,
-        },
-        locale: 'zh',
-        req,
-      })
+      // Add Korean translation
+      const koArea = areas_ko.find((a: Partial<Area>) => a.slug === area.slug)
+      if (koArea) {
+        await payload.update({
+          collection: 'areas',
+          id: areaDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(koArea)),
+            prefecture: prefectureId,
+          },
+          locale: 'ko',
+          req,
+        })
+      }
+
+      // Add Chinese translation
+      const zhArea = areas_zh.find((a: Partial<Area>) => a.slug === area.slug)
+      if (zhArea) {
+        await payload.update({
+          collection: 'areas',
+          id: areaDoc.id,
+          data: {
+            ...JSON.parse(JSON.stringify(zhArea)),
+            prefecture: prefectureId,
+          },
+          locale: 'zh',
+          req,
+        })
+      }
+    } catch (error) {
+      payload.logger.error(`Error creating area ${area.slug}:`, error)
     }
   }
   // #endregion

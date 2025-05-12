@@ -8,98 +8,98 @@ import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
-import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { isSuperAdmin } from '@/access/isSuperAdmin'
 import { getUserTenantIDs } from '@/utilities/getUserTenantIDs'
+import { Shop } from '@/payload-types'
 
-const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+const generateTitle: GenerateTitle<Shop> = ({ doc }) => {
+  return doc?.shopName ? `${doc.shopName} | Nightlife Japan` : 'Nightlife Japan'
 }
 
-const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
+const generateURL: GenerateURL<Shop> = ({ doc }) => {
   const url = getServerSideURL()
 
-  return doc?.slug ? `${url}/${doc.slug}` : url
+  return doc?.id ? `${url}/${doc.id}` : url
 }
 
 export const plugins: Plugin[] = [
-  redirectsPlugin({
-    // collections: ['pages', 'posts'],
-    overrides: {
-      admin: {
-        hidden: (args) => {
-          return !isSuperAdmin(args.user as User)
-        },
-      },
-      //  - This is a valid override, mapped fields don't resolve to the same type
-      // @ts-expect-error
-      fields: ({ defaultFields }) => {
-        return defaultFields.map((field) => {
-          if ('name' in field && field.name === 'from') {
-            return {
-              ...field,
-              admin: {
-                description: 'You will need to rebuild the website when changing this field.',
-              },
-            }
-          }
+  // redirectsPlugin({
+  //   // collections: ['pages', 'posts'],
+  //   overrides: {
+  //     admin: {
+  //       hidden: (args) => {
+  //         return !isSuperAdmin(args.user as User)
+  //       },
+  //     },
+  //     //  - This is a valid override, mapped fields don't resolve to the same type
+  //     // @ts-expect-error
+  //     fields: ({ defaultFields }) => {
+  //       return defaultFields.map((field) => {
+  //         if ('name' in field && field.name === 'from') {
+  //           return {
+  //             ...field,
+  //             admin: {
+  //               description: 'You will need to rebuild the website when changing this field.',
+  //             },
+  //           }
+  //         }
 
-          return field
-        })
-      },
-      hooks: {
-        afterChange: [revalidateRedirects],
-      },
-    },
-  }),
+  //         return field
+  //       })
+  //     },
+  //     hooks: {
+  //       afterChange: [revalidateRedirects],
+  //     },
+  //   },
+  // }),
   nestedDocsPlugin({
-    collections: ['categories'],
+    collections: ['regions', 'prefectures', 'areas'],
     generateURL: (docs) => docs.reduce((url, doc) => `${url}/${doc.slug}`, ''),
   }),
   seoPlugin({
     generateTitle,
     generateURL,
   }),
-  formBuilderPlugin({
-    fields: {
-      payment: false,
-    },
-    formSubmissionOverrides: {
-      admin: {
-        hidden: (args) => {
-          return !isSuperAdmin(args.user)
-        },
-      },
-    },
-    formOverrides: {
-      admin: {
-        hidden: (args) => {
-          return !isSuperAdmin(args.user)
-        },
-      },
-      fields: ({ defaultFields }) => {
-        return defaultFields.map((field) => {
-          if ('name' in field && field.name === 'confirmationMessage') {
-            return {
-              ...field,
-              editor: lexicalEditor({
-                features: ({ rootFeatures }) => {
-                  return [
-                    ...rootFeatures,
-                    FixedToolbarFeature(),
-                    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                  ]
-                },
-              }),
-            }
-          }
-          return field
-        })
-      },
-    },
-  }),
+  // formBuilderPlugin({
+  //   fields: {
+  //     payment: false,
+  //   },
+  //   formSubmissionOverrides: {
+  //     admin: {
+  //       hidden: (args) => {
+  //         return !isSuperAdmin(args.user)
+  //       },
+  //     },
+  //   },
+  //   formOverrides: {
+  //     admin: {
+  //       hidden: (args) => {
+  //         return !isSuperAdmin(args.user)
+  //       },
+  //     },
+  //     fields: ({ defaultFields }) => {
+  //       return defaultFields.map((field) => {
+  //         if ('name' in field && field.name === 'confirmationMessage') {
+  //           return {
+  //             ...field,
+  //             editor: lexicalEditor({
+  //               features: ({ rootFeatures }) => {
+  //                 return [
+  //                   ...rootFeatures,
+  //                   FixedToolbarFeature(),
+  //                   HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+  //                 ]
+  //               },
+  //             }),
+  //           }
+  //         }
+  //         return field
+  //       })
+  //     },
+  //   },
+  // }),
   multiTenantPlugin<Config>({
     collections: {
       shops: {},

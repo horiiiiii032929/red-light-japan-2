@@ -4,7 +4,7 @@
     "description": "Discover the best adult entertainment venues in Japan's red light districts. Find comprehensive information about prices, business hours, access, and staff details."
   },
   "region": {
-    "title": "{region} Shop List",
+    "title": "Search Nightlife Services",
     "description": "Discover {region}'s best nightlife spots. Find comprehensive information about prices, business hours, access, and staff details. Your trusted guide to safe and reliable entertainment in {region}.",
     "filterOptions": "Filter options",
     "loading": {
@@ -21,8 +21,9 @@
     "paymentMethods": "Payment Methods",
     "applyFilters": "Apply Filters",
     "sort": "Sort",
+    "reset": "reset",
     "sortOptions": {
-      "recommended": "Recommended",
+      "recommended": "Recommended 🔥",
       "newest": "Newest",
       "popular": "Popular",
       "priceLow": "Price: Low to High",
@@ -37,7 +38,11 @@
     "filterDescription": "Select areas and categories to filter the results",
     "selectArea": "Select {area}",
     "selectCategory": "Select {category}",
-    "close": "Close"
+    "close": "Close",
+    "availability": "Availability",
+    "openNow": "Open Now / Late-night",
+    "noResultsFound": "No results found",
+    "noResultsFoundDescription": "Please try adjusting your filters"
   },
   "system": {
     "noResultsFound": "No results found",

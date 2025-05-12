@@ -17,7 +17,7 @@ export async function ShopCard({ shop }: Props) {
   const t = await getTranslations('shops')
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-background">
       <CardHeader className="flex flex-row items-center gap-4">
         <div className="relative h-17 w-17">
           {shop.logo && <Media
