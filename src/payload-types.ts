@@ -76,6 +76,8 @@ export interface Config {
     areas: Area;
     'payment-methods': PaymentMethod;
     shops: Shop;
+    tags: Tag;
+    casts: Cast;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +94,8 @@ export interface Config {
     areas: AreasSelect<false> | AreasSelect<true>;
     'payment-methods': PaymentMethodsSelect<false> | PaymentMethodsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    casts: CastsSelect<false> | CastsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -378,8 +382,9 @@ export interface Shop {
   id: string;
   tenant?: (string | null) | Tenant;
   shopName: string;
+  slug?: string | null;
+  slugLock?: boolean | null;
   message?: string | null;
-  bannerImage?: (string | null) | Media;
   lowestPrice: number;
   logo?: (string | null) | Media;
   images?: (string | Media)[] | null;
@@ -403,70 +408,59 @@ export interface Shop {
   paymentMethods?: (string | PaymentMethod)[] | null;
   nearestStation: string;
   address: string;
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  location?: [number, number] | null;
-  tags: string;
+  tags?: (string | Tag)[] | null;
   openHour: string;
   closeHour: string;
   phoneNumber: {
     phoneNumber: string;
     phoneNumber2?: string | null;
   };
-  line: {
-    platform: string;
+  line?: {
+    snsId?: string | null;
     qrCode?: (string | null) | Media;
   };
-  weChat: {
-    platform: string;
+  weChat?: {
+    snsId?: string | null;
     qrCode?: (string | null) | Media;
   };
-  whatsapp: {
-    platform: string;
+  whatsapp?: {
+    snsId?: string | null;
     qrCode?: (string | null) | Media;
   };
   systems?:
     | {
         name: string;
-        description?: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
+        description?: string | null;
         image?: (string | null) | Media;
         priceMin: number;
         priceMax?: number | null;
         id?: string | null;
       }[]
     | null;
-  staff?:
-    | {
-        name: string;
-        age: number;
-        height: number;
-        cup?: ('A' | 'B' | 'C' | 'D' | 'E' | 'F') | null;
-        images?: (string | Media)[] | null;
-        id?: string | null;
-      }[]
-    | null;
+  systemDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  systemTerms?: string | null;
+  casts?: (string | Cast)[] | null;
   coupons?:
     | {
         code: string;
         name: string;
         description?: string | null;
-        validUntil: string;
+        originalPrice: number;
+        discountedPrice: number;
         id?: string | null;
       }[]
     | null;
@@ -478,6 +472,35 @@ export interface Shop {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: string;
+  title: string;
+  order?: number | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "casts".
+ */
+export interface Cast {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  name: string;
+  age: number;
+  height: number;
+  cup?: ('A' | 'B' | 'C' | 'D' | 'E' | 'F') | null;
+  images?: (string | Media)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -616,6 +639,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'shops';
         value: string | Shop;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: string | Tag;
+      } | null)
+    | ({
+        relationTo: 'casts';
+        value: string | Cast;
       } | null)
     | ({
         relationTo: 'payload-jobs';
@@ -889,8 +920,9 @@ export interface PaymentMethodsSelect<T extends boolean = true> {
 export interface ShopsSelect<T extends boolean = true> {
   tenant?: T;
   shopName?: T;
+  slug?: T;
+  slugLock?: T;
   message?: T;
-  bannerImage?: T;
   lowestPrice?: T;
   logo?: T;
   images?: T;
@@ -900,7 +932,6 @@ export interface ShopsSelect<T extends boolean = true> {
   paymentMethods?: T;
   nearestStation?: T;
   address?: T;
-  location?: T;
   tags?: T;
   openHour?: T;
   closeHour?: T;
@@ -913,19 +944,19 @@ export interface ShopsSelect<T extends boolean = true> {
   line?:
     | T
     | {
-        platform?: T;
+        snsId?: T;
         qrCode?: T;
       };
   weChat?:
     | T
     | {
-        platform?: T;
+        snsId?: T;
         qrCode?: T;
       };
   whatsapp?:
     | T
     | {
-        platform?: T;
+        snsId?: T;
         qrCode?: T;
       };
   systems?:
@@ -938,23 +969,17 @@ export interface ShopsSelect<T extends boolean = true> {
         priceMax?: T;
         id?: T;
       };
-  staff?:
-    | T
-    | {
-        name?: T;
-        age?: T;
-        height?: T;
-        cup?: T;
-        images?: T;
-        id?: T;
-      };
+  systemDescription?: T;
+  systemTerms?: T;
+  casts?: T;
   coupons?:
     | T
     | {
         code?: T;
         name?: T;
         description?: T;
-        validUntil?: T;
+        originalPrice?: T;
+        discountedPrice?: T;
         id?: T;
       };
   meta?:
@@ -964,6 +989,33 @@ export interface ShopsSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  title?: T;
+  order?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "casts_select".
+ */
+export interface CastsSelect<T extends boolean = true> {
+  tenant?: T;
+  name?: T;
+  age?: T;
+  height?: T;
+  cup?: T;
+  images?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1039,10 +1091,15 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?: {
-      relationTo: 'shops';
-      value: string | Shop;
-    } | null;
+    doc?:
+      | ({
+          relationTo: 'shops';
+          value: string | Shop;
+        } | null)
+      | ({
+          relationTo: 'casts';
+          value: string | Cast;
+        } | null);
     global?: string | null;
     user?: (string | null) | User;
   };

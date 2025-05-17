@@ -103,25 +103,14 @@ export const basic: Field[] = [
     },
   },
   {
-    name: 'location',
-    type: 'point',
-    label: {
-      ja: '位置',
-      en: 'Location',
-    },
-  },
-  {
     name: 'tags',
-    type: 'text',
-    required: true,
-    localized: true,
+    type: 'relationship',
+    relationTo: 'tags',
     label: {
       ja: 'タグ',
       en: 'Tags',
     },
-    admin: {
-      placeholder: 'タグを入力してください (カンマ区切り) 例: 英語対応可能、日本人スタッフなど',
-    }
+    hasMany: true,
   },
   {
     type: 'row',
@@ -190,7 +179,7 @@ export const basic: Field[] = [
             name: 'line',
             type: 'group',
             fields: [
-              { name: 'platform', type: 'text', required: true },
+              { name: 'snsId', type: 'text' },
               { name: 'qrCode', type: 'upload', relationTo: 'media' },
             ],
             admin: {
@@ -205,7 +194,7 @@ export const basic: Field[] = [
             name: 'weChat',
             type: 'group',
             fields: [
-              { name: 'platform', type: 'text', required: true },
+              { name: 'snsId', type: 'text' },
               { name: 'qrCode', type: 'upload', relationTo: 'media' },
             ],
             admin: {
@@ -220,7 +209,7 @@ export const basic: Field[] = [
             name: 'whatsapp',
             type: 'group',
             fields: [
-              { name: 'platform', type: 'text', required: true },
+              { name: 'snsId', type: 'text' },
               { name: 'qrCode', type: 'upload', relationTo: 'media' },
             ],
             admin: {

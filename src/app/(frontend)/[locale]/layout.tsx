@@ -15,6 +15,7 @@ import { notFound } from 'next/navigation'
 import { getMessages, setRequestLocale, getTranslations } from 'next-intl/server'
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
+import { Toaster } from '@/components/ui/sonner'
 
 interface Props {
   children: React.ReactNode
@@ -39,15 +40,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     metadataBase: new URL(getServerSideURL()),
-    title: t('app.title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
-    description: t('app.description'),
+    title: t('seo.app-title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
+    description: t('seo.app-description'),
     openGraph: mergeOpenGraph({
-      title: t('app.title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
-      description: t('app.description'),
+      title: t('seo.app-title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
+      description: t('seo.app-description'),
       locale: locale,
       alternateLocale: routing.locales.filter(l => l !== locale),
     }),
-    manifest: '/manifest.json',
+    // manifest: '/manifest.json',
     icons: {
       icon: [
         { url: '/favicon.ico', sizes: '32x32' },
@@ -124,6 +125,7 @@ export default async function RootLayout({ children, params }: Props) {
               </div>
               <Footer locale={locale} />
             </div>
+            <Toaster />
           </NextIntlClientProvider>
         </Providers>
       </body>

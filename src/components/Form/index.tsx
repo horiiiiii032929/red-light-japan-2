@@ -5,59 +5,35 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Label } from "@/components/ui/label"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, MapPinned, Shapes, Sunset, Coins, Tags } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-import type { Area, Category } from "@/payload-types"
-import Link from "next/link"
-import type { TypedLocale } from "payload"
+import type { Area, Category, Tag } from "@/payload-types"
 import React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "@/i18n/routing"
+import { useSearchParams } from "next/navigation"
 import { useTranslations } from 'next-intl'
+import { Separator } from "@/components/ui/separator"
 
 interface Props {
   areas: Area[]
   categories: Category[]
-  locale: TypedLocale
+  tags: Tag[]
+  onSubmit?: () => void
 }
-
-const SORT_OPTIONS = [
-  { value: 'recommended', label: 'Recommended 🔥' },
-  { value: 'rating', label: 'Rating' },
-  { value: 'price_low', label: 'Cheapest' },
-  { value: 'views', label: 'Most Viewed' },
-]
-
-const SPECIAL_TAGS = [
-  'English OK',
-  'New Girls',
-  'Themed Cosplay',
-  'VIP Service',
-  'All You Can Drink',
-  'Private Room',
-  'Credit Card OK',
-  'Foreign Card OK',
-]
 
 interface FilterState {
   prefecture: string
@@ -80,45 +56,55 @@ const PrefectureSelector = ({
   areasByPrefecture: Record<string, Area[]>
   onSelect: (value: string) => void
 }) => {
-  const t = useTranslations('filter')
+  const t = useTranslations()
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState('')
+
   return (
     <div role="group" aria-labelledby="prefecture-label" className="space-y-2">
-      <Label id="prefecture-label" className="font-medium text-sm text-muted-foreground">{t('area')}</Label>
-      <Popover>
+      <Label id="prefecture-label" className="font-medium text-sm text-muted-foreground">
+        <MapPinned className="w-4 h-4" />
+        {t('filters.area')}
+      </Label>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
-            aria-expanded={false}
-            aria-controls="prefecture-list"
+            aria-expanded={open}
             className="w-full justify-between"
           >
-            {prefecture || t('selectArea', { area: '' })}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
+            {prefecture || t('filters.areaPlaceholder')}
+            <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0">
           <Command>
-            <CommandInput placeholder={t('selectArea', { area: '' })} />
-            <CommandEmpty>{t('noResultsFound')}</CommandEmpty>
-            <CommandGroup id="prefecture-list">
-              {Object.keys(areasByPrefecture).map((prefecture) => (
-                <CommandItem
-                  key={prefecture}
-                  onSelect={() => onSelect(prefecture)}
-                  aria-selected={prefecture === prefecture}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      prefecture === prefecture ? "opacity-100" : "opacity-0"
-                    )}
-                    aria-hidden="true"
-                  />
-                  {prefecture}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandInput placeholder={t('filters.areaPlaceholder')} className="h-9" />
+            <CommandList>
+              <CommandEmpty>{t('filters.noResultsFound')}</CommandEmpty>
+              <CommandGroup>
+                {Object.keys(areasByPrefecture).map((prefecture) => (
+                  <CommandItem
+                    key={prefecture}
+                    value={prefecture}
+                    onSelect={(currentValue) => {
+                      onSelect(currentValue)
+                      setValue(currentValue === value ? "" : currentValue)
+                      setOpen(false)
+                    }}
+                  >
+                    {prefecture}
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === prefecture ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
@@ -136,10 +122,8 @@ const CitySelector = ({
   areas: Area[]
   onSelect: (value: string) => void
 }) => {
-  const t = useTranslations('filter')
   return (
     <div role="group" aria-labelledby="cities-label" className="space-y-2">
-      <Label id="cities-label" className="font-medium text-sm text-muted-foreground">{t('selectArea', { area: 'city' })}</Label>
       <div className="flex flex-wrap gap-2 mt-2" role="listbox" aria-multiselectable="true">
         {areas.map((area) => (
           <Badge
@@ -168,10 +152,13 @@ const CategorySelector = ({
   selectedCategories: string[]
   onSelect: (value: string) => void
 }) => {
-  const t = useTranslations('filter')
+  const t = useTranslations()
   return (
     <div role="group" aria-labelledby="categories-label" className="space-y-2">
-      <Label id="categories-label" className="font-medium text-sm text-muted-foreground">{t('categories')}</Label>
+      <Label id="categories-label" className="font-medium text-sm text-muted-foreground">
+        <Shapes className="w-4 h-4" />
+        {t('filters.categories')}
+      </Label>
       <div className="flex flex-wrap gap-2" role="listbox" aria-multiselectable="true">
         {categories.map((category) => (
           <Badge
@@ -198,17 +185,20 @@ const PriceRangeSelector = ({
   value: [number, number]
   onChange: (value: [number, number]) => void
 }) => {
-  const t = useTranslations('shops')
+  const t = useTranslations()
   return (
     <div className="space-y-4" role="group" aria-labelledby="price-range-label" >
-      <Label id="price-range-label" className="font-medium text-sm text-muted-foreground">{t('price')}</Label>
+      <Label id="price-range-label" className="font-medium text-sm text-muted-foreground">
+        <Coins className="w-4 h-4" />
+        {t('filters.price')}
+      </Label>
       <Slider
         defaultValue={[0, 100000]}
         max={100000}
         step={1000}
         value={value}
         onValueChange={onChange}
-        aria-label="Price range"
+        aria-label={t('price')}
       />
       <div className="flex justify-between text-sm text-muted-foreground" aria-live="polite">
         <span>¥{value[0].toLocaleString()}</span>
@@ -224,66 +214,45 @@ const TagSelector = ({
   selectedTags,
   onSelect
 }: {
-  tags: string[]
+  tags: Tag[]
   selectedTags: string[]
   onSelect: (value: string) => void
-}) => (
-  <div role="group" aria-labelledby="tags-label" className="space-y-2">
-    <Label id="tags-label" className="font-medium text-sm text-muted-foreground">Special Tags</Label>
-    <div className="flex flex-wrap gap-2" role="listbox" aria-multiselectable="true">
-      {tags.map((tag) => (
-        <Badge
-          key={tag}
-          variant={selectedTags.includes(tag) ? "default" : "outline"}
-          className="cursor-pointer whitespace-nowrap"
-          onClick={() => onSelect(tag)}
-          role="option"
-          aria-selected={selectedTags.includes(tag)}
-        >
-          {tag}
-        </Badge>
-      ))}
-    </div>
-  </div>
-)
-
-// Sort Selector Component
-const SortSelector = ({
-  value,
-  onChange
-}: {
-  value: string
-  onChange: (value: string) => void
-}) => (
-  <div role="group" aria-labelledby="sort-label" className="space-y-2">
-    <Label id="sort-label" className="font-medium text-sm text-muted-foreground">Sort By</Label>
-    <Select
-      value={value}
-      onValueChange={onChange}
-    >
-      <SelectTrigger aria-label="Select sort order">
-        <SelectValue placeholder="Select sort order" />
-      </SelectTrigger>
-      <SelectContent>
-        {SORT_OPTIONS.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
+}) => {
+  const t = useTranslations()
+  return (
+    <div role="group" aria-labelledby="tags-label" className="space-y-2">
+      <Label id="tags-label" className="font-medium text-sm text-muted-foreground">
+        <Tags className="w-4 h-4" />
+        {t('filters.tags')}
+      </Label>
+      <div className="flex flex-wrap gap-2" role="listbox" aria-multiselectable="true">
+        {tags.map((tag) => (
+          <Badge
+            key={tag.id}
+            variant={selectedTags.includes(tag.slug || '') ? "default" : "outline"}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => onSelect(tag.slug || '')}
+            role="option"
+            aria-selected={selectedTags.includes(tag.slug || '')}
+          >
+            {tag.title}
+          </Badge>
         ))}
-      </SelectContent>
-    </Select>
-  </div>
-)
+      </div>
+    </div>
+  )
+}
 
 export function Form({
   areas,
   categories,
-  locale
+  tags,
+  onSubmit
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const t = useTranslations('filter')
+  const t = useTranslations()
 
   // Group areas by prefecture and include order information
   const areasByPrefecture = areas.reduce((acc, area) => {
@@ -319,18 +288,20 @@ export function Form({
     sort: searchParams.get('sort') || 'recommended'
   });
 
-  const updateParams = (updates: Partial<FilterState>) => {
-    const newParams = { ...localParams, ...updates };
-    setLocalParams(newParams);
+  const updateLocalParams = (updates: Partial<FilterState>) => {
+    setLocalParams(prev => ({ ...prev, ...updates }));
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const params = new URLSearchParams();
-    Object.entries(newParams).forEach(([key, value]) => {
+    Object.entries(localParams).forEach(([key, value]) => {
       if (value) {
         params.set(key, value);
       }
     });
-
-    router.push(`/${locale}/search?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
+    onSubmit?.();
   };
 
   const selectedCities = localParams.city?.split(',') || [];
@@ -345,55 +316,32 @@ export function Form({
     const newCities = selectedCities.includes(city)
       ? selectedCities.filter(c => c !== city)
       : [...selectedCities, city];
-    updateParams({ city: newCities.join(',') });
+    updateLocalParams({ city: newCities.join(',') });
   };
 
   const handleCategorySelect = (category: string) => {
     const newCategories = selectedCategories.includes(category)
       ? selectedCategories.filter(c => c !== category)
       : [...selectedCategories, category];
-    updateParams({ category: newCategories.join(',') });
+    updateLocalParams({ category: newCategories.join(',') });
   };
 
   const handleTagSelect = (tag: string) => {
     const newTags = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
-    updateParams({ tags: newTags.join(',') });
+    updateLocalParams({ tags: newTags.join(',') });
   };
 
   const handlePriceRangeChange = (value: [number, number]) => {
-    updateParams({
+    updateLocalParams({
       price_min: String(value[0]),
       price_max: String(value[1])
     });
   };
 
   return (
-    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{t('filters')}</h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            setLocalParams({
-              prefecture: '',
-              city: '',
-              category: '',
-              open_now: '',
-              price_min: '0',
-              price_max: '100000',
-              tags: '',
-              sort: 'recommended'
-            });
-            router.push(`/${locale}/search`);
-          }}
-        >
-          {t('reset')}
-        </Button>
-      </div>
-
+    <form id="filter-form" onSubmit={handleSubmit}>
       <div className="space-y-6">
         {/* Location Section */}
         <section className="space-y-4">
@@ -401,7 +349,7 @@ export function Form({
             <PrefectureSelector
               prefecture={localParams.prefecture}
               areasByPrefecture={sortedPrefectures}
-              onSelect={(prefecture) => updateParams({ prefecture })}
+              onSelect={(prefecture) => updateLocalParams({ prefecture })}
             />
             {localParams.prefecture && (
               <CitySelector
@@ -413,6 +361,8 @@ export function Form({
           </div>
         </section>
 
+        <Separator className="my-4" />
+
         {/* Categories Section */}
         <section className="space-y-4">
           <CategorySelector
@@ -422,19 +372,26 @@ export function Form({
           />
         </section>
 
+        <Separator className="my-4" />
+
         {/* Availability Section */}
         <section className="space-y-4">
-          <h3 className="font-medium text-sm text-muted-foreground">{t('filterOptions')}</h3>
+          <h3 className="font-medium text-sm text-muted-foreground flex items-center gap-2">
+            <Sunset className="w-4 h-4" />
+            {t('filters.availability')}
+          </h3>
           <div className="flex items-center space-x-2">
             <Switch
               id="open-now"
               checked={localParams.open_now === 'true'}
-              onCheckedChange={(checked) => updateParams({ open_now: checked ? 'true' : '' })}
-              aria-label="Open Now / Late-night"
+              onCheckedChange={(checked) => updateLocalParams({ open_now: checked ? 'true' : '' })}
+              aria-label={t('openNow')}
             />
-            <Label htmlFor="open-now">{t('filterOptions')}</Label>
+            <Label htmlFor="open-now">{t('filters.openNow')}</Label>
           </div>
         </section>
+
+        <Separator className="my-4" />
 
         {/* Price Section */}
         <section className="space-y-4">
@@ -445,21 +402,13 @@ export function Form({
         </section>
 
         {/* Special Features Section */}
-        {/* <section className="space-y-4">
+        <section className="space-y-4">
           <TagSelector
-            tags={SPECIAL_TAGS}
+            tags={tags}
             selectedTags={selectedTags}
             onSelect={handleTagSelect}
           />
-        </section> */}
-
-        {/* Sort Section */}
-        {/* <section className="space-y-4">
-          <SortSelector
-            value={localParams.sort}
-            onChange={(value) => updateParams({ sort: value })}
-          />
-        </section> */}
+        </section>
       </div>
     </form>
   )

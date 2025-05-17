@@ -21,6 +21,9 @@ import { PaymentMethods } from './collections/PaymentMethods'
 import { Shops } from './collections/Shops'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { Prefectures } from './collections/Prefectures'
+import { Tags } from './collections/Tags'
+import { Casts } from './collections/Casts'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -40,12 +43,6 @@ export default buildConfig({
       ],
     },
     components: {
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
-      // beforeDashboard: ['@/components/BeforeDashboard'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
-      beforeDashboard: ['@/components/BeforeDashboard'],
       graphics: {
         Logo: '@/components/payload/Logo',
         Icon: '@/components/payload/Icon',
@@ -92,7 +89,9 @@ export default buildConfig({
     Prefectures,
     Areas,
     PaymentMethods,
-    Shops
+    Shops,
+    Tags,
+    Casts
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [

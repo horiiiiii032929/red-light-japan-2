@@ -1,105 +1,78 @@
 {
-  "app": {
-    "title": "Nightlife Japan - 성인 엔터테인먼트 가이드",
-    "description": "일본의 유흥가에서 최고의 성인 엔터테인먼트 장소를 발견하세요. 가격, 영업 시간, 접근성, 스태프 정보 등 종합적인 정보를 제공합니다."
+  "seo": {
+    "app-title": "나이트라이프 재팬 - 성인 엔터테인먼트 가이드",
+    "app-description": "나이트라이프 재팬은 일본 최고의 성인 엔터테인먼트 가이드입니다. 도쿄, 오사카 및 기타 지역의 최고의 성인 엔터테인먼트 장소를 찾아보세요."
   },
-  "region": {
-    "title": "나이트라이프 서비스 검색",
-    "description": "{region}의 최고의 나이트라이프 스팟을 발견하세요. 가격, 영업시간, 접근성, 스태프 정보 등 {region}의 나이트라이프에 대한 종합적인 정보를 제공합니다. 안전하고 신뢰할 수 있는 엔터테인먼트 가이드.",
-    "filterOptions": "필터 옵션",
-    "loading": {
-      "form": "필터 로딩 중...",
-      "mobileForm": "모바일 필터 로딩 중...",
-      "content": "콘텐츠 로딩 중..."
-    }
+  "breadcrumbs": {
+    "home": "홈",
+    "search": "검색"
   },
-  "filter": {
-    "filters": "필터",
-    "area": "지역",
-    "serviceType": "서비스 유형",
-    "categories": "카테고리",
-    "paymentMethods": "결제 방법",
+  "search": {
+    "title": "매장 검색",
+    "description": "검색 결과 {count}개",
+    "noResultsFound": "검색 결과가 없습니다",
+    "noResultsFoundDescription": "다른 필터를 시도해보세요",
+    "tryDifferentFilters": "다른 필터 시도하기",
+    "resetFilters": "필터 초기화"
+  },
+  "filters": {
+    "title": "필터",
     "applyFilters": "필터 적용",
-    "sort": "정렬",
-    "reset": "필터 초기화",
+    "reset": "초기화",
+    
     "sortOptions": {
-      "recommended": "추천 🔥",
-      "newest": "최신순",
-      "popular": "인기순",
-      "priceLow": "가격 낮은순",
-      "priceHigh": "가격 높은순"
+      "newest": "최신순"
     },
-    "mobile": {
-      "filters": "필터",
-      "sort": "정렬 기준"
-    },
-    "applying": "적용 중...",
-    "filterOptions": "필터 옵션",
-    "filterDescription": "지역과 카테고리를 선택하여 결과를 필터링하세요",
-    "selectArea": "{area} 선택",
-    "selectCategory": "{category} 선택",
-    "close": "닫기",
+
+    "area": "지역",
+    "areaPlaceholder": "지역 선택",
+    "categories": "카테고리",
     "availability": "영업 상태",
-    "openNow": "영업 중 / 심야 영업",
-    "noResultsFound": "결과를 찾을 수 없습니다",
-    "noResultsFoundDescription": "필터를 조정해 보세요"
-  },
-  "system": {
-    "noResultsFound": "결과를 찾을 수 없습니다",
-    "tryDifferentFilters": "필터를 조정해 보세요",
-    "errorOccurred": "오류가 발생했습니다",
-    "tryAgainLater": "나중에 다시 시도해 주세요"
-  },
-  "shops": {
-    "shopList": "매장 목록",
-    "memberCount": "{count}명",
-    "hasCoupon": "쿠폰 사용 가능",
+    "openNow": "영업 중",
     "price": "가격",
-    "hours": "영업 시간",
-    "viewDetails": "자세히 보기",
-    "access": "접근",
-    "lowestPrice": "최저 가격",
-    "shop": {
-      "description": "가격, 영업시간, 접근성, 직원 정보 등 이 매장에 대한 상세 정보를 확인하세요.",
-      "noXXAvailable": "{platform}을(를) 사용할 수 없습니다",
-      "contactInformation": "연락처 정보",
-      "phone": "전화번호",
-      "address": "주소",
-      "businessHours": "영업 시간",
-      "connectWithUs": "연락하기",
-      "line": "라인",
-      "wechat": "위챗",
-      "whatsapp": "왓츠앱",
-      "about": "소개",
-      "About": "소개",
-      "system": "시스템",
-      "System": "시스템",
-      "servicesAndFacilities": "서비스 및 시설",
-      "location": "위치",
-      "staff": "스태프",
-      "Staff": "스태프",
-      "age": "나이",
-      "height": "키",
-      "coupon": "쿠폰",
-      "Coupon": "쿠폰",
-      "validUntil": "유효 기간"
-    },
-    "system": {
-      "noResultsFound": "조건에 맞는 매장을 찾을 수 없습니다"
-    }
+    "tags": "태그",
+
+    "noResultsFound": "검색 결과가 없습니다"
   },
-  "footer": {
-    "regions": {
-      "regions": "지역",
-      "kantou": "간토",
-      "kansai": "간사이"
-    },
+
+  "shop-card": {
+    "viewDetails": "상세 보기"
+  },
+
+  "shop-page": {
+    "call": "전화하기",
+
     "information": "정보",
-    "aboutUs": "회사 소개",
-    "contact": "연락처",
-    "legal": "법적 정보",
-    "terms": "이용 약관",
-    "privacy": "개인정보 처리방침",
-    "rightsReserved": "모든 권리 보유"
+    "about-us": "매장 소개",
+    "features": "특징",
+    "basic-info": "기본 정보",
+    "address": "주소",
+    "open-hours": "영업 시간",
+    "phone-number": "전화번호",
+    "price-range": "가격대",
+    "category": "카테고리",
+    "payment-methods": "결제 방법",
+
+    "cast": "캐스트",
+    "cast-members": "캐스트 멤버",
+    
+    "system": "시스템",
+    "system-menu": "시스템 메뉴",
+    "system-terms": "시스템 이용약관",
+
+    "coupon": "쿠폰",
+    "coupon-code": "쿠폰 코드",
+    "coupon-terms-and-conditions": "이용약관",
+
+    "phone-reservation": "전화 예약",
+    "access": "오시는 길",
+
+    "or-contact-via": "또는 다음 방법으로 문의",
+    "copy": "복사",
+    "copied": "복사됨"
+  },
+
+  "common": {
+    "copied": "복사됨"
   }
 }

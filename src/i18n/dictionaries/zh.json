@@ -1,105 +1,78 @@
 {
-  "app": {
-    "title": "Nightlife Japan - 成人娱乐指南",
-    "description": "探索日本红灯区最佳成人娱乐场所。提供价格、营业时间、交通和员工详情等全面信息。"
+  "seo": {
+    "app-title": "日本夜生活 - 成人娱乐指南",
+    "app-description": "日本夜生活是日本领先的成人娱乐指南。在东京、大阪等地寻找最佳成人娱乐场所。"
   },
-  "region": {
-    "title": "夜生活服务搜索",
-    "description": "探索{region}最佳夜生活场所。提供全面的价格、营业时间、交通和员工信息。您值得信赖的{region}安全可靠娱乐指南。",
-    "filterOptions": "筛选选项",
-    "loading": {
-      "form": "正在加载筛选器...",
-      "mobileForm": "正在加载移动端筛选器...",
-      "content": "正在加载内容..."
-    }
+  "breadcrumbs": {
+    "home": "首页",
+    "search": "搜索"
   },
-  "filter": {
-    "filters": "筛选",
-    "area": "地区",
-    "serviceType": "服务类型",
-    "categories": "类别",
-    "paymentMethods": "支付方式",
+  "search": {
+    "title": "搜索店铺",
+    "description": "找到 {count} 个结果",
+    "noResultsFound": "未找到结果",
+    "noResultsFoundDescription": "请尝试其他筛选条件",
+    "tryDifferentFilters": "尝试其他筛选条件",
+    "resetFilters": "重置筛选"
+  },
+  "filters": {
+    "title": "筛选",
     "applyFilters": "应用筛选",
-    "sort": "排序",
-    "reset": "重置筛选",
+    "reset": "重置",
+    
     "sortOptions": {
-      "recommended": "推荐 🔥",
-      "newest": "最新",
-      "popular": "热门",
-      "priceLow": "价格从低到高",
-      "priceHigh": "价格从高到低"
+      "newest": "最新"
     },
-    "mobile": {
-      "filters": "筛选",
-      "sort": "排序方式"
-    },
-    "applying": "正在应用...",
-    "filterOptions": "筛选选项",
-    "filterDescription": "选择地区和类别以筛选结果",
-    "selectArea": "选择{area}",
-    "selectCategory": "选择{category}",
-    "close": "关闭",
+
+    "area": "地区",
+    "areaPlaceholder": "选择地区",
+    "categories": "分类",
     "availability": "营业状态",
-    "openNow": "营业中 / 深夜营业",
-    "noResultsFound": "未找到结果",
-    "noResultsFoundDescription": "请尝试调整您的筛选条件"
-  },
-  "system": {
-    "noResultsFound": "未找到结果",
-    "tryDifferentFilters": "尝试调整筛选条件",
-    "errorOccurred": "发生错误",
-    "tryAgainLater": "请稍后再试"
-  },
-  "shops": {
-    "shopList": "店铺列表",
-    "memberCount": "{count} 名",
-    "hasCoupon": "优惠券可用",
+    "openNow": "正在营业",
     "price": "价格",
-    "hours": "营业时间",
-    "viewDetails": "查看详情",
-    "access": "访问",
-    "lowestPrice": "最低价格",
-    "system": {
-      "noResultsFound": "未找到结果"
-    },
-    "shop": {
-      "description": "店铺描述",
-      "noXXAvailable": "没有{platform}可用",
-      "contactInformation": "联系信息",
-      "phone": "电话",
-      "address": "地址",
-      "businessHours": "营业时间",
-      "connectWithUs": "联系我们",
-      "line": "LINE",
-      "wechat": "微信",
-      "whatsapp": "WhatsApp",
-      "about": "关于",
-      "About": "关于",
-      "system": "系统",
-      "System": "系统",
-      "servicesAndFacilities": "服务和设施",
-      "location": "位置",
-      "staff": "员工",
-      "Staff": "员工",
-      "age": "年龄",
-      "height": "身高",
-      "coupon": "优惠券",
-      "Coupon": "优惠券",
-      "validUntil": "有效期至"
-    }
+    "tags": "标签",
+
+    "noResultsFound": "未找到结果"
   },
-  "footer": {
-    "regions": {
-      "regions": "区域",
-      "kantou": "关东",
-      "kansai": "关西"
-    },
+
+  "shop-card": {
+    "viewDetails": "查看详情"
+  },
+
+  "shop-page": {
+    "call": "致电",
+
     "information": "信息",
-    "aboutUs": "关于我们",
-    "contact": "联系方式",
-    "legal": "法律信息",
-    "terms": "服务条款",
-    "privacy": "隐私政策",
-    "rightsReserved": "保留所有权利"
+    "about-us": "关于我们",
+    "features": "特色",
+    "basic-info": "基本信息",
+    "address": "地址",
+    "open-hours": "营业时间",
+    "phone-number": "电话号码",
+    "price-range": "价格范围",
+    "category": "类别",
+    "payment-methods": "支付方式",
+
+    "cast": "演员",
+    "cast-members": "演员成员",
+    
+    "system": "系统",
+    "system-menu": "系统菜单",
+    "system-terms": "系统条款",
+
+    "coupon": "优惠券",
+    "coupon-code": "优惠码",
+    "coupon-terms-and-conditions": "条款和条件",
+
+    "phone-reservation": "电话预约",
+    "access": "交通",
+
+    "or-contact-via": "或通过以下方式联系",
+    "copy": "复制",
+    "copied": "已复制"
+  },
+
+  "common": {
+    "copied": "已复制"
   }
 }

@@ -7,6 +7,7 @@ export const system: Field = {
     ja: 'コース',
     en: 'Systems',
   },
+  localized: true,
   fields: [
     {
       name: 'name',
@@ -20,7 +21,7 @@ export const system: Field = {
     },
     {
       name: 'description',
-      type: 'richText',
+      type: 'textarea',
       localized: true,
       label: {
         ja: 'コース説明',

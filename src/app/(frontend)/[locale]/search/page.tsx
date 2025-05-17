@@ -1,127 +1,107 @@
-import type { Metadata } from 'next/types'
 import { getTranslations } from 'next-intl/server'
 import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload, TypedLocale, Where } from 'payload'
 import React from 'react'
-import { ShopCard } from '@/components/Shop/Card'
+import { MobileForm } from '@/components/MobileForm'
+import { queryMasterData } from '@/lib/queries/masterData'
+import { NoResults } from '@/components/Search/NoResults'
+import { ShopCard } from '@/components/ShopCard'
+import { Shop } from '@/payload-types'
+
+// Types
+type SearchParams = {
+  prefecture?: string
+  city?: string
+  category?: string
+  open_now?: string
+  price_min?: string
+  price_max?: string
+  tags?: string
+  sort?: string
+  page?: string
+}
 
 type Props = {
   params: Promise<{
     locale: TypedLocale
   }>,
-  searchParams: Promise<{
-    prefecture?: string
-    city?: string
-    category?: string
-    open_now?: string
-    price_min?: string
-    price_max?: string
-    tags?: string
-    sort?: string
-  }>,
+  searchParams: Promise<SearchParams>,
 }
 
 const SORT_OPTIONS = {
-  recommended: '-createdAt',
-  newest: '-createdAt',
-  popular: '-staff.length',
-  priceLow: 'lowestPrice',
-  priceHigh: '-lowestPrice'
+  newest: '-updatedAt',
 } as const
 
 type SortOption = keyof typeof SORT_OPTIONS
 
-export default async function Page({ params, searchParams }: Props) {
-  const { locale } = await params
-  const awaitedSearchParams = await searchParams || {}
+// Constants
+const SHOP_SELECT_FIELDS = {
+  id: true,
+  casts: true,
+  logo: true,
+  shopName: true,
+  categories: true,
+  area: true,
+  prefecture: true,
+  lowestPrice: true,
+  tags: true,
+  nearestStation: true,
+  openHour: true,
+  closeHour: true,
+  coupons: true,
+  message: true
+} as const
 
-  const payload = await getPayload({ config: configPromise })
-
-  // Build where conditions
-  const whereConditions = buildWhereConditions(awaitedSearchParams)
-
-  // Validate and get sort option
-  const sortField = SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.recommended
-
-  const shops = await payload.find({
-    collection: 'shops',
-    overrideAccess: false,
-    locale,
-    where: whereConditions,
-    sort: sortField,
-    select: {
-      id: true,
-      logo: true,
-      shopName: true,
-      message: true,
-      lowestPrice: true,
-      openHour: true,
-      closeHour: true,
-      bannerImage: true,
-      staff: true,
-      description: true,
-      paymentMethods: true,
-      area: true,
-      categories: true,
-    }
-  })
-
-  const t = await getTranslations('system')
-
-  return (
-    <div className="flex flex-col gap-4 py-4">
-      {shops.docs.map((shop) => (
-        <ShopCard key={shop.id} shop={shop} />
-      ))}
-
-      {shops.totalDocs === 0 && (
-        <div className="container">
-          <p className="text-center text-2xl font-bold">{t('noResultsFound')}</p>
-          <p className="text-center text-muted-foreground mt-2">{t('tryDifferentFilters')}</p>
-        </div>
-      )}
-
-      <div className="container">
-        {shops.totalPages > 1 && shops.page && (
-          <Pagination page={shops.page} totalPages={shops.totalPages} />
-        )}
-      </div>
-    </div>
-  )
+// Utility functions
+function getFilterCount(searchParams: SearchParams): number {
+  return Object.entries(searchParams).reduce((count, [key, value]) => {
+    if (key === 'sort' || !value) return count
+    return count + 1
+  }, 0)
 }
 
 function buildWhereConditions(
-  searchParams: Awaited<Props['searchParams']>,
+  searchParams: SearchParams,
+  masterData: Awaited<ReturnType<typeof queryMasterData>>
 ): Where {
-  const conditions: Where = {}
+  const conditions: Where = {
+    _status: { equals: 'published' } // Only show published shops
+  }
 
   // Prefecture filter
   if (searchParams?.prefecture) {
-    conditions['area.prefecture.slug'] = {
-      equals: searchParams.prefecture
+    const prefecture = masterData.prefectures.find(p => p.slug === searchParams.prefecture)
+    if (prefecture) {
+      conditions['prefecture'] = { equals: prefecture.id }
     }
   }
 
   // City filter
   if (searchParams?.city) {
-    conditions['area.slug'] = {
-      in: searchParams.city.split(',')
+    const cityAreas = masterData.areas.filter(area => area.slug === searchParams.city)
+    if (cityAreas.length > 0) {
+      conditions['area'] = { in: cityAreas.map(area => area.id) }
     }
   }
 
   // Category filter
   if (searchParams?.category) {
-    conditions['categories.slug'] = {
-      in: searchParams.category.split(',')
+    const categorySlugs = searchParams.category.split(',')
+    const categoryIds = masterData.categories
+      .filter(category => categorySlugs.includes(category.slug || ''))
+      .map(category => category.id)
+
+    if (categoryIds.length > 0) {
+      conditions['categories'] = { in: categoryIds }
     }
   }
 
   // Price range filter
   if (searchParams?.price_min || searchParams?.price_max) {
     conditions['lowestPrice'] = {
-      ...(searchParams?.price_min && { greater_than_equal: Number(searchParams?.price_min) }),
-      ...(searchParams?.price_max && { less_than_equal: Number(searchParams?.price_max) })
+      ...(searchParams?.price_min && { greater_than_equal: Number(searchParams.price_min) }),
+      ...(searchParams?.price_max && { less_than_equal: Number(searchParams.price_max) })
     }
   }
 
@@ -130,15 +110,98 @@ function buildWhereConditions(
     const now = new Date()
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
-    const currentTime = currentHour + (currentMinute / 60)
+    const currentTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
 
-    conditions['openHour'] = {
-      less_than_equal: currentTime.toString()
-    }
-    conditions['closeHour'] = {
-      greater_than_equal: currentTime.toString()
+    conditions['and'] = [
+      { openHour: { less_than_equal: currentTime } },
+      { closeHour: { greater_than_equal: currentTime } }
+    ]
+  }
+
+  // Tags filter
+  if (searchParams?.tags) {
+    const tagSlugs = searchParams.tags.split(',')
+    const tagIds = masterData.tags
+      .filter(tag => tagSlugs.includes(tag.slug || ''))
+      .map(tag => tag.id)
+
+    if (tagIds.length > 0) {
+      conditions['tags'] = { in: tagIds }
     }
   }
 
   return conditions
+}
+
+export default async function SearchPage({ params, searchParams }: Props) {
+  const { locale } = await params
+  const t = await getTranslations()
+  const awaitedSearchParams = await searchParams || {}
+  const masterData = await queryMasterData({ locale })
+
+  const filterCount = getFilterCount(awaitedSearchParams)
+  const whereConditions = buildWhereConditions(awaitedSearchParams, masterData)
+  const sortField = SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.newest
+
+  const payload = await getPayload({ config: configPromise })
+  const page = Number(awaitedSearchParams.page) || 1
+  const limit = 12 // Number of items per page
+
+  const shops = await payload.find({
+    collection: 'shops',
+    overrideAccess: false,
+    locale,
+    depth: 3,
+    where: whereConditions,
+    sort: sortField,
+    page,
+    limit,
+    select: SHOP_SELECT_FIELDS
+  })
+
+
+  return (
+    <div className="flex flex-col">
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          {t('search.title')}
+        </h1>
+        <p className="mt-1 text-xs text-muted-foreground md:mt-2 md:text-sm">
+          {t('search.description', { count: shops.totalDocs })}
+        </p>
+      </div>
+
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:mb-6 md:justify-end">
+        <MobileForm
+          areas={masterData.areas}
+          categories={masterData.categories}
+          filterCount={filterCount}
+          tags={masterData.tags}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {shops.docs.length > 0 ? (
+          shops.docs.map((shop) => (
+            <ShopCard key={shop.id} shop={shop as Shop} />
+          ))
+        ) : (
+          <div className="flex justify-center items-center h-full w-full col-span-full">
+            <NoResults />
+          </div>
+        )}
+      </div>
+
+      <div className="container">
+        {shops.totalPages > 1 && shops.page && (
+          <Pagination
+            page={shops.page}
+            totalPages={shops.totalPages}
+            baseUrl={`/${locale}/search`}
+            searchParams={awaitedSearchParams}
+          />
+        )}
+      </div>
+    </div>
+  )
 }

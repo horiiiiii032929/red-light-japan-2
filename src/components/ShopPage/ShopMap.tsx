@@ -103,4 +103,4 @@ const ShopMap = ({ location, name }: ShopMapProps) => {
 
 export default dynamic(() => Promise.resolve(ShopMap), {
   ssr: false
-})
+}) 

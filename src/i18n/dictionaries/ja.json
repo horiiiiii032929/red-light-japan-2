@@ -1,105 +1,78 @@
 {
-  "app": {
-    "title": "Nightlife Japan - 大人のエンターテイメントガイド",
-    "description": "日本の歓楽街で最高の大人のエンターテイメント施設を発見。料金、営業時間、アクセス、スタッフ情報など、包括的な情報をご提供。"
+  "seo": {
+    "app-title": "ナイトライフジャパン - 大人のエンターテイメントガイド",
+    "app-description": "ナイトライフジャパンは日本最大の大人のエンターテイメントガイドです。東京、大阪、その他の地域の最高の大人のエンターテイメント施設を見つけましょう。"
   },
-  "region": {
-    "title": "夜遊びサービス検索",
-    "description": "{region}の夜遊びスポット情報。最新の料金、営業時間、アクセス方法、スタッフ情報など、{region}の夜遊びに必要な情報を網羅。安全で安心な夜遊びスポットをご紹介。",
-    "filterOptions": "フィルターオプション",
-    "loading": {
-      "form": "フィルターを読み込み中...",
-      "mobileForm": "モバイルフィルターを読み込み中...",
-      "content": "コンテンツを読み込み中..."
-    }
+  "breadcrumbs": {
+    "home": "ホーム",
+    "search": "検索"
   },
-  "filter": {
-    "filters": "フィルター",
-    "area": "エリア",
-    "serviceType": "サービスタイプ",
-    "categories": "カテゴリー",
-    "paymentMethods": "支払い方法",
+  "search": {
+    "title": "店舗検索",
+    "description": "{count}件の結果が見つかりました",
+    "noResultsFound": "検索結果が見つかりません",
+    "noResultsFoundDescription": "別のフィルターをお試しください",
+    "tryDifferentFilters": "別のフィルターを試す",
+    "resetFilters": "フィルターをリセット"
+  },
+  "filters": {
+    "title": "フィルター",
     "applyFilters": "フィルターを適用",
-    "sort": "並び替え",
-    "reset": "フィルターをリセット",
+    "reset": "リセット",
+    
     "sortOptions": {
-      "recommended": "おすすめ 🔥",
-      "newest": "新着順",
-      "popular": "人気順",
-      "priceLow": "価格低い順",
-      "priceHigh": "価格高い順"
+      "newest": "新着順"
     },
-    "mobile": {
-      "filters": "フィルター",
-      "sort": "並び替え"
-    },
-    "applying": "適用中...",
-    "filterOptions": "フィルターオプション",
-    "filterDescription": "エリアとカテゴリーを選択して結果を絞り込み",
-    "selectArea": "{area}を選択",
-    "selectCategory": "{category}を選択",
-    "close": "閉じる",
+
+    "area": "エリア",
+    "areaPlaceholder": "エリアを選択",
+    "categories": "カテゴリー",
     "availability": "営業状況",
-    "openNow": "営業中 / 深夜営業",
-    "noResultsFound": "結果が見つかりません",
-    "noResultsFoundDescription": "フィルターを調整してみてください"
-  },
-  "system": {
-    "noResultsFound": "結果が見つかりません",
-    "tryDifferentFilters": "フィルターを調整してください",
-    "errorOccurred": "エラーが発生しました",
-    "tryAgainLater": "後でもう一度お試しください"
-  },
-  "shops": {
-    "shopList": "店舗一覧",
-    "memberCount": "{count}名",
-    "hasCoupon": "クーポンあり",
+    "openNow": "営業中",
     "price": "料金",
-    "hours": "営業時間",
-    "viewDetails": "詳細を見る",
-    "access": "アクセス",
-    "lowestPrice": "最低価格",
-    "shop": {
-      "description": "料金、営業時間、アクセス、スタッフ情報など、この店舗の詳細情報をご覧いただけます。",
-      "noXXAvailable": "{platform}は利用できません",
-      "contactInformation": "連絡先情報",
-      "phone": "電話番号",
-      "address": "住所",
-      "businessHours": "営業時間",
-      "connectWithUs": "お問い合わせ",
-      "line": "LINE",
-      "wechat": "WeChat",
-      "whatsapp": "WhatsApp",
-      "about": "概要",
-      "About": "概要",
-      "system": "システム",
-      "System": "システム",
-      "servicesAndFacilities": "サービスと設備",
-      "location": "場所",
-      "staff": "スタッフ",
-      "Staff": "スタッフ",
-      "age": "年齢",
-      "height": "身長",
-      "coupon": "クーポン",
-      "Coupon": "クーポン",
-      "validUntil": "有効期限"
-    },
-    "system": {
-      "noResultsFound": "条件に一致する店舗が見つかりません"
-    }
+    "tags": "タグ",
+
+    "noResultsFound": "検索結果が見つかりません"
   },
-  "footer": {
-    "regions": {
-      "regions": "地域",
-      "kantou": "関東",
-      "kansai": "関西"
-    },
+
+  "shop-card": {
+    "viewDetails": "詳細を見る"
+  },
+
+  "shop-page": {
+    "call": "電話する",
+
     "information": "情報",
-    "aboutUs": "私たちについて",
-    "contact": "お問い合わせ",
-    "legal": "法的情報",
-    "terms": "利用規約",
-    "privacy": "プライバシーポリシー",
-    "rightsReserved": "全著作権所有"
+    "about-us": "店舗について",
+    "features": "特徴",
+    "basic-info": "基本情報",
+    "address": "住所",
+    "open-hours": "営業時間",
+    "phone-number": "電話番号",
+    "price-range": "料金帯",
+    "category": "カテゴリー",
+    "payment-methods": "支払い方法",
+
+    "cast": "キャスト",
+    "cast-members": "キャストメンバー",
+    
+    "system": "システム",
+    "system-menu": "システムメニュー",
+    "system-terms": "システム利用規約",
+
+    "coupon": "クーポン",
+    "coupon-code": "クーポンコード",
+    "coupon-terms-and-conditions": "利用規約",
+
+    "phone-reservation": "電話予約",
+    "access": "アクセス",
+
+    "or-contact-via": "または以下の方法でお問い合わせ",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+
+  "common": {
+    "copied": "コピーしました"
   }
 }

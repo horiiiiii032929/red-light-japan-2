@@ -104,6 +104,7 @@ export const plugins: Plugin[] = [
     collections: {
       shops: {},
       media: {},
+      casts: {},
     },
     tenantField: {
       access: {

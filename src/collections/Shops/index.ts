@@ -14,6 +14,8 @@ import { system } from './tabs/system'
 import { coupon } from './tabs/coupon'
 import { basic } from './tabs/basic'
 import { top } from './tabs/top'
+import { lexicalEditor, FixedToolbarFeature, InlineToolbarFeature, UploadFeature, EXPERIMENTAL_TableFeature } from '@payloadcms/richtext-lexical'
+import { slugField } from '@/fields/slug'
 
 export const Shops: CollectionConfig<'shops'> = {
   slug: 'shops',
@@ -48,6 +50,7 @@ export const Shops: CollectionConfig<'shops'> = {
         en: 'Shop Name',
       },
     },
+    ...slugField(),
     {
       type: 'tabs',
       tabs: [
@@ -66,14 +69,51 @@ export const Shops: CollectionConfig<'shops'> = {
           },
         },
         {
-          fields: [system],
+          fields: [
+            system,
+            {
+              name: 'systemDescription',
+              type: 'richText',
+              localized: true,
+              label: {
+                ja: 'システム説明',
+                en: 'System Description',
+              },
+              editor: lexicalEditor({
+                features: ({ defaultFeatures, rootFeatures }) => {
+                  return [
+                    ...defaultFeatures,
+                    ...rootFeatures,
+                    FixedToolbarFeature(),
+                    InlineToolbarFeature(),
+                    EXPERIMENTAL_TableFeature(),
+                  ]
+                },
+              }),
+            },
+            {
+              name: 'systemTerms',
+              type: 'textarea',
+              localized: true,
+              label: {
+                ja: 'システム利用規約',
+                en: 'System Terms',
+              },
+              admin: {
+                rows: 10,
+                placeholder: '利用規約を入力してください(改行でわけられます)',
+              },
+            },
+          ],
           label: {
             ja: 'システム',
             en: 'System',
           },
         },
         {
-          fields: [staff],
+          fields: [
+            staff
+          ],
           label: {
             ja: 'スタッフ',
             en: 'Staff',
@@ -109,8 +149,8 @@ export const Shops: CollectionConfig<'shops'> = {
     }
   ],
   hooks: {
-    afterChange: [revalidateShop],
-    afterDelete: [revalidateDelete],
+    // afterChange: [revalidateShop],
+    // afterDelete: [revalidateDelete],
   },
   versions: {
     drafts: {

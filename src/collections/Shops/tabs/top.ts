@@ -12,15 +12,6 @@ export const top: Field[] = [
 
   },
   {
-    name: 'bannerImage',
-    type: 'upload',
-    relationTo: 'media',
-    label: {
-      ja: 'バナー画像',
-      en: 'Banner Image',
-    },
-  },
-  {
     name: 'lowestPrice',
     type: 'number',
     required: true,

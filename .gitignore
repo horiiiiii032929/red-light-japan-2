@@ -9,5 +9,10 @@ node_modules
 # Payload default media upload directory
 public/media/
 
+src/migrations/data
+src/migrations/data/media
+src/public
+
+
 public/robots.txt
 public/sitemap*.xml

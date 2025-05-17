@@ -7,12 +7,12 @@ export const coupon: Field = {
     en: 'Coupon',
   },
   type: 'array',
+  localized: true,
   fields: [
     {
       name: 'code',
       type: 'text',
       required: true,
-      localized: true,
       label: {
         ja: 'クーポンコード',
         en: 'Coupon Code',
@@ -38,13 +38,14 @@ export const coupon: Field = {
       },
     },
     {
-      name: 'validUntil',
-      type: 'date',
+      name: 'originalPrice',
+      type: 'number',
       required: true,
-      label: {
-        ja: '有効期限',
-        en: 'Valid Until',
-      },
+    },
+    {
+      name: 'discountedPrice',
+      type: 'number',
+      required: true,
     },
   ],
 }

@@ -38,17 +38,15 @@ export const HeaderClient = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container-wrapper">
-        <div className="container flex h-14 items-center gap-2 md:gap-4">
-          <Link href="/" className="mr-4 flex items-center gap-2 lg:mr-6">
-            <Logo className="h-6 w-6" />
+        <div className="container flex h-16 items-center justify-between">
+          <Link href="/">
+            <Logo />
           </Link>
 
-          <div className="ml-auto flex justify-end">
-            <nav className="flex items-center gap-1">
-              <LocaleSwitcher />
-              <ModeSwitcher />
-            </nav>
-          </div>
+          <nav className="flex items-center gap-1">
+            <LocaleSwitcher />
+            <ModeSwitcher />
+          </nav>
         </div>
       </div>
     </header>

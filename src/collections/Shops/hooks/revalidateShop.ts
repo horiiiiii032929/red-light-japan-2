@@ -8,41 +8,37 @@ import localization from '@/i18n/localization'
 export const revalidateShop: CollectionAfterChangeHook<Shop> = ({
   doc,
   previousDoc,
-  req: { payload, context },
+  req: { payload, context, i18n },
 }) => {
+  const locale = i18n.language
+
   if (!context.disableRevalidate) {
     if (doc._status === 'published') {
-      const path = `/shops/${doc.id}`
+      const path = `/${locale}/shops/${doc.id}`
 
       payload.logger.info(`Revalidating post at path: ${path}`)
 
-      Object.keys(localization.locales).forEach((locale) => {
-        revalidatePath(`/${locale}/shops/${doc.id}`)
-      })
-      // revalidateTag('shops-sitemap')
+      revalidatePath(path)
     }
 
     if (previousDoc._status === 'published' && doc._status !== 'published') {
-      const oldPath = `/shops/${previousDoc.id}`
+      const oldPath = `/${locale}/shops/${previousDoc.id}`
 
       payload.logger.info(`Revalidating old post at path: ${oldPath}`)
 
-      Object.keys(localization.locales).forEach((locale) => {
-        revalidatePath(`/${locale}/shops/${doc.id}`)
-      })
-      // revalidateTag('shops-sitemap')
+      revalidatePath(oldPath)
     }
   }
   return doc
 }
 
-export const revalidateDelete: CollectionAfterDeleteHook<Shop> = ({ doc, req: { context } }) => {
-  if (!context.disableRevalidate) {
-    Object.keys(localization.locales).forEach((locale) => {
-      revalidatePath(`/${locale}/shops/${doc.id}`)
-    })
-    // revalidateTag('shops-sitemap')
-  }
+export const revalidateDelete: CollectionAfterDeleteHook<Shop> = ({ doc, req: { payload, context, i18n } }) => {
+  const locale = i18n.language
+  const oldPath = `/${locale}/shops/${doc.id}`
+
+  payload.logger.info(`Revalidating old post at path: ${oldPath}`)
+
+  revalidatePath(oldPath)
 
   return doc
 }
