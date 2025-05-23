@@ -6,7 +6,7 @@ import { cache } from 'react'
 export const queryMasterData = cache(async ({ locale }: { locale: TypedLocale }) => {
   const payload = await getPayload({ config: configPromise })
 
-  const [areas, categories, regions, prefectures, tags] = await Promise.all([
+  const [areas, categories, regions, prefectures, tags, shopsCountResult] = await Promise.all([
     payload.find({
       collection: 'areas',
       sort: 'order',
@@ -42,6 +42,15 @@ export const queryMasterData = cache(async ({ locale }: { locale: TypedLocale })
       locale,
       limit: 200,
     }),
+    payload.find({
+      collection: 'shops',
+      overrideAccess: false,
+      locale,
+      limit: 1,
+      page: 1,
+      depth: 0,
+      select: { shopName: false },
+    }),
   ])
 
   return {
@@ -50,5 +59,6 @@ export const queryMasterData = cache(async ({ locale }: { locale: TypedLocale })
     regions: regions.docs,
     prefectures: prefectures.docs,
     tags: tags.docs,
+    shopCount: shopsCountResult.totalDocs,
   }
 }) 
