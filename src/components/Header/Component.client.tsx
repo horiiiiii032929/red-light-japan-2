@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { useParams } from 'next/navigation'
 import React, { useTransition } from 'react'
 
@@ -9,13 +9,6 @@ import React, { useTransition } from 'react'
 import { Logo } from '@/components/Logo/Logo'
 import { useLocale } from 'next-intl'
 import localization from '@/i18n/localization'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   DropdownMenu,
   DropdownMenuContent,

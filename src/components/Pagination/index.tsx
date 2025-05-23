@@ -21,7 +21,7 @@ export const Pagination: React.FC<{
 }> = (props) => {
   const router = useRouter()
 
-  const { className, page, totalPages, baseUrl = '/posts/page', searchParams = {} } = props
+  const { className, page, totalPages, baseUrl = '/search', searchParams = {} } = props
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
 
@@ -29,7 +29,7 @@ export const Pagination: React.FC<{
   const hasExtraNextPages = page + 1 < totalPages
 
   const buildUrl = (pageNum: number) => {
-    if (baseUrl === '/posts/page') {
+    if (baseUrl === '/search') {
       return `${baseUrl}/${pageNum}`
     }
 

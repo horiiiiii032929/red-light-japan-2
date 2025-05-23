@@ -1,7 +1,7 @@
 import { Card } from "../ui/card";
 import { CardContent } from "../ui/card";
 import { Shop, Cast, Tag } from "@/payload-types";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { ShopCarousel } from "./ShopCarousel";
 import { ShopHeader } from "./ShopHeader";
@@ -34,12 +34,14 @@ export async function ShopCard({ shop }: Props) {
         />
 
         {shop.coupons && shop.coupons[0] && (
-          <ShopCoupon
-            name={shop.coupons[0].name || ''}
-            description={shop.coupons[0].description || ''}
-            originalPrice={shop.coupons[0].originalPrice}
-            discountedPrice={shop.coupons[0].discountedPrice}
-          />
+          <Link href={`/shops/${shop.id}`}>
+            <ShopCoupon
+              name={shop.coupons[0].name || ''}
+              description={shop.coupons[0].description || ''}
+              originalPrice={shop.coupons[0].originalPrice}
+              discountedPrice={shop.coupons[0].discountedPrice}
+            />
+          </Link>
         )}
 
         <div>

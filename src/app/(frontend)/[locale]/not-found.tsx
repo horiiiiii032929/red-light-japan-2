@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import React from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ export default function NotFound() {
         <p className="mb-4">This page could not be found.</p>
       </div>
       <Button asChild variant="default">
-        <Link href="/en/search">Go home</Link>
+        <Link href="/">Go home</Link>
       </Button>
     </div>
   )
