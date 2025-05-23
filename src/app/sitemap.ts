@@ -1,12 +1,23 @@
 import { MetadataRoute } from 'next'
 import { getServerSideURL } from '@/utilities/getURL'
-import { Shop, Region } from '@/payload-types'
-import { queryMasterData } from '@/lib/queries/masterData'
+import { Shop } from '@/payload-types'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
 // TODO: Replace with actual query function
 async function queryShops(): Promise<Shop[]> {
-  // Implement actual query logic
-  return []
+  const payload = await getPayload({ config: configPromise })
+  const shops = await payload.find({
+    collection: 'shops',
+    overrideAccess: false,
+    locale: 'en',
+    limit: -1,
+    select: {
+      id: true,
+      updatedAt: true,
+    }
+  })
+  return shops.docs
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -16,10 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all shops
   const shops = await queryShops()
 
-  // Get all regions
-  const { regions } = await queryMasterData({ locale: 'en' })
-
-  // Generate shop URLs
+  // Generate shop URLs with all locales
   const shopUrls = shops.flatMap((shop: Shop) =>
     locales.map(locale => ({
       url: `${baseUrl}/${locale}/shops/${shop.id}`,
@@ -29,17 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  // Generate region URLs
-  const regionUrls = regions.flatMap((region: Region) =>
-    locales.map(locale => ({
-      url: `${baseUrl}/${locale}/region/${region.slug || ''}`,
-      lastModified: new Date(region.updatedAt),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7
-    }))
-  )
-
-  // Add static pages
+  // Add static pages for all locales
   const staticPages = locales.flatMap(locale => [
     {
       url: `${baseUrl}/${locale}`,
@@ -48,10 +46,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0
     },
     {
-      url: `${baseUrl}/${locale}/about`,
+      url: `${baseUrl}/${locale}/shops`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5
+      changeFrequency: 'daily' as const,
+      priority: 0.9
+    },
+    {
+      url: `${baseUrl}/${locale}/search`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.8
     },
     {
       url: `${baseUrl}/${locale}/contact`,
@@ -61,5 +65,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ])
 
-  return [...staticPages, ...shopUrls, ...regionUrls]
+  // Combine all URLs
+  const allUrls = [
+    ...staticPages,
+    ...shopUrls
+  ]
+
+  // Filter out any invalid URLs
+  const validUrls = allUrls.filter(entry => {
+    try {
+      new URL(entry.url)
+      return true
+    } catch {
+      return false
+    }
+  })
+
+  return validUrls
 } 

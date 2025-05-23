@@ -17,6 +17,12 @@ const defaultOpenGraph: Metadata['openGraph'] = {
   title: 'NIGHT LIFE JAPAN - Your Guide to Japan\'s Nightlife',
   locale: 'en_US',
   alternateLocale: ['ja_JP', 'ko_KR', 'zh_CN'],
+  url: process.env.NEXT_PUBLIC_SERVER_URL || 'https://nightlifejapan.com',
+  determiner: 'the',
+  emails: ['contact@nightlifejapan.com'],
+  phoneNumbers: [],
+  audio: [],
+  videos: [],
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {

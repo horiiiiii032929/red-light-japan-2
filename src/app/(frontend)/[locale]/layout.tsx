@@ -16,6 +16,7 @@ import { getMessages, setRequestLocale, getTranslations } from 'next-intl/server
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Toaster } from '@/components/ui/sonner'
+import { Analytics } from '@vercel/analytics/react'
 
 interface Props {
   children: React.ReactNode
@@ -47,8 +48,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t('seo.app-description'),
       locale: locale,
       alternateLocale: routing.locales.filter(l => l !== locale),
+      type: 'website',
+      siteName: 'Nightlife Japan',
     }),
-    // manifest: '/manifest.json',
+    twitter: {
+      card: 'summary_large_image',
+      title: t('seo.app-title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
+      description: t('seo.app-description'),
+      creator: '@nightlifejapan',
+    },
     icons: {
       icon: [
         { url: '/favicon.ico', sizes: '32x32' },
@@ -68,10 +76,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         'max-image-preview': 'large',
         'max-snippet': -1,
         'max-video-preview': -1,
+        'notranslate': true,
       }
     },
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+      yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
     },
     alternates: {
       canonical: '/',
@@ -83,7 +93,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     category: 'adult entertainment',
-    keywords: ['nightlife', 'japan', 'red light district', 'adult entertainment', 'night clubs', 'bars', 'restaurants'],
+    keywords: [
+      'nightlife', 'japan', 'red light district', 'adult entertainment',
+      'night clubs', 'bars', 'restaurants', 'tokyo nightlife', 'osaka nightlife',
+      'japanese entertainment', 'adult guide', 'nightlife guide', 'japan guide',
+      'entertainment venues', 'night spots', 'adult venues'
+    ],
+    authors: [{ name: 'Nightlife Japan' }],
+    publisher: 'Nightlife Japan',
+    formatDetection: {
+      telephone: false,
+      date: false,
+      address: false,
+      email: false,
+      url: false,
+    },
   }
 }
 
@@ -126,6 +150,7 @@ export default async function RootLayout({ children, params }: Props) {
               <Footer locale={locale} />
             </div>
             <Toaster />
+            <Analytics />
           </NextIntlClientProvider>
         </Providers>
       </body>
