@@ -23,6 +23,8 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { Prefectures } from './collections/Prefectures'
 import { Tags } from './collections/Tags'
 import { Casts } from './collections/Casts'
+import { Pages } from './collections/Pages'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -79,6 +81,7 @@ export default buildConfig({
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || '',
+    // transactionOptions: false
   }),
   collections: [
     Categories,
@@ -91,7 +94,8 @@ export default buildConfig({
     PaymentMethods,
     Shops,
     Tags,
-    Casts
+    Casts,
+    Pages
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
@@ -100,14 +104,16 @@ export default buildConfig({
       enabled: process.env.NODE_ENV === 'production',
       collections: {
         media: true,
-        // @ts-expect-error
-        'media-with-prefix': {
-          prefix: 'night-life-japan',
-        },
       },
       token: process.env.BLOB_READ_WRITE_TOKEN,
+      clientUploads: true
     }),
   ],
+  email: resendAdapter({
+    defaultFromAddress: 'contact@nightlifejapan.com',
+    defaultFromName: 'NIGHT LIFE JAPAN',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
