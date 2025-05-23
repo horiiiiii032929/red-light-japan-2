@@ -152,8 +152,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const masterData = await queryMasterData({ locale })
 
   // Build dynamic title and description based on search parameters
-  let titleParts = []
-  let descriptionParts = []
+  const titleParts: string[] = []
+  const descriptionParts: string[] = []
 
   if (awaitedSearchParams.prefecture) {
     const prefecture = masterData.prefectures.find(p => p.slug === awaitedSearchParams.prefecture)

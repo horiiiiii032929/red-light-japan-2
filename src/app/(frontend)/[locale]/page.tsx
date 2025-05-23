@@ -10,11 +10,17 @@ import { Link } from "@/i18n/routing"
 import type { Metadata } from 'next'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
+import { TypedLocale } from "payload"
 
+interface Props {
+  params: Promise<{
+    locale: TypedLocale
+  }>
+}
 
-export async function generateMetadata({ params }: { params: { locale: Config['locale'] } }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations()
-  const { locale } = params
+  const { locale } = await params
 
   return {
     title: t('seo.app-title', { defaultValue: 'Nightlife Japan - Adult Entertainment Guide' }),
@@ -52,7 +58,7 @@ export async function generateMetadata({ params }: { params: { locale: Config['l
   }
 }
 
-export default async function HomePage({ params }: { params: { locale: Config['locale'] } }) {
+export default async function HomePage({ params }: Props) {
   const t = await getTranslations()
   const { locale } = await params
   const masterData = await queryMasterData({ locale })
