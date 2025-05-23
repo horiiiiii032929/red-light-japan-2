@@ -8,6 +8,9 @@ import { queryMasterData } from '@/lib/queries/masterData'
 import { NoResults } from '@/components/Search/NoResults'
 import { ShopCard } from '@/components/ShopCard'
 import { Shop } from '@/payload-types'
+import type { Metadata } from 'next'
+import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { getServerSideURL } from '@/utilities/getURL'
 
 // Types
 type SearchParams = {
@@ -70,15 +73,14 @@ function buildWhereConditions(
   }
 
   // Prefecture filter
-  // if (searchParams?.prefecture) {
-  //   const prefecture = masterData.prefectures.find(p => p.slug === searchParams.prefecture)
-  //   // @ts-expect-error error in payload
-  //   const relatedAreas = masterData.areas.filter(a => a.prefecture.id === prefecture?.id)
-
-  //   if (relatedAreas.length > 0) {
-  //     conditions['area'] = { in: relatedAreas.map(a => a.id).join(',') }
-  //   }
-  // }
+  if (searchParams?.prefecture) {
+    const prefecture = masterData.prefectures.find(p => p.slug === searchParams.prefecture?.toLowerCase())
+    // @ts-expect-error error in payload
+    const relatedAreas = masterData.areas.filter(a => a.prefecture.id === prefecture?.id)
+    if (relatedAreas.length > 0) {
+      conditions['area'] = { in: relatedAreas.map(a => a.id).join(',') }
+    }
+  }
 
   // City filter
   if (searchParams?.city) {
@@ -137,7 +139,109 @@ function buildWhereConditions(
     }
   }
 
+
+  console.log(conditions)
+
   return conditions
+}
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const t = await getTranslations()
+  const { locale } = await params
+  const awaitedSearchParams = await searchParams || {}
+  const masterData = await queryMasterData({ locale })
+
+  // Build dynamic title and description based on search parameters
+  let titleParts = []
+  let descriptionParts = []
+
+  if (awaitedSearchParams.prefecture) {
+    const prefecture = masterData.prefectures.find(p => p.slug === awaitedSearchParams.prefecture)
+    if (prefecture) {
+      titleParts.push(prefecture.title)
+      descriptionParts.push(prefecture.title)
+    }
+  }
+
+  if (awaitedSearchParams.city) {
+    const citySlugs = awaitedSearchParams.city.split(',')
+    const cities = masterData.areas
+      .filter(area => citySlugs.includes(area.slug || ''))
+      .map(area => area.title)
+    if (cities.length > 0) {
+      titleParts.push(cities.join(', '))
+      descriptionParts.push(cities.join(', '))
+    }
+  }
+
+  if (awaitedSearchParams.category) {
+    const categorySlugs = awaitedSearchParams.category.split(',')
+    const categories = masterData.categories
+      .filter(category => categorySlugs.includes(category.slug || ''))
+      .map(category => category.title)
+    if (categories.length > 0) {
+      titleParts.push(categories.join(', '))
+      descriptionParts.push(categories.join(', '))
+    }
+  }
+
+  // Build the final title and description
+  const baseTitle = t('search.title')
+  const title = titleParts.length > 0
+    ? `${titleParts.join(' - ')} | ${baseTitle}`
+    : baseTitle
+
+  const baseDescription = t('search.description', { count: 'various' })
+  const description = descriptionParts.length > 0
+    ? `Find the best adult entertainment venues in ${descriptionParts.join(', ')}. ${baseDescription}`
+    : baseDescription
+
+  // Build canonical URL with search parameters
+  const searchParamsString = new URLSearchParams(
+    Object.entries(awaitedSearchParams)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => [key, value as string])
+  ).toString()
+
+  const canonicalUrl = searchParamsString
+    ? `/${locale}/search?${searchParamsString}`
+    : `/${locale}/search`
+
+  return {
+    title,
+    description,
+    openGraph: mergeOpenGraph({
+      title,
+      description,
+      locale: locale,
+      url: `${getServerSideURL()}${canonicalUrl}`,
+      images: [
+        {
+          url: `${getServerSideURL()}/search-og.jpg`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    }),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'en': '/en/search',
+        'ja': '/ja/search',
+        'ko': '/ko/search',
+        'zh': '/zh/search',
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+      'noimageindex': false,
+    },
+  }
 }
 
 export default async function SearchPage({ params, searchParams }: Props) {
