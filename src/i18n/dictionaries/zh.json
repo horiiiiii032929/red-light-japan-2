@@ -3,6 +3,23 @@
     "app-title": "日本夜生活 - 成人娱乐指南",
     "app-description": "日本夜生活是日本领先的成人娱乐指南。在东京、大阪等地寻找最佳成人娱乐场所。"
   },
+  "home-page": {
+    "hero-title": "今晚计划已定",
+    "hero-sub-headline": "发现并加入附近热闹的夜生活场所",
+    "hero-button": "浏览场所",
+    "featurered-title": "特色区域",
+    "featured-sub-headline": "探索热门区域的成人娱乐场所",
+    "featured-button": "查看全部",
+    "search-area": "按地区搜索",
+    "cta-title": "场所经营者",
+    "cta-sub-headline": "推广您的场所，吸引更多顾客",
+    "cta-button": "联系我们"
+  },
+  "contact-page": {
+    "title": "联系我们",
+    "description": "与我们取得联系",
+    "form-description": "请填写以下表格与我们联系"
+  },
   "breadcrumbs": {
     "home": "首页",
     "search": "搜索"
@@ -19,11 +36,9 @@
     "title": "筛选",
     "applyFilters": "应用筛选",
     "reset": "重置",
-    
     "sortOptions": {
       "newest": "最新"
     },
-
     "area": "地区",
     "areaPlaceholder": "选择地区",
     "categories": "分类",
@@ -31,17 +46,13 @@
     "openNow": "正在营业",
     "price": "价格",
     "tags": "标签",
-
     "noResultsFound": "未找到结果"
   },
-
   "shop-card": {
     "viewDetails": "查看详情"
   },
-
   "shop-page": {
     "call": "致电",
-
     "information": "信息",
     "about-us": "关于我们",
     "features": "特色",
@@ -52,26 +63,20 @@
     "price-range": "价格范围",
     "category": "类别",
     "payment-methods": "支付方式",
-
     "cast": "演员",
     "cast-members": "演员成员",
-    
     "system": "系统",
     "system-menu": "系统菜单",
     "system-terms": "系统条款",
-
     "coupon": "优惠券",
     "coupon-code": "优惠码",
     "coupon-terms-and-conditions": "条款和条件",
-
     "phone-reservation": "电话预约",
     "access": "交通",
-
     "or-contact-via": "或通过以下方式联系",
     "copy": "复制",
     "copied": "已复制"
   },
-
   "common": {
     "copied": "已复制"
   }

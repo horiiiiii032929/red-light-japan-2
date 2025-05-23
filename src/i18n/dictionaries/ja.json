@@ -3,6 +3,23 @@
     "app-title": "ナイトライフジャパン - 大人のエンターテイメントガイド",
     "app-description": "ナイトライフジャパンは日本最大の大人のエンターテイメントガイドです。東京、大阪、その他の地域の最高の大人のエンターテイメント施設を見つけましょう。"
   },
+  "home-page": {
+    "hero-title": "今夜の予定、決まりました",
+    "hero-sub-headline": "近くの賑やかな夜のスポットを発見して参加しましょう",
+    "hero-button": "店舗を探す",
+    "featurered-title": "注目のエリア",
+    "featured-sub-headline": "人気エリアの大人のエンターテイメント施設を発見",
+    "featured-button": "すべて見る",
+    "search-area": "都道府県で検索",
+    "cta-title": "店舗オーナーの方へ",
+    "cta-sub-headline": "店舗を宣伝して、より多くのお客様を集めましょう",
+    "cta-button": "お問い合わせ"
+  },
+  "contact-page": {
+    "title": "お問い合わせ",
+    "description": "お問い合わせはこちら",
+    "form-description": "以下のフォームにご記入の上、お問い合わせください"
+  },
   "breadcrumbs": {
     "home": "ホーム",
     "search": "検索"
@@ -19,11 +36,9 @@
     "title": "フィルター",
     "applyFilters": "フィルターを適用",
     "reset": "リセット",
-    
     "sortOptions": {
       "newest": "新着順"
     },
-
     "area": "エリア",
     "areaPlaceholder": "エリアを選択",
     "categories": "カテゴリー",
@@ -31,17 +46,13 @@
     "openNow": "営業中",
     "price": "料金",
     "tags": "タグ",
-
     "noResultsFound": "検索結果が見つかりません"
   },
-
   "shop-card": {
     "viewDetails": "詳細を見る"
   },
-
   "shop-page": {
     "call": "電話する",
-
     "information": "情報",
     "about-us": "店舗について",
     "features": "特徴",
@@ -52,26 +63,20 @@
     "price-range": "料金帯",
     "category": "カテゴリー",
     "payment-methods": "支払い方法",
-
     "cast": "キャスト",
     "cast-members": "キャストメンバー",
-    
     "system": "システム",
     "system-menu": "システムメニュー",
     "system-terms": "システム利用規約",
-
     "coupon": "クーポン",
     "coupon-code": "クーポンコード",
     "coupon-terms-and-conditions": "利用規約",
-
     "phone-reservation": "電話予約",
     "access": "アクセス",
-
     "or-contact-via": "または以下の方法でお問い合わせ",
     "copy": "コピー",
     "copied": "コピーしました"
   },
-
   "common": {
     "copied": "コピーしました"
   }

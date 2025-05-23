@@ -3,6 +3,23 @@
     "app-title": "나이트라이프 재팬 - 성인 엔터테인먼트 가이드",
     "app-description": "나이트라이프 재팬은 일본 최고의 성인 엔터테인먼트 가이드입니다. 도쿄, 오사카 및 기타 지역의 최고의 성인 엔터테인먼트 장소를 찾아보세요."
   },
+  "home-page": {
+    "hero-title": "오늘 밤 계획, 완료",
+    "hero-sub-headline": "주변의 활기찬 밤 문화 장소를 발견하고 참여하세요",
+    "hero-button": "매장 둘러보기",
+    "featurered-title": "추천 지역",
+    "featured-sub-headline": "인기 지역의 성인 엔터테인먼트 장소를 발견하세요",
+    "featured-button": "전체 보기",
+    "search-area": "지역별 검색",
+    "cta-title": "매장 운영자",
+    "cta-sub-headline": "매장을 홍보하고 더 많은 고객을 유치하세요",
+    "cta-button": "문의하기"
+  },
+  "contact-page": {
+    "title": "문의하기",
+    "description": "연락처",
+    "form-description": "아래 양식을 작성하여 문의해 주세요"
+  },
   "breadcrumbs": {
     "home": "홈",
     "search": "검색"
@@ -19,11 +36,9 @@
     "title": "필터",
     "applyFilters": "필터 적용",
     "reset": "초기화",
-    
     "sortOptions": {
       "newest": "최신순"
     },
-
     "area": "지역",
     "areaPlaceholder": "지역 선택",
     "categories": "카테고리",
@@ -31,17 +46,13 @@
     "openNow": "영업 중",
     "price": "가격",
     "tags": "태그",
-
     "noResultsFound": "검색 결과가 없습니다"
   },
-
   "shop-card": {
     "viewDetails": "상세 보기"
   },
-
   "shop-page": {
     "call": "전화하기",
-
     "information": "정보",
     "about-us": "매장 소개",
     "features": "특징",
@@ -52,26 +63,20 @@
     "price-range": "가격대",
     "category": "카테고리",
     "payment-methods": "결제 방법",
-
     "cast": "캐스트",
     "cast-members": "캐스트 멤버",
-    
     "system": "시스템",
     "system-menu": "시스템 메뉴",
     "system-terms": "시스템 이용약관",
-
     "coupon": "쿠폰",
     "coupon-code": "쿠폰 코드",
     "coupon-terms-and-conditions": "이용약관",
-
     "phone-reservation": "전화 예약",
     "access": "오시는 길",
-
     "or-contact-via": "또는 다음 방법으로 문의",
     "copy": "복사",
     "copied": "복사됨"
   },
-
   "common": {
     "copied": "복사됨"
   }
