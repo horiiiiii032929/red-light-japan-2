@@ -81,23 +81,23 @@ export default async function HomePage({ params }: Props) {
             <Image src="/hero.png?height=800&width=1600" alt="Nightlife" fill className="object-cover" priority />
           </div>
 
-          <div className="container relative z-20 flex flex-col px-6 py-16 md:py-24 lg:py-32">
-            <div className="p-6 md:p-8 lg:p-10 flex flex-col w-full justify-center items-center max-w-2xl">
+          <div className="container relative z-20 flex flex-col items-center justify-center min-h-[600px] px-6">
+            <div className="flex flex-col items-center justify-center text-center max-w-2xl">
               <div className="space-y-4">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                <h1 className="scroll-m-20 text-4xl text-white font-extrabold tracking-tight lg:text-5xl">
                   {t('home-page.hero-title')}
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground">
+                <p className="text-lg md:text-xl text-muted-foreground text-white">
                   {t('home-page.hero-sub-headline')}
                 </p>
-                <div className="flex flex-wrap gap-4 pt-2">
-                  <Button className="h-12 text-base" asChild>
+                <div className="flex flex-wrap justify-center gap-4 pt-2">
+                  <Button className="text-base" asChild>
                     <Link href="/search">
                       {t('home-page.hero-button')}
                     </Link>
                   </Button>
 
-                  <Button className="h-12 text-base" variant="outline" asChild>
+                  <Button className="text-base" variant="outline" asChild>
                     <Link href="/contact">
                       {t('home-page.cta-button')}
                     </Link>
@@ -146,20 +146,19 @@ export default async function HomePage({ params }: Props) {
         <section className="container px-6">
           <div className="relative overflow-hidden rounded-xl">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-            <div className="relative z-10 py-16 px-8 md:py-20 md:px-12 text-white">
+            <div className="relative z-10 py-16 px-8 md:py-20 md:px-12">
               <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-                <Sparkles className="h-12 w-12 mb-6" />
-                <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                <Sparkles className="h-12 w-12 mb-6 text-white" />
+                <h2 className="text-2xl font-bold tracking-tight md:text-3xl text-white">
                   {t('home-page.cta-title')}
                 </h2>
-                <p className="mt-6 text-sm md:text-base">
+                <p className="mt-6 text-sm md:text-base text-white">
                   {t('home-page.cta-sub-headline')}
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row gap-4">
                   <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 text-base border-white text-white hover:bg-white/20 hover:text-white"
+                    variant="ghost"
+                    className="text-base text-white"
                     asChild
                   >
                     <Link href="/contact">{t('home-page.cta-button')}</Link>
