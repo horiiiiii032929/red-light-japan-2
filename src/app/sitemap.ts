@@ -1,85 +1,68 @@
 import { MetadataRoute } from 'next'
-import { getServerSideURL } from '@/utilities/getURL'
-import { Shop } from '@/payload-types'
+import { routing } from '@/i18n/routing'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-// TODO: Replace with actual query function
-async function queryShops(): Promise<Shop[]> {
-  const payload = await getPayload({ config: configPromise })
-  const shops = await payload.find({
-    collection: 'shops',
-    overrideAccess: false,
-    locale: 'en',
-    limit: -1,
-    select: {
-      id: true,
-      updatedAt: true,
-    }
-  })
-  return shops.docs
+// Define the fields we want to select for shops
+const SHOP_SELECT_FIELDS = {
+  id: true,
+  updatedAt: true,
 }
 
+// Define supported locales
+const SUPPORTED_LOCALES = ['en', 'ja', 'ko', 'zh'] as const
+type SupportedLocale = typeof SUPPORTED_LOCALES[number]
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = getServerSideURL()
-  const locales = ['en', 'ja', 'ko', 'zh']
+  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
-  // Get all shops
-  const shops = await queryShops()
+  // Define your static routes
+  const staticRoutes = [
+    '',
+    '/shops',
+    '/search',
+    '/contact',
+  ]
 
-  // Generate shop URLs with all locales
-  const shopUrls = shops.flatMap((shop: Shop) =>
-    locales.map(locale => ({
-      url: `${baseUrl}/${locale}/shops/${shop.id}`,
-      lastModified: new Date(shop.updatedAt),
+  // Generate sitemap entries for static routes
+  const staticEntries = SUPPORTED_LOCALES.flatMap((locale) =>
+    staticRoutes.map((route) => ({
+      url: `${baseUrl}/${locale}${route}`,
+      lastModified: new Date(),
       changeFrequency: 'daily' as const,
-      priority: 0.8
+      priority: route === '' ? 1 : 0.8,
     }))
   )
 
-  // Add static pages for all locales
-  const staticPages = locales.flatMap(locale => [
-    {
-      url: `${baseUrl}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 1.0
-    },
-    {
-      url: `${baseUrl}/${locale}/shops`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9
-    },
-    {
-      url: `${baseUrl}/${locale}/search`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/${locale}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5
-    }
-  ])
+  // Get all shops for each locale
+  const payload = await getPayload({ config: configPromise })
+  const shopEntries = await Promise.all(
+    SUPPORTED_LOCALES.map(async (locale) => {
+      const shops = await payload.find({
+        collection: 'shops',
+        overrideAccess: false,
+        locale,
+        depth: 0,
+        limit: 1000, // Adjust this number based on your needs
+        select: SHOP_SELECT_FIELDS,
+      })
 
-  // Combine all URLs
-  const allUrls = [
-    ...staticPages,
-    ...shopUrls
+      return shops.docs.map((shop) => ({
+        url: `${baseUrl}/${locale}/shops/${shop.id}`,
+        lastModified: new Date(shop.updatedAt),
+        changeFrequency: 'daily' as const,
+        priority: 0.7,
+      }))
+    })
+  )
+
+  // Combine all entries
+  const allEntries = [
+    ...staticEntries,
+    ...shopEntries.flat(),
   ]
 
-  // Filter out any invalid URLs
-  const validUrls = allUrls.filter(entry => {
-    try {
-      new URL(entry.url)
-      return true
-    } catch {
-      return false
-    }
-  })
-
-  return validUrls
+  return allEntries
 } 
