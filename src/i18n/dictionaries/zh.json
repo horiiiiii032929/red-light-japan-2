@@ -20,9 +20,33 @@
     "description": "与我们取得联系",
     "form-description": "请填写以下表格与我们联系"
   },
+  "prefecture-page": {
+    "title": "{prefecture}夜生活指南",
+    "description": "在{prefecture}找到最好的成人娱乐场所",
+    "areas": "{prefecture}热门区域",
+    "popular-shops": "{prefecture}热门店铺",
+    "venues": "场所",
+    "categories": "分类",
+    "featured-articles": "{prefecture}特色文章",
+    "all-areas": "所有区域",
+    "all-shops": "所有店铺",
+    "all-articles": "所有文章"
+  },
+  "area-page": {
+    "title": "{area}夜生活指南",
+    "description": "在{area}找到最好的成人娱乐场所",
+    "area-information": "{area}信息",
+    "categories": "分类",
+    "all": "全部",
+    "venues": "场所",
+    "all-shops": "查看所有店铺（{count}）",
+    "view-category": "查看所有{category}",
+    "all-categories": "查看所有分类"
+  },
   "breadcrumbs": {
     "home": "首页",
-    "search": "搜索"
+    "search": "搜索",
+    "contact": "联系我们"
   },
   "search": {
     "title": "搜索店铺",

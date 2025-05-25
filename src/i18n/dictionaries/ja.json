@@ -20,9 +20,33 @@
     "description": "お問い合わせはこちら",
     "form-description": "以下のフォームにご記入の上、お問い合わせください"
   },
+  "prefecture-page": {
+    "title": "{prefecture}ナイトライフガイド",
+    "description": "{prefecture}の最高の大人のエンターテイメント施設を見つけることができます",
+    "areas": "{prefecture}の人気エリア",
+    "popular-shops": "{prefecture}の人気店舗",
+    "venues": "店舗",
+    "categories": "カテゴリー",
+    "featured-articles": "{prefecture}の特集記事",
+    "all-areas": "すべてのエリア",
+    "all-shops": "すべての店舗",
+    "all-articles": "すべての記事"
+  },
+  "area-page": {
+    "title": "{area}ナイトライフガイド",
+    "description": "{area}の最高の大人のエンターテイメント施設を見つけることができます",
+    "area-information": "{area}の情報",
+    "categories": "カテゴリー",
+    "all": "すべて",
+    "venues": "店舗",
+    "all-shops": "すべての店舗を見る（{count}）",
+    "view-category": "すべての{category}を見る",
+    "all-categories": "すべてのカテゴリーを見る"
+  },
   "breadcrumbs": {
     "home": "ホーム",
-    "search": "検索"
+    "search": "検索",
+    "contact": "お問い合わせ"
   },
   "search": {
     "title": "店舗検索",

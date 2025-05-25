@@ -20,6 +20,29 @@
     "description": "Get in touch with us",
     "form-description": "Please fill out the form below to get in touch with us"
   },
+  "prefecture-page": {
+    "title": "{prefecture} Nightlife Guide",
+    "description": "you can find the best adult entertainment venues in {prefecture}",
+    "areas": "{prefecture} Popular Areas",
+    "popular-shops": "{prefecture} Popular Shops",
+    "venues": "Venues",
+    "categories": "Categories",
+    "featured-articles": "{prefecture} Featured Articles",
+    "all-areas": "All Areas",
+    "all-shops": "All Shops",
+    "all-articles": "All Articles"
+  },
+  "area-page": {
+    "title": "{area} Nightlife Guide",
+    "description": "you can find the best adult entertainment venues in {area}",
+    "area-information": "{area} Information",
+    "categories": "Categories",
+    "all": "All",
+    "venues": "Venues",
+    "all-shops": "View All Shops ({count})",
+    "view-category": "View All {category}",
+    "all-categories": "View All Categories"
+  },
   "breadcrumbs": {
     "home": "Home",
     "search": "Search",
