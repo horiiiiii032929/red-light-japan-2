@@ -110,7 +110,7 @@ export default buildConfig({
     }),
   ],
   email: resendAdapter({
-    defaultFromAddress: 'contact@nightlifejapan.com',
+    defaultFromAddress: 'contact@nightlifejapan.jp',
     defaultFromName: 'NIGHT LIFE JAPAN',
     apiKey: process.env.RESEND_API_KEY || '',
   }),
