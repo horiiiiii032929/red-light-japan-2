@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { routing } from '@/i18n/routing'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { queryMasterData } from '@/lib/queries/masterData'
 
 // Define the fields we want to select for shops
 const SHOP_SELECT_FIELDS = {
@@ -11,7 +12,6 @@ const SHOP_SELECT_FIELDS = {
 
 // Define supported locales
 const SUPPORTED_LOCALES = ['en', 'ja', 'ko', 'zh'] as const
-type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -58,10 +58,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   )
 
+  // Get prefecture and area entries for each locale
+  const locationEntries = await Promise.all(
+    SUPPORTED_LOCALES.map(async (locale) => {
+      const masterdata = await queryMasterData({ locale })
+      const entries: MetadataRoute.Sitemap = []
+
+      // Add prefecture entries
+      masterdata.prefectures.forEach((prefecture) => {
+        entries.push({
+          url: `${baseUrl}/${locale}/${prefecture.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.8,
+        })
+
+        // Add area entries for each prefecture
+        masterdata.areas
+          .filter((area) => (area.prefecture as any).id === prefecture.id)
+          .forEach((area) => {
+            entries.push({
+              url: `${baseUrl}/${locale}/${prefecture.slug}/${area.slug}`,
+              lastModified: new Date(),
+              changeFrequency: 'weekly' as const,
+              priority: 0.7,
+            })
+          })
+      })
+
+      return entries
+    })
+  )
+
   // Combine all entries
   const allEntries = [
     ...staticEntries,
     ...shopEntries.flat(),
+    ...locationEntries.flat(),
   ]
 
   return allEntries
