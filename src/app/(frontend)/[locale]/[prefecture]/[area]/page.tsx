@@ -227,7 +227,7 @@ export default async function AreaPage({
           {shopByCategories.map((category) => (
             <Link
               key={category.id}
-              href={`/${prefecture}/${area}/${category.id}`}
+              href={`/search?area=${area}&category=${category.slug}`}
               className="flex flex-col items-center gap-1 rounded-lg border p-3 text-center transition-colors hover:bg-muted md:gap-2 md:p-4"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 md:h-12 md:w-12">
