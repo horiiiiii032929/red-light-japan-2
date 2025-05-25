@@ -129,7 +129,7 @@ export default async function HomePage({ params }: Props) {
                     {region.prefectures.map((prefecture) => (
                       <Link
                         key={prefecture.id}
-                        href={`/search?prefecture=${prefecture.slug}`}
+                        href={`/${prefecture.slug}`}
                         className="rounded-md px-4 py-3 text-center text-sm hover:bg-muted transition-colors"
                       >
                         {prefecture.title}

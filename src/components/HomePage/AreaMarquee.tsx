@@ -37,7 +37,7 @@ export function AreaMarquee({ prefectures, areas }: AreaMarqueeProps) {
   const AreaCard = ({ area, index }: { area: typeof popularAreas[0], index: number }) => (
     <Link
       key={index}
-      href={`/search?prefecture=${area.prefecture?.slug}&area=${area.slug}`}
+      href={`/${area.prefecture?.slug}/${area.slug}`}
       className="group relative overflow-hidden rounded-lg w-[300px] h-[200px] flex-shrink-0 mx-3 bg-background border rounded-xl"
     >
       <div className="absolute inset-0 justify-center z-20">
