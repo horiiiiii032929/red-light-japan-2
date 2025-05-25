@@ -139,9 +139,6 @@ function buildWhereConditions(
     }
   }
 
-
-  console.log(conditions)
-
   return conditions
 }
 
