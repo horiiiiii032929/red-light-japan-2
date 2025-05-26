@@ -48,6 +48,14 @@
     "search": "搜索",
     "contact": "联系我们"
   },
+  "category-page": {
+    "title": "{area}的{category}夜生活",
+    "description": "在{area}找到最好的{category}",
+    "related-articles": "相关文章",
+    "all-shops": "查看所有店铺（{count}）",
+    "view-category": "查看所有{category}",
+    "all-categories": "查看所有分类"
+  },
   "search": {
     "title": "搜索店铺",
     "description": "找到 {count} 个结果",

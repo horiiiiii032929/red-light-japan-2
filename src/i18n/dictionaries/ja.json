@@ -48,6 +48,14 @@
     "search": "検索",
     "contact": "お問い合わせ"
   },
+  "category-page": {
+    "title": "{area}の{category}ナイトライフ",
+    "description": "{area}の最高の{category}を見つけましょう",
+    "related-articles": "関連記事",
+    "all-shops": "すべての店舗を見る（{count}）",
+    "view-category": "すべての{category}を見る",
+    "all-categories": "すべてのカテゴリーを見る"
+  },
   "search": {
     "title": "店舗検索",
     "description": "{count}件の結果が見つかりました",

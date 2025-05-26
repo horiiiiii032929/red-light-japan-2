@@ -43,6 +43,14 @@
     "view-category": "View All {category}",
     "all-categories": "View All Categories"
   },
+  "category-page": {
+    "title": "{area}'s {category} Nightlife",
+    "description": "Find the best {category} in {area}",
+    "related-articles": "Related Articles",
+    "all-shops": "View All Shops ({count})",
+    "view-category": "View All {category}",
+    "all-categories": "View All Categories"
+  },
   "breadcrumbs": {
     "home": "Home",
     "search": "Search",

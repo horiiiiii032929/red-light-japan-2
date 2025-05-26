@@ -48,6 +48,14 @@
     "search": "검색",
     "contact": "문의하기"
   },
+  "category-page": {
+    "title": "{area}의 {category} 나이트라이프",
+    "description": "{area}의 최고의 {category}를 찾아보세요",
+    "related-articles": "관련 기사",
+    "all-shops": "모든 매장 보기 ({count})",
+    "view-category": "모든 {category} 보기",
+    "all-categories": "모든 카테고리 보기"
+  },
   "search": {
     "title": "매장 검색",
     "description": "검색 결과 {count}개",
