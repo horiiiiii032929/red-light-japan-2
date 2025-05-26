@@ -17,13 +17,15 @@ interface Props {
   categories: Category[]
   tags: Tag[],
   filterCount: number
+  isSearchPage?: boolean
 }
 
 export function MobileForm({
   areas,
   categories,
   filterCount,
-  tags
+  tags,
+  isSearchPage = true
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const t = useTranslations()
@@ -64,6 +66,7 @@ export function MobileForm({
                 categories={categories}
                 tags={tags}
                 onSubmit={handleSubmit}
+                isSearchPage={isSearchPage}
               />
             </div>
             <SheetFooter>

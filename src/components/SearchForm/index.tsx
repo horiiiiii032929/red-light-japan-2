@@ -32,6 +32,7 @@ interface Props {
   areas: Area[]
   categories: Category[]
   tags: Tag[]
+  isSearchPage?: boolean
   onSubmit?: () => void
 }
 
@@ -247,6 +248,7 @@ export function Form({
   areas,
   categories,
   tags,
+  isSearchPage = true,
   onSubmit
 }: Props) {
   const router = useRouter();
@@ -343,38 +345,39 @@ export function Form({
   return (
     <form id="filter-form" onSubmit={handleSubmit}>
       <div className="space-y-6">
-        {/* Location Section */}
-        <section className="space-y-4">
-          <div className="space-y-4">
-            <PrefectureSelector
-              prefecture={localParams.prefecture}
-              areasByPrefecture={sortedPrefectures}
-              onSelect={(prefecture) => updateLocalParams({ prefecture })}
-            />
-            {localParams.prefecture && (
-              <AreaSelector
-                selectedAreas={selectedAreas}
-                areas={sortedPrefectures[localParams.prefecture] || []}
-                onSelect={handleAreaSelect}
+        {isSearchPage && (
+          <section className="space-y-4">
+            <div className="space-y-4">
+              <PrefectureSelector
+                prefecture={localParams.prefecture}
+                areasByPrefecture={sortedPrefectures}
+                onSelect={(prefecture) => updateLocalParams({ prefecture })}
               />
-            )}
-          </div>
-        </section>
+              {localParams.prefecture && (
+                <AreaSelector
+                  selectedAreas={selectedAreas}
+                  areas={sortedPrefectures[localParams.prefecture] || []}
+                  onSelect={handleAreaSelect}
+                />
+              )}
+            </div>
+          </section>
+        )}
 
-        <Separator className="my-4" />
+        {isSearchPage && <Separator className="my-4" />}
 
-        {/* Categories Section */}
-        <section className="space-y-4">
-          <CategorySelector
-            categories={categories}
-            selectedCategories={selectedCategories}
-            onSelect={handleCategorySelect}
-          />
-        </section>
+        {isSearchPage && (
+          <section className="space-y-4">
+            <CategorySelector
+              categories={categories}
+              selectedCategories={selectedCategories}
+              onSelect={handleCategorySelect}
+            />
+          </section>
+        )}
 
-        <Separator className="my-4" />
+        {isSearchPage && <Separator className="my-4" />}
 
-        {/* Availability Section */}
         <section className="space-y-4">
           <h3 className="font-medium text-sm text-muted-foreground flex items-center gap-2">
             <Sunset className="w-4 h-4" />
@@ -393,7 +396,6 @@ export function Form({
 
         <Separator className="my-4" />
 
-        {/* Price Section */}
         <section className="space-y-4">
           <PriceRangeSelector
             value={priceRange}
@@ -401,7 +403,6 @@ export function Form({
           />
         </section>
 
-        {/* Special Features Section */}
         <section className="space-y-4">
           <TagSelector
             tags={tags}

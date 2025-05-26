@@ -11,6 +11,7 @@ import { Shop } from '@/payload-types'
 import type { Metadata } from 'next'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
+import { SHOP_SELECT_FIELDS } from '@/lib/queries/const'
 
 // Types
 type SearchParams = {
@@ -38,25 +39,7 @@ const SORT_OPTIONS = {
 
 type SortOption = keyof typeof SORT_OPTIONS
 
-// Constants
-const SHOP_SELECT_FIELDS = {
-  id: true,
-  casts: true,
-  logo: true,
-  shopName: true,
-  categories: true,
-  area: true,
-  prefecture: true,
-  lowestPrice: true,
-  tags: true,
-  nearestStation: true,
-  openHour: true,
-  closeHour: true,
-  coupons: true,
-  message: true
-} as const
 
-// Utility functions
 function getFilterCount(searchParams: SearchParams): number {
   return Object.entries(searchParams).reduce((count, [key, value]) => {
     if (key === 'sort' || !value) return count
@@ -212,14 +195,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       description,
       locale: locale,
       url: `${getServerSideURL()}${canonicalUrl}`,
-      images: [
-        {
-          url: `${getServerSideURL()}/search-og.jpg`,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
+      type: 'website',
     }),
     alternates: {
       canonical: canonicalUrl,

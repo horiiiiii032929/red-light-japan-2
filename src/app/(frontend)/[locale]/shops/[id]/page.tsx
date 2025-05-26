@@ -119,7 +119,6 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
       description,
       locale: locale,
       url: `${getServerSideURL()}/${locale}/shops/${id}`,
-      images: ogImage ? [ogImage] : undefined,
       type: 'website',
     }),
     alternates: {
@@ -137,6 +136,14 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+        'notranslate': true,
+      }
     },
     other: {
       'schema-org': JSON.stringify([breadcrumbSchema, localBusinessSchema]),

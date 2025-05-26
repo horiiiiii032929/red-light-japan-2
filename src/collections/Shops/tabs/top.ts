@@ -9,7 +9,17 @@ export const top: Field[] = [
       ja: 'メッセージ',
       en: 'Message',
     },
-
+  },
+  {
+    name: 'topImage',
+    type: 'upload',
+    localized: true,
+    label: {
+      ja: 'トップ画像',
+      en: 'Top Image',
+    },
+    relationTo: 'media',
+    hasMany: false
   },
   {
     name: 'lowestPrice',

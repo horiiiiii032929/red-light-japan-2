@@ -391,6 +391,7 @@ export interface Shop {
   slug?: string | null;
   slugLock?: boolean | null;
   message?: string | null;
+  topImage?: (string | null) | Media;
   lowestPrice: number;
   logo?: (string | null) | Media;
   images?: (string | Media)[] | null;
@@ -1172,6 +1173,7 @@ export interface ShopsSelect<T extends boolean = true> {
   slug?: T;
   slugLock?: T;
   message?: T;
+  topImage?: T;
   lowestPrice?: T;
   logo?: T;
   images?: T;

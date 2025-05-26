@@ -1,7 +1,6 @@
 'use client'
 
 import { Link } from "@/i18n/routing"
-import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Marquee } from "@/components/magicui/marquee"
 import { Area, Prefecture } from "@/payload-types"
@@ -66,7 +65,7 @@ export function AreaMarquee({ prefectures, areas }: AreaMarqueeProps) {
             {t('home-page.featured-sub-headline')}
           </p>
         </div>
-        <Link href="/areas" className="flex items-center text-sm font-medium text-primary md:text-base">
+        <Link href="/search" className="flex items-center text-sm font-medium text-primary md:text-base">
           {t('home-page.featured-button')} <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
         </Link>
       </div>
