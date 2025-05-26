@@ -18,6 +18,7 @@ import { ShopCard } from "@/components/ShopCard"
 import type { Metadata } from "next"
 import { mergeOpenGraph } from "@/utilities/mergeOpenGraph"
 import { getServerSideURL } from "@/utilities/getURL"
+import { SHOP_SELECT_FIELDS } from "@/lib/queries/const"
 
 interface Props {
   params: Promise<{
@@ -91,6 +92,14 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+        'notranslate': true,
+      }
     },
     other: {
       'schema-org': JSON.stringify([breadcrumbSchema]),
@@ -119,6 +128,8 @@ export default async function PrefecturePage({
           equals: area.id,
         },
       },
+      locale,
+      select: SHOP_SELECT_FIELDS
     })
 
     return {
@@ -134,7 +145,9 @@ export default async function PrefecturePage({
         in: areasWithCount.map((area) => area.id).join(','),
       },
     },
+    locale,
     limit: 6,
+    select: SHOP_SELECT_FIELDS
   })
 
   if (!prefectureData) {

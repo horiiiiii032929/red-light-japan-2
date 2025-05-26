@@ -1,10 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
-import { MapPin, Star, ArrowRight, Filter, Construction } from "lucide-react"
+import { MapPin, ArrowRight, Construction } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -23,6 +21,7 @@ import { ShopCard } from "@/components/ShopCard"
 import { NoResults } from "@/components/Search/NoResults"
 import { mergeOpenGraph } from "@/utilities/mergeOpenGraph"
 import { getServerSideURL } from "@/utilities/getURL"
+import { SHOP_SELECT_FIELDS } from "@/lib/queries/const"
 
 interface Props {
   params: Promise<{
@@ -32,7 +31,9 @@ interface Props {
   }>
 }
 
-export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params: paramsPromise
+}: Props): Promise<Metadata> {
   const t = await getTranslations()
   const { prefecture, area, locale } = await paramsPromise
   const masterdata = await queryMasterData({ locale })
@@ -104,6 +105,14 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+        'notranslate': true,
+      }
     },
     other: {
       'schema-org': JSON.stringify([breadcrumbSchema]),
@@ -133,6 +142,7 @@ export default async function AreaPage({
           equals: areas?.id,
         },
       },
+      locale,
       limit: 6,
     })
 
@@ -152,7 +162,9 @@ export default async function AreaPage({
         equals: areas?.id,
       },
     },
+    locale,
     limit: 6,
+    select: SHOP_SELECT_FIELDS
   })
 
   if (!areas) {
@@ -227,7 +239,7 @@ export default async function AreaPage({
           {shopByCategories.map((category) => (
             <Link
               key={category.id}
-              href={`/search?area=${area}&category=${category.slug}`}
+              href={`/${locale}/${prefecture}/${area}/${category.slug}`}
               className="flex flex-col items-center gap-1 rounded-lg border p-3 text-center transition-colors hover:bg-muted md:gap-2 md:p-4"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 md:h-12 md:w-12">
@@ -292,7 +304,7 @@ export default async function AreaPage({
 
               <div className="mt-6 flex justify-center md:mt-8">
                 <Button className="h-10 text-sm w-full sm:w-auto" asChild>
-                  <Link href={`/search?area=${area}&category=${category.slug}`}>
+                  <Link href={`/${locale}/${prefecture}/${area}/${category.slug}`}>
                     {t('area-page.view-category', { category: category.title })}
                   </Link>
                 </Button>

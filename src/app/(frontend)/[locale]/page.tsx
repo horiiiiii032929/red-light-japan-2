@@ -30,14 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t('seo.app-description'),
       locale: locale,
       url: `${getServerSideURL()}/${locale}`,
-      images: [
-        {
-          url: `${getServerSideURL()}/hero.png`,
-          width: 1600,
-          height: 800,
-          alt: 'Nightlife Japan - Your Guide to Japan\'s Nightlife',
-        },
-      ],
+      type: 'website',
     }),
     alternates: {
       canonical: `/${locale}`,
