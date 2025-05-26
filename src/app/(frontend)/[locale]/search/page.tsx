@@ -15,7 +15,7 @@ import { getServerSideURL } from '@/utilities/getURL'
 // Types
 type SearchParams = {
   prefecture?: string
-  city?: string
+  area?: string
   category?: string
   open_now?: string
   price_min?: string
@@ -83,8 +83,8 @@ function buildWhereConditions(
   }
 
   // City filter
-  if (searchParams?.city) {
-    const areaSlugs = searchParams.city.split(',')
+  if (searchParams?.area) {
+    const areaSlugs = searchParams.area.split(',')
     const areaIds = masterData.areas
       .filter(area => areaSlugs.includes(area.slug || ''))
       .map(area => area.id)
@@ -160,14 +160,14 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     }
   }
 
-  if (awaitedSearchParams.city) {
-    const citySlugs = awaitedSearchParams.city.split(',')
-    const cities = masterData.areas
-      .filter(area => citySlugs.includes(area.slug || ''))
+  if (awaitedSearchParams.area) {
+    const areaSlugs = awaitedSearchParams.area.split(',')
+    const areas = masterData.areas
+      .filter(area => areaSlugs.includes(area.slug || ''))
       .map(area => area.title)
-    if (cities.length > 0) {
-      titleParts.push(cities.join(', '))
-      descriptionParts.push(cities.join(', '))
+    if (areas.length > 0) {
+      titleParts.push(areas.join(', '))
+      descriptionParts.push(areas.join(', '))
     }
   }
 

@@ -37,7 +37,7 @@ interface Props {
 
 interface FilterState {
   prefecture: string
-  city: string
+  area: string
   category: string
   open_now: string
   price_min: string
@@ -113,12 +113,12 @@ const PrefectureSelector = ({
 }
 
 // City Selector Component
-const CitySelector = ({
-  cities,
+const AreaSelector = ({
+  selectedAreas,
   areas,
   onSelect
 }: {
-  cities: string[]
+  selectedAreas: string[]
   areas: Area[]
   onSelect: (value: string) => void
 }) => {
@@ -128,11 +128,11 @@ const CitySelector = ({
         {areas.map((area) => (
           <Badge
             key={area.id}
-            variant={cities.includes(area.slug || '') ? "default" : "outline"}
+            variant={selectedAreas.includes(area.slug || '') ? "default" : "outline"}
             className="cursor-pointer"
             onClick={() => onSelect(area.slug || '')}
             role="option"
-            aria-selected={cities.includes(area.slug || '')}
+            aria-selected={selectedAreas.includes(area.slug || '')}
           >
             {area.title}
           </Badge>
@@ -279,7 +279,7 @@ export function Form({
 
   const [localParams, setLocalParams] = React.useState<FilterState>({
     prefecture: searchParams.get('prefecture') || '',
-    city: searchParams.get('city') || '',
+    area: searchParams.get('area') || '',
     category: searchParams.get('category') || '',
     open_now: searchParams.get('open_now') || '',
     price_min: searchParams.get('price_min') || '0',
@@ -304,7 +304,7 @@ export function Form({
     onSubmit?.();
   };
 
-  const selectedCities = localParams.city?.split(',') || [];
+  const selectedAreas = localParams.area?.split(',') || [];
   const selectedCategories = localParams.category?.split(',') || [];
   const selectedTags = localParams.tags?.split(',') || [];
   const priceRange = [
@@ -312,11 +312,11 @@ export function Form({
     Number(localParams.price_max) || 100000
   ] as [number, number];
 
-  const handleCitySelect = (city: string) => {
-    const newCities = selectedCities.includes(city)
-      ? selectedCities.filter(c => c !== city)
-      : [...selectedCities, city];
-    updateLocalParams({ city: newCities.join(',') });
+  const handleAreaSelect = (area: string) => {
+    const newAreas = selectedAreas.includes(area)
+      ? selectedAreas.filter(a => a !== area)
+      : [...selectedAreas, area];
+    updateLocalParams({ area: newAreas.join(',') });
   };
 
   const handleCategorySelect = (category: string) => {
@@ -352,10 +352,10 @@ export function Form({
               onSelect={(prefecture) => updateLocalParams({ prefecture })}
             />
             {localParams.prefecture && (
-              <CitySelector
-                cities={selectedCities}
+              <AreaSelector
+                selectedAreas={selectedAreas}
                 areas={sortedPrefectures[localParams.prefecture] || []}
-                onSelect={handleCitySelect}
+                onSelect={handleAreaSelect}
               />
             )}
           </div>
