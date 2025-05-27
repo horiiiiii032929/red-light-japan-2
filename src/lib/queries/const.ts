@@ -12,5 +12,7 @@ export const SHOP_SELECT_FIELDS = {
   openHour: true,
   closeHour: true,
   coupons: true,
-  message: true
+  message: true,
+  images: true,
+  topImage: true,
 } as const
