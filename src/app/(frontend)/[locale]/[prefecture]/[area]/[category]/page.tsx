@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { getTranslations } from "next-intl/server"
 import { queryMasterData } from "@/lib/queries/masterData"
-import { getPayload, TypedLocale } from "payload"
+import { getPayload, TypedLocale, Where } from "payload"
 import { notFound } from "next/navigation"
 import configPromise from '@payload-config'
 import { MobileForm } from "@/components/MobileForm"
@@ -31,7 +31,90 @@ interface Props {
   }>
   searchParams: Promise<{
     page: string
+    price_min?: string
+    price_max?: string
+    open_now?: string
+    tags?: string
   }>
+}
+
+function buildWhereConditions(
+  params: Awaited<Props['params']>,
+  searchParams: Awaited<Props['searchParams']>,
+  masterData: Awaited<ReturnType<typeof queryMasterData>>
+): Where {
+  const conditions: Where = {
+    _status: { equals: 'published' } // Only show published shops
+  }
+
+  // Prefecture filter
+  if (params.prefecture) {
+    const prefecture = masterData.prefectures.find(p => p.slug === params.prefecture?.toLowerCase())
+    // @ts-expect-error error in payload
+    const relatedAreas = masterData.areas.filter(a => a.prefecture.id === prefecture?.id)
+    if (relatedAreas.length > 0) {
+      conditions['area'] = { in: relatedAreas.map(a => a.id).join(',') }
+    }
+  }
+
+  // City filter
+  if (params.area) {
+    const areaSlugs = params.area.split(',')
+    const areaIds = masterData.areas
+      .filter(area => areaSlugs.includes(area.slug || ''))
+      .map(area => area.id)
+
+    if (areaIds.length > 0) {
+      conditions['area'] = { in: areaIds.join(',') }
+    }
+  }
+
+  // Category filter
+  if (params.category) {
+    const categorySlugs = params.category.split(',')
+    const categoryIds = masterData.categories
+      .filter(category => categorySlugs.includes(category.slug || ''))
+      .map(category => category.id)
+
+    if (categoryIds.length > 0) {
+      conditions['categories'] = { in: categoryIds.join(',') }
+    }
+  }
+
+  // Price range filter
+  if (searchParams?.price_min || searchParams?.price_max) {
+    conditions['lowestPrice'] = {
+      ...(searchParams?.price_min && { greater_than_equal: Number(searchParams.price_min) }),
+      ...(searchParams?.price_max && { less_than_equal: Number(searchParams.price_max) })
+    }
+  }
+
+  // Open now filter
+  if (searchParams?.open_now === 'true') {
+    const now = new Date()
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
+
+    conditions['and'] = [
+      { openHour: { less_than_equal: currentTime } },
+      { closeHour: { greater_than_equal: currentTime } }
+    ]
+  }
+
+  // Tags filter
+  if (searchParams?.tags) {
+    const tagSlugs = searchParams.tags.split(',')
+    const tagIds = masterData.tags
+      .filter(tag => tagSlugs.includes(tag.slug || ''))
+      .map(tag => tag.id)
+
+    if (tagIds.length > 0) {
+      conditions['tags'] = { in: tagIds.join(',') }
+    }
+  }
+
+  return conditions
 }
 
 export async function generateMetadata({
@@ -72,7 +155,7 @@ export async function generateMetadata({
       {
         '@type': 'ListItem',
         'position': 1,
-        'name': t('breadcrumb.home'),
+        'name': t('breadcrumbs.home'),
         'item': `${getServerSideURL()}/${locale}`
       },
       {
@@ -179,20 +262,13 @@ export default async function CategoryPage({
   const categoryData = masterdata.categories.find((item) => item.slug === category)
 
   const payload = await getPayload({ config: configPromise })
-
+  const whereConditions = buildWhereConditions(await params, awaitedSearchParams, masterdata)
   const page = Number(awaitedSearchParams.page) || 1
   const limit = 12 // Number of items per page
 
   const shops = await payload.find({
     collection: 'shops',
-    where: {
-      categories: {
-        in: categoryData?.id,
-      },
-      area: {
-        equals: areaData?.id,
-      },
-    },
+    where: whereConditions,
     sort: 'updatedAt:desc',
     locale,
     page,
@@ -209,7 +285,7 @@ export default async function CategoryPage({
       <Breadcrumb className="mb-4 md:mb-6 overflow-x-auto whitespace-nowrap pb-1">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">{t('breadcrumb.home')}</BreadcrumbLink>
+            <BreadcrumbLink href="/">{t('breadcrumbs.home')}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -236,38 +312,39 @@ export default async function CategoryPage({
           {t('category-page.description', { area: areaData?.title, category: categoryData?.title })}
         </p>
       </div>
-
-      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:mb-6 md:justify-end">
-        <MobileForm
-          areas={masterdata.areas}
-          categories={masterdata.categories}
-          filterCount={0}
-          tags={masterdata.tags}
-          isSearchPage={false}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {shops.docs.length > 0 ? (
-          shops.docs.map((shop) => (
-            <ShopCard key={shop.id} shop={shop as Shop} />
-          ))
-        ) : (
-          <div className="flex justify-center items-center h-full w-full col-span-full">
-            <NoResults />
-          </div>
-        )}
-      </div>
-
-      <div className="container">
-        {shops.totalPages > 1 && shops.page && (
-          <Pagination
-            page={shops.page}
-            totalPages={shops.totalPages}
-            baseUrl={`/${locale}/${prefecture}/${area}/${category}`}
-            searchParams={awaitedSearchParams}
+      <div className="mb-8 md:mb-10">
+        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:mb-6 md:justify-end">
+          <MobileForm
+            areas={masterdata.areas}
+            categories={masterdata.categories}
+            filterCount={0}
+            tags={masterdata.tags}
+            isSearchPage={false}
           />
-        )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+          {shops.docs.length > 0 ? (
+            shops.docs.map((shop) => (
+              <ShopCard key={shop.id} shop={shop as Shop} />
+            ))
+          ) : (
+            <div className="flex justify-center items-center h-full w-full col-span-full">
+              <NoResults />
+            </div>
+          )}
+        </div>
+
+        <div className="container">
+          {shops.totalPages > 1 && shops.page && (
+            <Pagination
+              page={shops.page}
+              totalPages={shops.totalPages}
+              baseUrl={`/${locale}/${prefecture}/${area}/${category}`}
+              searchParams={awaitedSearchParams}
+            />
+          )}
+        </div>
       </div>
 
       <section className="mb-8 md:mb-12">

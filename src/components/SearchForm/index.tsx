@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils"
 
 import type { Area, Category, Tag } from "@/payload-types"
 import React from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter, usePathname } from "@/i18n/routing"
 import { useSearchParams } from "next/navigation"
 import { useTranslations } from 'next-intl'
 import { Separator } from "@/components/ui/separator"
@@ -199,7 +199,7 @@ const PriceRangeSelector = ({
         step={1000}
         value={value}
         onValueChange={onChange}
-        aria-label={t('price')}
+        aria-label={t('filters.price')}
       />
       <div className="flex justify-between text-sm text-muted-foreground" aria-live="polite">
         <span>¥{value[0].toLocaleString()}</span>
@@ -253,6 +253,7 @@ export function Form({
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const t = useTranslations()
 
@@ -302,7 +303,8 @@ export function Form({
         params.set(key, value);
       }
     });
-    router.push(`/search?${params.toString()}`);
+
+    router.replace(`${pathname}?${params.toString()}`);
     onSubmit?.();
   };
 
@@ -388,7 +390,7 @@ export function Form({
               id="open-now"
               checked={localParams.open_now === 'true'}
               onCheckedChange={(checked) => updateLocalParams({ open_now: checked ? 'true' : '' })}
-              aria-label={t('openNow')}
+              aria-label={t('filters.openNow')}
             />
             <Label htmlFor="open-now">{t('filters.openNow')}</Label>
           </div>
