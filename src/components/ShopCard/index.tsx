@@ -9,6 +9,7 @@ import { ShopTags } from "./ShopTags";
 import { ShopInfo } from "./ShopInfo";
 import { ShopCoupon } from "./ShopCoupon";
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 interface Props {
   shop: Shop
@@ -22,9 +23,34 @@ export async function ShopCard({ shop }: Props) {
 
   return (
     <Card className="py-0 overflow-hidden gap-2">
-      <ShopCarousel casts={casts} />
-
-      <CardContent className="p-2 md:p-4 flex-1 flex flex-col gap-3">
+      {/* <ShopCarousel casts={casts} /> */}
+      <div className="relative w-full aspect-[3/2] overflow-hidden">
+        <Image
+          //@ts-expect-error need to fix later
+          src={shop.topImage?.url || shop.images?.[0]?.url || '/plceholder.svg'}
+          fill
+          className="object-cover"
+          alt={shop.shopName}
+          sizes="(max-width: 768px) 100vw, 320px"
+        />
+      </div>
+      <div className="grid grid-cols-4 gap-2 px-2 md:px-4">
+        {shop.casts?.slice(0, 4).map((cast, index) => (
+          <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
+            <Image
+              //@ts-expect-error need to fix later
+              src={typeof cast.images?.[0] === 'string' ? cast.images?.[0] : cast.images?.[0]?.url || "/placeholder.svg"}
+              //@ts-expect-error need to fix later
+              alt={`${cast.name} - image ${index + 1}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 320px"
+              className="object-cover"
+              priority={index === 0}
+            />
+          </div>
+        ))}
+      </div>
+      <CardContent className="px-2 md:px-4 flex-1 flex flex-col gap-3 mt-1">
         <ShopHeader shop={shop} />
         <ShopTags tags={tags} />
         <ShopInfo
