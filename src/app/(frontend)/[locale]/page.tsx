@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Sparkles } from "lucide-react"
+import { ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getTranslations } from "next-intl/server"
@@ -51,6 +51,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+
+
 export default async function HomePage({ params }: Props) {
   const t = await getTranslations()
   const { locale } = await params
@@ -63,6 +65,30 @@ export default async function HomePage({ params }: Props) {
       .filter(prefecture => typeof prefecture.region === 'object' && prefecture.region.id === region.id)
       .sort((a, b) => (a.order || 0) - (b.order || 0))
   }))
+
+  const popularAreas = masterData.areas
+    .filter(area => {
+      const popularSlugs = [
+        'shinjuku',           // Tokyo
+        'shibuya-ebisu',      // Tokyo
+        'roppongi-akasaka',   // Tokyo
+        'umeda-kita-shinchi', // Osaka
+        'namba-shinsaibashi', // Osaka
+        'gion',               // Kyoto
+        'kawaramachi-kiyamachi-pontocho', // Kyoto
+        'sannomiya',          // Kobe
+      ]
+      return popularSlugs.includes(area.slug || '')
+    })
+    .map((area) => {
+      const prefecture = masterData.prefectures.find(p => p.id === (typeof area.prefecture === 'object' ? area.prefecture.id : area.prefecture))
+      return {
+        id: area.id,
+        name: area.title,
+        slug: area.slug,
+        prefecture: prefecture,
+      }
+    })
 
   return (
     <div className="container-wrapper">
@@ -101,11 +127,45 @@ export default async function HomePage({ params }: Props) {
           </div>
         </section>
 
-        {/* Popular Areas Section */}
-        <AreaMarquee
-          prefectures={masterData.prefectures}
-          areas={masterData.areas}
-        />
+        <section className="container px-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                {t('home-page.featurered-title')}
+              </h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                {t('home-page.featured-sub-headline')}
+              </p>
+            </div>
+            <Link href="/search" className="flex items-center text-sm font-medium text-primary md:text-base">
+              {t('home-page.featured-button')} <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+            </Link>
+          </div>
+
+
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+            {popularAreas.map((area) => (
+              <Link
+                key={area.id}
+                href={`/${area.prefecture?.slug}/${area.slug}`}
+                className="group relative overflow-hidden rounded-lg h-[200px] flex-shrink-0 bg-background border rounded-xl"
+              >
+                <div className="absolute inset-0 justify-center z-20">
+                  <div className="[writing-mode:vertical-rl] flex">
+                    <h3 className="scroll-m-20 text-4xl uppercase font-extrabold tracking-tight lg:text-5xl whitespace-pre-line break-words">
+                      {area.prefecture?.title || ''}
+                    </h3>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 right-4 z-20">
+                  <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight whitespace-pre-line break-words max-w-[200px] text-right">
+                    {area.name}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* Regions Section */}
         <section className="container px-6">
