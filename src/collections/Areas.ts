@@ -33,6 +33,17 @@ export const Areas: CollectionConfig = {
       hasMany: false,
     },
     {
+      name: 'description',
+      type: 'textarea',
+      localized: true,
+    },
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: false
+    },
+    {
       name: 'order',
       type: 'number',
     },
