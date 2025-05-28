@@ -111,5 +111,15 @@
   },
   "common": {
     "copied": "Copied"
+  },
+  "footer": {
+    "prefectures": "Prefectures",
+    "areas": "Areas",
+    "categories": "Categories",
+    "content": "Content",
+    "site-information": "Site Information",
+    "about": "About",
+    "terms": "Terms of Service & Privacy Policy",
+    "contact": "Contact"
   }
 }
