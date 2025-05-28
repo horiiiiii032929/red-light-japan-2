@@ -36,7 +36,7 @@ export async function ShopCard({ shop }: Props) {
       </div>
       <div className="grid grid-cols-4 gap-2 px-2 md:px-4">
         {shop.casts?.slice(0, 4).map((cast, index) => (
-          <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
+          <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg" key={index}>
             <Image
               //@ts-expect-error need to fix later
               src={typeof cast.images?.[0] === 'string' ? cast.images?.[0] : cast.images?.[0]?.url || "/placeholder.svg"}
