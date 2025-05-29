@@ -111,5 +111,15 @@
   },
   "common": {
     "copied": "已复制"
+  },
+  "footer": {
+    "prefectures": "都道府县",
+    "areas": "地区",
+    "categories": "分类",
+    "content": "内容",
+    "site-information": "网站信息",
+    "about": "关于我们",
+    "terms": "服务条款和隐私政策",
+    "contact": "联系我们"
   }
 }

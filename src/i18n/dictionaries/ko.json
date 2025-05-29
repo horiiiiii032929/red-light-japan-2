@@ -111,5 +111,15 @@
   },
   "common": {
     "copied": "복사됨"
+  },
+  "footer": {
+    "prefectures": "도도부현",
+    "areas": "지역",
+    "categories": "카테고리",
+    "content": "콘텐츠",
+    "site-information": "사이트 정보",
+    "about": "소개",
+    "terms": "서비스 약관 및 개인정보 처리방침",
+    "contact": "문의하기"
   }
 }

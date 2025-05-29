@@ -111,5 +111,15 @@
   },
   "common": {
     "copied": "コピーしました"
+  },
+  "footer": {
+    "prefectures": "都道府県",
+    "areas": "エリア",
+    "categories": "カテゴリー",
+    "content": "コンテンツ",
+    "site-information": "サイト情報",
+    "about": "会社概要",
+    "terms": "利用規約・プライバシーポリシー",
+    "contact": "お問い合わせ"
   }
 }
