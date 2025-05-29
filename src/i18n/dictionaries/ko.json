@@ -69,7 +69,8 @@
     "applyFilters": "필터 적용",
     "reset": "초기화",
     "sortOptions": {
-      "newest": "최신순"
+      "newest": "최신순",
+      "new_shops": "신규 매장"
     },
     "area": "지역",
     "areaPlaceholder": "지역 선택",

@@ -34,7 +34,8 @@ type Props = {
 }
 
 const SORT_OPTIONS = {
-  newest: '-updatedAt',
+  updated_at: '-updatedAt',
+  new_shops: '-createdAt',
 } as const
 
 type SortOption = keyof typeof SORT_OPTIONS
@@ -225,11 +226,11 @@ export default async function SearchPage({ params, searchParams }: Props) {
 
   const filterCount = getFilterCount(awaitedSearchParams)
   const whereConditions = buildWhereConditions(awaitedSearchParams, masterData)
-  const sortField = SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.newest
+  const sortField = SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.updated_at
 
   const payload = await getPayload({ config: configPromise })
   const page = Number(awaitedSearchParams.page) || 1
-  const limit = 12 // Number of items per page
+  const limit = 12
 
   const shops = await payload.find({
     collection: 'shops',

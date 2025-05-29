@@ -69,7 +69,8 @@
     "applyFilters": "Apply Filters",
     "reset": "Reset",
     "sortOptions": {
-      "newest": "Newest"
+      "updated_at": "Newest",
+      "new_shops": "New Shops"
     },
     "area": "Area",
     "areaPlaceholder": "Select Area",

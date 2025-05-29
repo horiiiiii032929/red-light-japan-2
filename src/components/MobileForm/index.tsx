@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { useRouter } from "@/i18n/routing"
+import { usePathname, useRouter } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/SearchForm"
 import { Filter } from "lucide-react"
 import type { Area, Category, Tag } from "@/payload-types"
-import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetTrigger, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { Select, SelectTrigger, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectValue } from "@/components/ui/select"
@@ -30,6 +29,7 @@ export function MobileForm({
   const [isOpen, setIsOpen] = useState(false)
   const t = useTranslations()
   const router = useRouter()
+  const pathname = usePathname()
 
   const handleSubmit = () => {
     setIsOpen(false);
@@ -39,6 +39,15 @@ export function MobileForm({
     setIsOpen(false);
     router.replace('/search', undefined);
   };
+
+  const handleSortChange = (value: string) => {
+    const currentQuery = new URLSearchParams(window.location.search);
+    const queryParams = Object.fromEntries(currentQuery.entries());
+    router.replace({
+      pathname: pathname,
+      query: { ...queryParams, sort: value }
+    }, { scroll: false });
+  }
 
   return (
     <div className="flex items-center gap-4">
@@ -77,14 +86,17 @@ export function MobileForm({
         </SheetContent>
       </Sheet>
 
-      <Select defaultValue="updated_at">
+      <Select defaultValue="updated_at" onValueChange={handleSortChange}>
         <SelectTrigger className="flex-1">
           <SelectValue placeholder="Recommended" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectItem value="updated_at">
-              <span>✨</span> {t('filters.sortOptions.newest')}
+              {t('filters.sortOptions.updated_at')}
+            </SelectItem>
+            <SelectItem value="new_shops">
+              {t('filters.sortOptions.new_shops')}
             </SelectItem>
           </SelectGroup>
         </SelectContent>

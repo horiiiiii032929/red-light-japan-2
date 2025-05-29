@@ -69,7 +69,8 @@
     "applyFilters": "フィルターを適用",
     "reset": "リセット",
     "sortOptions": {
-      "newest": "新着順"
+      "newest": "新着順",
+      "new_shops": "新規店舗"
     },
     "area": "エリア",
     "areaPlaceholder": "エリアを選択",

@@ -35,8 +35,17 @@ interface Props {
     price_max?: string
     open_now?: string
     tags?: string
+    sort?: string
   }>
 }
+
+const SORT_OPTIONS = {
+  updated_at: '-updatedAt',
+  new_shops: '-createdAt',
+} as const
+
+type SortOption = keyof typeof SORT_OPTIONS
+
 
 function buildWhereConditions(
   params: Awaited<Props['params']>,
@@ -269,7 +278,7 @@ export default async function CategoryPage({
   const shops = await payload.find({
     collection: 'shops',
     where: whereConditions,
-    sort: 'updatedAt:desc',
+    sort: SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.updated_at,
     locale,
     page,
     limit,
