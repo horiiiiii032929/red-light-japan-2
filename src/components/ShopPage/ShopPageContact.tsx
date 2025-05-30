@@ -28,7 +28,7 @@ export function ShopPageContact({ shop }: ShopPageContactProps) {
   }
 
   const ContactButtons = () => (
-    <div className="space-y-3 md:space-y-4">
+    <div className="space-y-2 md:space-y-3">
       <div className="flex flex-col gap-2">
         <Button size="lg" className="h-10 text-sm md:h-11 md:text-base" asChild>
           <Link href={`tel:${shop.phoneNumber?.phoneNumber}`}>
@@ -39,7 +39,7 @@ export function ShopPageContact({ shop }: ShopPageContactProps) {
       </div>
 
       <div className="relative">
-        <div className="absolute inset-0 flex items-center">
+        <div className="absolute inset-0 flex items-center z-10">
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
@@ -52,19 +52,16 @@ export function ShopPageContact({ shop }: ShopPageContactProps) {
       <div className="grid grid-cols-3 gap-2">
         <Button variant="outline" size="lg" className="h-10 text-sm md:h-11 md:text-base" asChild>
           <Link href={`https://line.me/ti/p/${shop.line?.snsId}`} target="_blank">
-            <MessageCircle className="mr-1 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
             Line
           </Link>
         </Button>
         <Button variant="outline" size="lg" className="h-10 text-sm md:h-11 md:text-base" asChild>
           <Link href={`weixin://dl/business/?t=${shop.weChat?.snsId}`} target="_blank">
-            <MessageCircle className="mr-1 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
             WeChat
           </Link>
         </Button>
         <Button variant="outline" size="lg" className="h-10 text-sm md:h-11 md:text-base" asChild>
           <Link href={`https://wa.me/${shop.whatsapp?.snsId}`} target="_blank">
-            <MessageCircle className="mr-1 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
             WhatsApp
           </Link>
         </Button>
@@ -76,7 +73,7 @@ export function ShopPageContact({ shop }: ShopPageContactProps) {
     return (
       <div className="fixed -bottom-5 left-0 right-0 z-50 md:relative md:z-0">
         <Card className="rounded-t-xl md:rounded-lg border-t md:border-t-0 shadow-lg md:shadow-none">
-          <CardContent className="p-3 md:p-4">
+          <CardContent className="px-2 md:px-3">
             <ContactButtons />
           </CardContent>
         </Card>
@@ -88,7 +85,7 @@ export function ShopPageContact({ shop }: ShopPageContactProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
-          <CardContent className="p-3 md:p-4">
+          <CardContent className="px-2 md:px-3">
             <ContactButtons />
           </CardContent>
         </Card>

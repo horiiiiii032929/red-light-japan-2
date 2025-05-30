@@ -19,7 +19,7 @@ export function ShopPageMap({ shop }: ShopPageMapProps) {
 
   return (
     <Card>
-      <CardContent className="p-3 md:p-4">
+      <CardContent className="px-2 md:px-3">
         <h3 className="mb-2 text-sm font-medium md:text-base md:mb-3">
           {t('shop-page.access')}
         </h3>

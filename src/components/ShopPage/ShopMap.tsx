@@ -73,6 +73,7 @@ const ShopMap = ({ location, name }: ShopMapProps) => {
         style={{
           height: "100%",
           width: "100%",
+          zIndex: 0,
         }}
         whenReady={() => setError(null)}
       >
