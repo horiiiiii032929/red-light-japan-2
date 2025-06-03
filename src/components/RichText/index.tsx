@@ -67,6 +67,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(headingNode.children)
         ? headingNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -120,6 +124,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(paragraphNode.children)
         ? paragraphNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -149,6 +157,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(tableNode.children)
         ? tableNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -178,6 +190,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(rowNode.children)
         ? rowNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -201,6 +217,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(cellNode.children)
         ? cellNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -230,6 +250,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(listNode.children)
         ? listNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -259,6 +283,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(itemNode.children)
         ? itemNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -282,6 +310,10 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       const children = Array.isArray(quoteNode.children)
         ? quoteNode.children.map((child: SerializedLexicalNode, index: number) => {
           const converter = converters[child.type] || converters.unknown;
+          if (typeof converter !== 'function') {
+            console.warn('No converter function for node type:', child.type);
+            return null;
+          }
           return converter({
             node: child,
             childIndex: index,
@@ -297,6 +329,9 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       }
       return <blockquote className="border-l-4 pl-4 my-4 italic text-gray-600">{children}</blockquote>;
     },
+
+    // Line break node converter
+    linebreak: ({ childIndex }) => <br key={`br-${childIndex}`} />,
 
     // Fallback for unhandled node types
     unknown: ({ node }: ConverterProps) => {
