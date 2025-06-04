@@ -62,7 +62,9 @@
     "noResultsFound": "No results found",
     "noResultsFoundDescription": "Please try different filters",
     "tryDifferentFilters": "Try different filters",
-    "resetFilters": "Reset Filters"
+    "resetFilters": "Reset Filters",
+    "shops": "Shops",
+    "news": "News"
   },
   "filters": {
     "title": "Filters",
@@ -108,7 +110,8 @@
     "access": "Access",
     "or-contact-via": "Or Contact via",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "news": "News"
   },
   "common": {
     "copied": "Copied"

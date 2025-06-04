@@ -11,6 +11,7 @@ import { ShopPageBasicInfo } from "./ShopPageBasicInfo"
 import { ShopPageContact } from "./ShopPageContact"
 import { ShopPageMap } from "./ShopPageMap"
 import { getTranslations } from "next-intl/server"
+import { ShopPageNewsCard } from "./ShopPageNewsCard"
 
 interface ShopPageProps {
   shop: Shop
@@ -28,7 +29,7 @@ export async function ShopPage({ shop }: ShopPageProps) {
       <div className="grid gap-6 md:grid-cols-3 md:gap-8">
         <div className="md:col-span-2">
           <Tabs defaultValue="info">
-            <TabsList className="mb-4 grid w-full grid-cols-4">
+            <TabsList className="w-full mb-2">
               <TabsTrigger value="info" className="text-xs md:text-sm">
                 {t('shop-page.information')}
               </TabsTrigger>
@@ -40,6 +41,9 @@ export async function ShopPage({ shop }: ShopPageProps) {
               </TabsTrigger>
               <TabsTrigger value="coupon" className="text-xs md:text-sm">
                 {t('shop-page.coupon')}
+              </TabsTrigger>
+              <TabsTrigger value="news" className="text-xs md:text-sm">
+                {t('shop-page.news')}
               </TabsTrigger>
             </TabsList>
 
@@ -93,6 +97,16 @@ export async function ShopPage({ shop }: ShopPageProps) {
             <TabsContent value="coupon" className="space-y-4 md:space-y-6">
               <h2 className="text-lg font-semibold md:text-xl">{t('shop-page.coupon')}</h2>
               <ShopPageCoupons coupons={shop.coupons} />
+            </TabsContent>
+
+            <TabsContent value="news" className="space-y-4 md:space-y-6">
+              <h2 className="text-lg font-semibold md:text-xl">{t('shop-page.news')}</h2>
+              <div className="grid grid-cols-1 gap-4">
+                {shop.relatedNews?.docs?.map((news) => {
+                  if (typeof news === 'string') return null
+                  return <ShopPageNewsCard key={news.id} news={news} />
+                })}
+              </div>
             </TabsContent>
           </Tabs>
         </div>

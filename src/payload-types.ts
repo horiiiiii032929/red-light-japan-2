@@ -79,6 +79,7 @@ export interface Config {
     tags: Tag;
     casts: Cast;
     pages: Page;
+    news: News;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-jobs': PayloadJob;
@@ -86,7 +87,11 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    shops: {
+      relatedNews: 'news';
+    };
+  };
   collectionsSelect: {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -100,6 +105,7 @@ export interface Config {
     tags: TagsSelect<false> | TagsSelect<true>;
     casts: CastsSelect<false> | CastsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -416,6 +422,11 @@ export interface Shop {
         id?: string | null;
       }[]
     | null;
+  relatedNews?: {
+    docs?: (string | News)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   meta?: {
     title?: string | null;
     /**
@@ -453,6 +464,36 @@ export interface Cast {
   height: number;
   cup?: ('A' | 'B' | 'C' | 'D' | 'E' | 'F') | null;
   images?: (string | Media)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  title: string;
+  image?: (string | null) | Media;
+  subTitle?: string | null;
+  detail?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  shop: string | Shop;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -836,6 +877,10 @@ export interface PayloadLockedDocument {
         value: string | Page;
       } | null)
     | ({
+        relationTo: 'news';
+        value: string | News;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: string | Form;
       } | null)
@@ -1107,6 +1152,7 @@ export interface ShopsSelect<T extends boolean = true> {
         discountedPrice?: T;
         id?: T;
       };
+  relatedNews?: T;
   meta?:
     | T
     | {
@@ -1172,6 +1218,21 @@ export interface FormBlockSelect<T extends boolean = true> {
   introContent?: T;
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  tenant?: T;
+  title?: T;
+  image?: T;
+  subTitle?: T;
+  detail?: T;
+  shop?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1401,6 +1462,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'casts';
           value: string | Cast;
+        } | null)
+      | ({
+          relationTo: 'news';
+          value: string | News;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

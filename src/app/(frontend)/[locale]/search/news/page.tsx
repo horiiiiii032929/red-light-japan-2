@@ -1,20 +1,18 @@
 import { getTranslations } from 'next-intl/server'
-import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload, TypedLocale, Where } from 'payload'
 import React from 'react'
 import { MobileForm } from '@/components/MobileForm'
 import { queryMasterData } from '@/lib/queries/masterData'
 import { NoResults } from '@/components/Search/NoResults'
-import { ShopCard } from '@/components/ShopCard'
-import { Shop } from '@/payload-types'
+import { News } from '@/payload-types'
 import type { Metadata } from 'next'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getServerSideURL } from '@/utilities/getURL'
-import { SHOP_SELECT_FIELDS } from '@/lib/queries/const'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Link } from '@/i18n/routing'
+import { Tabs, TabsContent } from "@/components/ui/tabs"
+import NewsCard from '@/components/NewsCard'
 import SearchPageTab from '@/components/SearchPageTab'
+import { Pagination } from '@/components/Pagination'
 
 // Types
 type SearchParams = {
@@ -230,21 +228,40 @@ export default async function SearchPage({ params, searchParams }: Props) {
   const filterCount = getFilterCount(awaitedSearchParams)
   const whereConditions = buildWhereConditions(awaitedSearchParams, masterData)
   const sortField = SORT_OPTIONS[awaitedSearchParams.sort as SortOption] || SORT_OPTIONS.updated_at
-
-  const payload = await getPayload({ config: configPromise })
   const page = Number(awaitedSearchParams.page) || 1
   const limit = 12
+  const payload = await getPayload({ config: configPromise })
 
   const shops = await payload.find({
     collection: 'shops',
     overrideAccess: false,
     locale,
-    depth: 3,
     where: whereConditions,
+    select: {
+      shopName: true,
+      relatedNews: true
+    },
+    joins: {
+      relatedNews: {
+        limit: 1,
+        sort: '-updatedAt',
+      }
+    },
+    limit: -1
+  })
+
+  const news = await payload.find({
+    collection: 'news',
+    overrideAccess: false,
+    locale,
+    where: {
+      shop: {
+        in: shops.docs.map((shop) => shop.id).join(',')
+      }
+    },
     sort: sortField,
     page,
     limit,
-    select: SHOP_SELECT_FIELDS
   })
 
   return (
@@ -267,14 +284,15 @@ export default async function SearchPage({ params, searchParams }: Props) {
         />
       </div>
 
-      <Tabs defaultValue="shops" className="w-full">
+      <Tabs defaultValue="news" className="w-full">
         <SearchPageTab />
-        <TabsContent value="shops">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {shops.docs.length > 0 ? (
-              shops.docs.map((shop) => (
-                <ShopCard key={shop.id} shop={shop as Shop} />
-              ))
+
+        <TabsContent value="news">
+          <div className="grid grid-cols-1 gap-4">
+            {news.docs.length > 0 ? (
+              news.docs.map((news, key) => {
+                return <NewsCard key={key} news={news as News} />
+              })
             ) : (
               <div className="flex justify-center items-center h-full w-full col-span-full">
                 <NoResults />
@@ -283,11 +301,11 @@ export default async function SearchPage({ params, searchParams }: Props) {
           </div>
 
           <div className="container mt-6">
-            {shops.totalPages > 1 && shops.page && (
+            {news.totalPages > 1 && news.page && (
               <Pagination
-                page={shops.page}
-                totalPages={shops.totalPages}
-                baseUrl={`/${locale}/search`}
+                page={news.page}
+                totalPages={news.totalPages}
+                baseUrl={`/${locale}/search/news`}
                 searchParams={awaitedSearchParams}
               />
             )}

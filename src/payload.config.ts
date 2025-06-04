@@ -25,6 +25,7 @@ import { Tags } from './collections/Tags'
 import { Casts } from './collections/Casts'
 import { Pages } from './collections/Pages'
 import { resendAdapter } from '@payloadcms/email-resend'
+import { News } from './collections/News'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -81,7 +82,7 @@ export default buildConfig({
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || '',
-    // transactionOptions: false
+    transactionOptions: false
   }),
   collections: [
     Categories,
@@ -95,13 +96,14 @@ export default buildConfig({
     Shops,
     Tags,
     Casts,
-    Pages
+    Pages,
+    News
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
     ...plugins,
     vercelBlobStorage({
-      enabled: process.env.NODE_ENV === 'production',
+      // enabled: process.env.NODE_ENV === 'production',
       collections: {
         media: true,
       },

@@ -62,7 +62,9 @@
     "noResultsFound": "검색 결과가 없습니다",
     "noResultsFoundDescription": "다른 필터를 시도해보세요",
     "tryDifferentFilters": "다른 필터 시도하기",
-    "resetFilters": "필터 초기화"
+    "resetFilters": "필터 초기화",
+    "shops": "매장",
+    "news": "뉴스"
   },
   "filters": {
     "title": "필터",
@@ -108,7 +110,8 @@
     "access": "오시는 길",
     "or-contact-via": "또는 다음 방법으로 문의",
     "copy": "복사",
-    "copied": "복사됨"
+    "copied": "복사됨",
+    "news": "뉴스"
   },
   "common": {
     "copied": "복사됨"

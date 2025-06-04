@@ -128,6 +128,19 @@ export const Shops: CollectionConfig<'shops'> = {
           },
         },
         {
+          fields: [{
+            name: 'relatedNews',
+            type: 'join',
+            collection: 'news',
+            on: 'shop',
+            maxDepth: 3,
+          }],
+          label: {
+            ja: 'ニュース',
+            en: 'News',
+          },
+        },
+        {
           name: 'meta',
           label: 'SEO',
           fields: [

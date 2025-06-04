@@ -62,7 +62,9 @@
     "noResultsFound": "未找到结果",
     "noResultsFoundDescription": "请尝试其他筛选条件",
     "tryDifferentFilters": "尝试其他筛选条件",
-    "resetFilters": "重置筛选"
+    "resetFilters": "重置筛选",
+    "shops": "店铺",
+    "news": "新闻"
   },
   "filters": {
     "title": "筛选",
@@ -108,7 +110,8 @@
     "access": "交通",
     "or-contact-via": "或通过以下方式联系",
     "copy": "复制",
-    "copied": "已复制"
+    "copied": "已复制",
+    "news": "新闻"
   },
   "common": {
     "copied": "已复制"

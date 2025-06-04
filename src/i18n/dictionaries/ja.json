@@ -62,7 +62,9 @@
     "noResultsFound": "検索結果が見つかりません",
     "noResultsFoundDescription": "別のフィルターをお試しください",
     "tryDifferentFilters": "別のフィルターを試す",
-    "resetFilters": "フィルターをリセット"
+    "resetFilters": "フィルターをリセット",
+    "shops": "店舗",
+    "news": "ニュース"
   },
   "filters": {
     "title": "フィルター",
@@ -108,7 +110,8 @@
     "access": "アクセス",
     "or-contact-via": "または以下の方法でお問い合わせ",
     "copy": "コピー",
-    "copied": "コピーしました"
+    "copied": "コピーしました",
+    "news": "ニュース"
   },
   "common": {
     "copied": "コピーしました"
